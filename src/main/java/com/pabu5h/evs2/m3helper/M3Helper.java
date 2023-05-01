@@ -4,6 +4,7 @@ import com.pabu5h.evs2.dto.M3ResponseDto;
 import com.pabu5h.evs2.dto.QueryCredDto;
 import com.pabu5h.evs2.dto.QueryDto;
 import com.pabu5h.evs2.dto.QueryReqDto;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,6 +27,11 @@ public class M3Helper {
     public String m3EptGetMeterRLS;
     @Value("${m3.ept.turn_meter_on_off}")
     public String m3EptTurnMeterOnOff;
+
+    private final Logger logger;
+    public M3Helper(Logger logger) {
+        this.logger = logger;
+    }
 
     public M3ResponseDto<Object> M3R(QueryCredDto cred, QueryReqDto<Map<String, Object>> req, String ept) throws Exception {
         String m3GetMeterDataUrl = m3Path + ept;
