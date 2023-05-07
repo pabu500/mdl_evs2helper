@@ -21,6 +21,10 @@ public class M3Helper {
 
     @Value("${m3.path}")
     public String m3Path;
+
+    @Value("${m3.ept.mms_status}")
+    public String m3EptMmsStatus;
+
     @Value("${m3.ept.get_meter_data}")
     public String m3EptGetMeterData;
     @Value("${m3.ept.query_meter_relay_status}")
