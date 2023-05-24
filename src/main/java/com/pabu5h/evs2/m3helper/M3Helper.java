@@ -29,6 +29,8 @@ public class M3Helper {
     public String m3EptGetMeterData;
     @Value("${m3.ept.query_meter_relay_status}")
     public String m3EptGetMeterRLS;
+    @Value("${m3.ept.query_meter_comm_status}")
+    public String m3EptGetMeterComm;
     @Value("${m3.ept.turn_meter_on_off}")
     public String m3EptTurnMeterOnOff;
 
