@@ -27,6 +27,18 @@ public class OwlHelper {
     @Autowired
     RestTemplate restTemplate;
 
+    public Map<String, Object> getMeterInfoList(){
+        String url = owlPath + owlEptGetMeterInfoList;
+
+        ResponseEntity<Map> resp = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
+        if (resp.getStatusCode() != HttpStatus.OK) {
+            return Collections.singletonMap("error", resp.getBody());
+        }
+        if(resp.getBody().containsKey("meter_info_list")) {
+            return resp.getBody();
+        }
+        return Collections.singletonMap("error", "unknown error");
+    }
     public Map<String, Object> getMeterInfoFromMeterSn(String meterSn) {
         //http get request to owl
         String url = owlPath + owlEptGetMeterInfoFromMeterSn + "?meter_sn=" + meterSn;
