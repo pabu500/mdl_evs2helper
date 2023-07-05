@@ -1,4 +1,4 @@
-package com.pabu5h.evs2.m3helper;
+package com.pabu5h.evs2.evs2helper;
 
 import com.pabu5h.evs2.dto.M3ResponseDto;
 import com.pabu5h.evs2.dto.QueryCredDto;
