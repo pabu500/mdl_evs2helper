@@ -34,6 +34,7 @@ public class OwlHelper {
 
         ResponseEntity<Map> resp = restTemplate.exchange(url, HttpMethod.GET, null, Map.class);
         if (resp.getStatusCode() != HttpStatus.OK) {
+            logger.info("getMeterInfoList() error: " + resp.getBody());
             return Collections.singletonMap("error", resp.getBody());
         }
         if(resp.getBody().containsKey("meter_info_list")) {
