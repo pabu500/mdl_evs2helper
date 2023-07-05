@@ -13,9 +13,11 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Service
 public class OwlHelper {
+    private static final Logger logger = Logger.getLogger(OwlHelper.class.getName());
     @Value("${owl.path}")
     private String owlPath;
     @Value("${owl.ept.get_meter_info_list}")
