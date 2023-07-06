@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>com.pabu5h.evs2</groupId>
 	<artifactId>evs2helper</artifactId>
-	<version>2.3.0</version>
-	<name>m3helper</name>
-	<description>M3 Helper Module</description>
+	<version>2.3.1</version>
+	<name>evs2helper</name>
+	<description>EVS2 Helper Module</description>
 
 <!--	<properties>-->
 <!--		<java.version>20</java.version>-->
