@@ -14,6 +14,14 @@ public class MeterInfoCache {
 
     private volatile boolean refreshing = false;
 
+    public Map<String, MeterInfoDto> getMeterInfo(String meterSn) {
+        MeterInfoDto meterInfo = meterInfoMap.get(meterSn);
+        if(meterInfo != null) {
+            return Map.of("meter_info", meterInfo);
+        }
+        return null;
+    }
+
     public void refreshMeterInfoMap(List<MeterInfoDto> meterInfoList) {
         refreshing = true;
         meterInfoMap.clear();
