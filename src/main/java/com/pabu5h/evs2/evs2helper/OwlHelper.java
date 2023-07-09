@@ -5,13 +5,12 @@ import com.pabu5h.evs2.dto.PremiseDto;
 import com.xt.utils.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -26,8 +25,26 @@ public class OwlHelper {
     private String owlEptGetMeterInfoFromMeterSn;
     @Value("${owl.ept.get_meter_info_from_meter_displayname}")
     private String owlEptGetMeterInfoFromMeterDisplayname;
+    @Value("${owl.ept.sync_mms_meter_batch}")
+    private String syncMmsMeterBatchEpt;
     @Autowired
     RestTemplate restTemplate;
+
+    public Map<String, Object> syncMmsMeterBatch(List<String> meterSnList) {
+        //http get request to owl
+        String url = owlPath + syncMmsMeterBatchEpt;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<List<String>> requestEntity = new HttpEntity<>(meterSnList, headers);
+
+        //send request
+        ResponseEntity<Map> resp = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class);
+        if (resp.getStatusCode() != HttpStatus.OK) {
+            return Collections.singletonMap("error", resp.getBody());
+        }
+        return resp.getBody();
+    }
 
     public Map<String, Object> getMeterInfoList(){
         String url = owlPath + owlEptGetMeterInfoList;
