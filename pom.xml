@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>com.github.evs2bu500</groupId>
 			<artifactId>mdl_evs2dto</artifactId>
-			<version>1.6.5</version>
+			<version>1.6.6</version>
 		</dependency>
 
 		<dependency>
