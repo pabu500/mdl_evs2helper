@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 
 
 @Service
-public class DataFetcher {
-    private final Logger logger = Logger.getLogger(DataFetcher.class.getName());
+public class DataAgent {
+    private final Logger logger = Logger.getLogger(DataAgent.class.getName());
 
     @Autowired
     MeterInfoCache meterInfoCache;
