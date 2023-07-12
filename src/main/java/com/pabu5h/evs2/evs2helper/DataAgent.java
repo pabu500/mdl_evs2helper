@@ -26,7 +26,9 @@ public class DataAgent {
         // if not found, get from owlHelper,
         // if not found, get from queryHelper
         Map<String, MeterInfoDto> result = meterInfoCache.getMeterInfo(meterSnStr);
-        if (result.containsKey("meter_info")) {
+
+        //if (result.containsKey("meter_info")) {
+        if (result != null) {
             Map<String, Object> result2 = new HashMap<>();
             result2.put("meter_info", result.get("meter_info"));
             return result2;
