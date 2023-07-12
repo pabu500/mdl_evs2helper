@@ -14,6 +14,10 @@ public class MeterInfoCache {
 
     private volatile boolean refreshing = false;
 
+    public void putMeterInfo(String meterSn, MeterInfoDto meterInfo) {
+        meterInfoMap.put(meterSn, meterInfo);
+    }
+
     public Map<String, MeterInfoDto> getMeterInfo(String meterSn) {
         MeterInfoDto meterInfo = meterInfoMap.get(meterSn);
         if(meterInfo != null) {
