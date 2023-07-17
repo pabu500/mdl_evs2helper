@@ -45,7 +45,7 @@ public class DataAgent {
         } catch (Exception e) {
             logger.info("owlHelper error: " + e.getMessage());
             try {
-                Map<String, Object> result2 = queryHelper.getMeterInfoDto(meterSnStr);
+                Map<String, Object> result2 = queryHelper.getMeterInfoDtoFromSn(meterSnStr);
                 if (result2.containsKey("meter_info")) {
                     result = new HashMap<>();
                     result.put("meter_info", (MeterInfoDto) result2.get("meter_info"));
