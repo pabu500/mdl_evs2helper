@@ -22,7 +22,7 @@ public class DataAgent {
     @Autowired
     QueryHelper queryHelper;
 
-    public Map<String, Object> getMeterInfoDto(String meterSnStr) {
+    public Map<String, Object> getMeterInfoDtoFromSn(String meterSnStr) {
         // 1st try to get from cache,
         // if not found, get from owlHelper,
         // if not found, get from queryHelper
@@ -57,13 +57,21 @@ public class DataAgent {
         }
         return Map.of("info", "meter info not found");
     }
+    public Map<String, Object> getMeterInfoDtoFromDisplayname(String meterDisplaynameStr) {
+        Map<String, Object> result = getMeterSnFromDisplayname(meterDisplaynameStr);
+        if(result.containsKey("meter_sn")) {
+            String meterSnStr = (String) result.get("meter_sn");
+            return getMeterInfoDtoFromSn(meterSnStr);
+        }
+        return Map.of("info", "meter info not found");
+    }
 
     public Map<String, Object> getMeterDisplaynameFromSn(String meterSnStr) {
 
         String meterDisplayname = meterInfoCache.getMeterDisplayname(meterSnStr);
 
         if(meterDisplayname.isEmpty()) {
-            Map<String, Object> result = getMeterInfoDto(meterSnStr);
+            Map<String, Object> result = getMeterInfoDtoFromSn(meterSnStr);
             if(result.containsKey("meter_info")) {
                 MeterInfoDto meterInfoDto = (MeterInfoDto) result.get("meter_info");
                 meterInfoCache.putMeterInfo(meterSnStr, meterInfoDto);
