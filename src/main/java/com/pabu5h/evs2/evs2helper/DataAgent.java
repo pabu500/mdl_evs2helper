@@ -77,19 +77,31 @@ public class DataAgent {
     }
 
     public Map<String, Object> getMeterSnFromDisplayname(String meterDisplaynameStr){
-        String meterSn = meterInfoCache.getMeterSn(meterDisplaynameStr);
+         String meterSn = meterInfoCache.getMeterSn(meterDisplaynameStr);
 
-        if(meterSn.isEmpty()) {
-            Map<String, Object> result = owlHelper.getMeterInfoFromMeterDisplayname(meterDisplaynameStr);
-            if(result.containsKey("meter_info")) {
-                MeterInfoDto meterInfoDto = (MeterInfoDto) result.get("meter_info");
-                meterInfoCache.putMeterInfo(meterInfoDto.getMeterSn(), meterInfoDto);
-                meterSn = meterInfoDto.getMeterSn();
-                return Map.of("meter_sn", meterSn);
-            }
-        }else {
-            return Map.of("meter_sn", meterSn);
-        }
-        return Map.of("info", "meter sn not found");
+         if(!meterSn.isEmpty()) {
+             return Map.of("meter_sn", meterSn);
+         }else {
+             try {
+                 Map<String, Object> result = owlHelper.getMeterInfoFromMeterDisplayname(meterDisplaynameStr);
+                 if (result.containsKey("meter_info")) {
+                     MeterInfoDto meterInfoDto = (MeterInfoDto) result.get("meter_info");
+                     meterInfoCache.putMeterInfo(meterInfoDto.getMeterSn(), meterInfoDto);
+                     meterSn = meterInfoDto.getMeterSn();
+                     return Map.of("meter_sn", meterSn);
+                 }
+             } catch (Exception e) {
+                 logger.info("owlHelper error: " + e.getMessage());
+                 try {
+                    String meterSnStr = queryHelper.getMeterSnFromMeterDisplayname(meterDisplaynameStr);
+                    if (!meterSnStr.isEmpty()) {
+                        return Map.of("meter_sn", meterSnStr);
+                    }
+                 } catch (Exception e2) {
+                    logger.info("queryHelper error: " + e2.getMessage());
+                 }
+             }
+         }
+         return Map.of("info", "meter sn not found");
     }
 }
