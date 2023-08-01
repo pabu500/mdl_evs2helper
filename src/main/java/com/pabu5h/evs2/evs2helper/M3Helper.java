@@ -14,6 +14,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
+import static org.apache.logging.log4j.LogManager.getLogger;
+
 @Service
 public class M3Helper {
     @Autowired
@@ -34,10 +36,10 @@ public class M3Helper {
     @Value("${m3.ept.turn_meter_on_off}")
     public String m3EptTurnMeterOnOff;
 
-    private final Logger logger;
-    public M3Helper(Logger logger) {
-        this.logger = logger;
-    }
+    private final Logger logger = getLogger(M3Helper.class);
+//    public M3Helper(Logger logger) {
+//        this.logger = logger;
+//    }
 
     public M3ResponseDto<Object> M3R(QueryCredDto cred, QueryReqDto<Map<String, Object>> req, String ept) throws Exception {
         String m3GetMeterDataUrl = m3Path + ept;
