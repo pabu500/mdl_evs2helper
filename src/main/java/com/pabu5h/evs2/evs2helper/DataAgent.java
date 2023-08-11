@@ -117,13 +117,19 @@ public class DataAgent {
         Map<String, Object> result = getMeterInfoDtoFromSn(meterSnStr);
         if(result.containsKey("meter_info")) {
             MeterInfoDto meterInfoDto = (MeterInfoDto) result.get("meter_info");
-            return Map.of("tariff_price", meterInfoDto.getTariffPrice());
+            if(meterInfoDto.getTariffPrice()>0.00001) {
+                return Map.of("tariff_price", meterInfoDto.getTariffPrice());
+            }
         }
         try {
             Map<String, Object> result2 = owlHelper.getMeterInfoFromMeterSn(meterSnStr);
             if (result2.containsKey("meter_info")) {
                 MeterInfoDto meterInfoDto = (MeterInfoDto) result2.get("meter_info");
-                return Map.of("tariff_price", meterInfoDto.getTariffPrice());
+                if(meterInfoDto.getTariffPrice()>0.00001) {
+                    return Map.of("tariff_price", meterInfoDto.getTariffPrice());
+                }else {
+                    throw new Exception("tariff_price is 0");
+                }
             }
         } catch (Exception e) {
             logger.info("owlHelper error: " + e.getMessage());
