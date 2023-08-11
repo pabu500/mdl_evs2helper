@@ -133,22 +133,14 @@ public class DataAgent {
             }
         } catch (Exception e) {
             logger.info("owlHelper error: " + e.getMessage());
+
             try {
-                Map<String, Object> result2 = queryHelper.getMeterInfoDtoFromSn(meterSnStr);
-                if (result2.containsKey("meter_info")) {
-                    MeterInfoDto meterInfoDto = (MeterInfoDto) result2.get("meter_info");
-                    return Map.of("tariff_price", meterInfoDto.getTariffPrice());
+                Map<String, Object> tariffResult = queryHelper.getMeterTariffFromSn(meterSnStr);
+                if (tariffResult.containsKey("tariff_price")) {
+                    return tariffResult;
                 }
-            } catch (Exception e2) {
-                logger.info("queryHelper error: " + e2.getMessage());
-                try {
-                    Map<String, Object> tariffResult = queryHelper.getMeterTariffFromSn(meterSnStr);
-                    if (tariffResult.containsKey("tariff_price")) {
-                        return tariffResult;
-                    }
-                } catch (Exception e3) {
-                    logger.info("queryHelper error: " + e3.getMessage());
-                }
+            } catch (Exception e3) {
+                logger.info("queryHelper error: " + e3.getMessage());
             }
         }
         return Map.of("info", "meter tariff not found");
