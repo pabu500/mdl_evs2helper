@@ -147,4 +147,12 @@ public class DataAgent {
         }
         return Map.of("info", "meter tariff not found");
     }
+    public Map<String, Object> getMeterTariffFromDisplayname(String meterDisplaynameStr) {
+        Map<String, Object> result = getMeterSnFromDisplayname(meterDisplaynameStr);
+        if(result.containsKey("meter_sn")) {
+            String meterSnStr = (String) result.get("meter_sn");
+            return getMeterTariffFromSn(meterSnStr);
+        }
+        return Map.of("info", "meter tariff not found");
+    }
 }
