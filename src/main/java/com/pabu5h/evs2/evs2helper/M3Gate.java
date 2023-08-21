@@ -31,8 +31,8 @@ public class M3Gate {
     public String m3EptGetMeterComm;
     @Value("${m3.ept.turn_meter_on_off}")
     public String m3EptTurnMeterOnOff;
-    @Value("${m3.ept.check_rls_mid}")
-    public String m3EptCheckRlsMid;
+    @Value("${m3.ept.check_rls_mid_subscribe}")
+    public String m3EptCheckRlsMidSubscribe;
 
     public Map<String, Object> getMmsStatus(SvcClaimDto svcClaimDto) {
 
@@ -121,12 +121,12 @@ public class M3Gate {
             return Collections.singletonMap("error", e.getMessage());
         }
     }
-    public Map<String, Object> checkRlsMid(String meterSn, String mid, SvcClaimDto svcClaimDto) {
+    public Map<String, Object> checkRlsMidSubscribe(String meterSn, String mid, SvcClaimDto svcClaimDto) {
         M3ResponseDto<Object> resp;
         try {
             QueryCredDto cred = new QueryCredDto(svcClaimDto.getUsername(), "0");
             QueryReqDto<Map<String, Object>> m3req = new QueryReqDto<Map<String, Object>>(Map.of("meter_sn", meterSn, "mid", mid));
-            resp = m3Helper.M3R(cred, m3req, m3EptCheckRlsMid);
+            resp = m3Helper.M3R(cred, m3req, m3EptCheckRlsMidSubscribe);
 
             if(resp.getResult()!= null) {
                 return Collections.singletonMap("meter_rls", resp.getRls());
