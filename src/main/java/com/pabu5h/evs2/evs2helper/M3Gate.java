@@ -121,6 +121,7 @@ public class M3Gate {
             return Collections.singletonMap("result", resp.toString());
         } catch (Exception e) {
             return Collections.singletonMap("error", e.getMessage());
+//            return Map.of("error", e.getMessage(), "mid", resp.getRlsMid());
         }
     }
     public Map<String, Object> checkRlsMidSubscribe(String meterSn, String mid, SvcClaimDto svcClaimDto) {
