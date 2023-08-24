@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -114,7 +115,8 @@ public class M3Gate {
                 return Collections.singletonMap("meter_rls", resp.getRls());
             }
             if(resp.getError()!= null){
-                return Collections.singletonMap("error", resp.getError());
+//                return Collections.singletonMap("error", resp.getError());
+                return Map.of("error", resp.getError(), "mid", resp.getRlsMid());
             }
             return Collections.singletonMap("result", resp.toString());
         } catch (Exception e) {
