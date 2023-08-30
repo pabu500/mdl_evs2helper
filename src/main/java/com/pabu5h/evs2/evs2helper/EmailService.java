@@ -5,9 +5,12 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import java.util.logging.Logger;
+
 
 @Component
 public class EmailService {
+    private final Logger logger = Logger.getLogger(EmailService.class.getName());
     @Autowired
     private JavaMailSender mailSender;
 
@@ -20,6 +23,10 @@ public class EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+        }catch (Exception e){
+            logger.info("mailSender error: " + e.getMessage());
+        }
     }
 }
