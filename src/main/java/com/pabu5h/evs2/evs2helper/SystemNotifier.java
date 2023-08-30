@@ -16,4 +16,8 @@ public class SystemNotifier {
     public void sendEmail(String subject, String text) {
         emailService.sendSimpleEmail(emailFrom, emailTo, subject, text);
     }
+    public void sendException(String subject, String source, String errorMessage) {
+        String text = "Source: " + source + "\n" + "Error Message: " + errorMessage;
+        emailService.sendSimpleEmail(emailFrom, emailTo, subject, text);
+    }
 }
