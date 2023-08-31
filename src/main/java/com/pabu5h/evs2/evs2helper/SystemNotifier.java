@@ -23,7 +23,8 @@ public class SystemNotifier {
         emailService.sendSimpleEmail(emailFrom, emailTo, subject, text);
     }
     public void sendNotice(String subject, String source, Map<String, String> message) {
-        String text = "Source: " + source + "\n" + message.get("title")+": " + message.get("message");
+        String title = message.get("title") == null ? "Message" : message.get("title");
+        String text = "Source: " + source + "\n" + title+": " + message.get("message");
         emailService.sendSimpleEmail(emailFrom, emailTo, subject, text);
     }
 }
