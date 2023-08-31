@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Component
 public class SystemNotifier {
     @Autowired
@@ -18,6 +20,10 @@ public class SystemNotifier {
     }
     public void sendException(String subject, String source, String errorMessage) {
         String text = "Source: " + source + "\n" + "Error Message: " + errorMessage;
+        emailService.sendSimpleEmail(emailFrom, emailTo, subject, text);
+    }
+    public void sendNotice(String subject, String source, Map<String, String> message) {
+        String text = "Source: " + source + "\n" + message.get("title")+": " + message.get("message");
         emailService.sendSimpleEmail(emailFrom, emailTo, subject, text);
     }
 }
