@@ -8,6 +8,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -18,6 +19,8 @@ public class TcmHelper {
     private String tcmEtpInsertOneCredit;
     @Value("${tcm.etp.reset_one_ref_bal}")
     private String tcmEtpResetOneRefBal;
+    @Value("${tcm.etp.update_meter_bypass_policy}")
+    private String tcmEtpUpdateMeterBypassPolicy;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -42,7 +45,6 @@ public class TcmHelper {
         }
 
     }
-
     public Map<String, Object> resetOneRefBal(Map<String, Object> resetMap) throws Exception {
         String tcmEpt = tcmPath + tcmEtpResetOneRefBal;
 
@@ -61,6 +63,24 @@ public class TcmHelper {
         } catch (Exception e) {
             throw new Exception("TCM Query Error: " + e.getMessage());
         }
+    }
+    public Map<String, Object> updateMeterBypassPolicy(List<String> meterSns) throws Exception {
+        String tcmEpt = tcmPath + tcmEtpUpdateMeterBypassPolicy;
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<List<String>> requestEntity = new HttpEntity<>(meterSns, headers);
+
+        try {
+            ResponseEntity<Map<String, Object>> response = this.restTemplate.exchange(tcmEpt, HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<String, Object>>() {});
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return response.getBody();
+            } else {
+                throw new Exception("TCM Query Error: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new Exception("TCM Query Error: " + e.getMessage());
+        }
     }
 }
