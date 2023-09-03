@@ -56,4 +56,8 @@ public class MeterInfoCache {
         return "";
     }
 
+    public void updateMeterInfo(String meterSn, MeterInfoDto meterInfoDto){
+        meterInfoMap.put(meterSn, meterInfoDto);
+    }
+
 }
