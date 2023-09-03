@@ -27,6 +27,8 @@ public class OwlHelper {
     private String owlEptGetMeterInfoFromMeterDisplayname;
     @Value("${owl.ept.sync_mms_meter_batch}")
     private String syncMmsMeterBatchEpt;
+    @Value("${owl.ept.update_meter_bypass_policy}")
+    private String updateMeterBypassPolicyEpt;
     @Autowired
     RestTemplate restTemplate;
 
@@ -45,7 +47,21 @@ public class OwlHelper {
         }
         return resp.getBody();
     }
+    public Map<String, Object> updateMeterBypassPolicy(List<String> meterSnList) {
+        //http get request to owl
+        String url = owlPath + updateMeterBypassPolicyEpt;
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<List<String>> requestEntity = new HttpEntity<>(meterSnList, headers);
+
+        //send request
+        ResponseEntity<Map> resp = restTemplate.exchange(url, HttpMethod.POST, requestEntity, Map.class);
+        if (resp.getStatusCode() != HttpStatus.OK) {
+            return Collections.singletonMap("error", resp.getBody());
+        }
+        return resp.getBody();
+    }
     public Map<String, Object> getMeterInfoList(){
         String url = owlPath + owlEptGetMeterInfoList;
 
