@@ -105,7 +105,12 @@ public class KafkaHelper {
         }
     }
     public void send(String topic, String key, String message, boolean log) {
-        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, key, message);
+        CompletableFuture<SendResult<String, String>> future = null;
+        if(key == null || key.isBlank()){
+            future = kafkaTemplate.send(topic, message);
+        }else {
+            future = kafkaTemplate.send(topic, key, message);
+        }
         future.whenComplete((result, ex) -> {
             if (ex != null) {
                 logger.severe(ex.getMessage());
@@ -113,17 +118,17 @@ public class KafkaHelper {
                 ProducerRecord<String, String> producerRecord = result.getProducerRecord();
                 RecordMetadata recordMetadata = result.getRecordMetadata();
                 if(log){
-                    logger.info("message sent. topic: " + producerRecord.topic() + ", partition: " + recordMetadata.partition() + ", offset: " + recordMetadata.offset() + ", key: " + producerRecord.key() + ", value: " + producerRecord.value());
+                    logger.info("message sent. t:" + producerRecord.topic() + " p:" + recordMetadata.partition() + ", o:" + recordMetadata.offset() + ", k:" + producerRecord.key() + ", v:" + producerRecord.value());
                 }
             }
         });
     }
     public void getBrokerStat() {
-        System.out.println("Broker Stat:");
+        logger.info("Broker Stat:");
         try (AdminClient adminClient = AdminClient.create(kafkaAdmin.getConfigurationProperties())) {
             ListTopicsResult listTopicsResult = adminClient.listTopics();
             listTopicsResult.names().get().forEach(topicName -> {
-                System.out.println("Topic: " + topicName);
+                logger.info("Topic: " + topicName);
                 try {
                     TopicDescription topicDescription = adminClient.describeTopics(Collections.singletonList(topicName)).values().get(topicName).get();
                     Map<TopicPartition, OffsetSpec> queryLatest = new HashMap<>();
@@ -143,8 +148,8 @@ public class KafkaHelper {
                         long earliestOffset = earliestOffsets.get(tp).offset();
                         long numberOfMessages = latestOffset - earliestOffset;
 
-                        System.out.println("Partition: " + info.partition() + ", Leader: " + info.leader().id() + ", Replicas: " + info.replicas().size() + ", ISR: " + info.isr().size());
-                        System.out.println("Approximate number of messages: " + numberOfMessages);
+                        logger.info("Partition: " + info.partition() + ", Leader: " + info.leader().id() + ", Replicas: " + info.replicas().size() + ", ISR: " + info.isr().size());
+                        logger.info("Approximate number of messages: " + numberOfMessages);
                     }
                 } catch (InterruptedException | ExecutionException e) {
                     logger.severe(e.getMessage());
@@ -167,7 +172,7 @@ public class KafkaHelper {
             //get all messages from partition
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(10));
             records.forEach(record -> {
-                System.out.println("Received message. topic: " + record.topic() + ", partition: " + record.partition() + ", offset: " + record.offset() + ", key: " + record.key() + ", value: " + record.value());
+                logger.info("Received message. topic: " + record.topic() + ", partition: " + record.partition() + ", offset: " + record.offset() + ", key: " + record.key() + ", value: " + record.value());
             });
 
         }
