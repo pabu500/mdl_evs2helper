@@ -9,10 +9,16 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.TopicPartitionInfo;
 import org.apache.kafka.common.config.ConfigResource;
+import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +33,17 @@ import java.util.logging.Logger;
 @Service
 public class KafkaHelper {
     private final Logger logger = Logger.getLogger(KafkaHelper.class.getName());
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
+    @Value("${spring.kafka.properties.security.protocol}")
+    private String securityProtocol;
+    @Value("${spring.kafka.properties.sasl.mechanism}")
+    private String saslMechanism;
+    @Value("${spring.kafka.properties.sasl.jaas.config}")
+    private String saslJaasConfig;
+    @Value("${spring.kafka.properties.sasl.client.callback.handler.class}")
+    private String saslClientCallbackHandlerClass;
+
     @Autowired
     private KafkaAdmin kafkaAdmin;
     @Autowired
@@ -34,6 +51,23 @@ public class KafkaHelper {
     @Autowired
     private ConsumerFactory<String, String> consumerFactory;
 
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactory(){
+        ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<String, String>();
+
+        Map<String, Object> config = new HashMap<>();
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, "ktest");
+        config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+        config.put("security.protocol", securityProtocol);
+        config.put("sasl.mechanism", saslMechanism);
+        config.put("sasl.jaas.config", saslJaasConfig);
+        config.put("sasl.client.callback.handler.class", saslClientCallbackHandlerClass);
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+        factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(config));
+        return factory;
+    }
     public void describeTopicConfig(String topicName) {
         try (AdminClient adminClient = AdminClient.create(kafkaAdmin.getConfigurationProperties())) {
             ConfigResource resource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
@@ -138,7 +172,6 @@ public class KafkaHelper {
 
         }
     }
-
     public void flushTopic(String topicName) {
         try (AdminClient adminClient = AdminClient.create(kafkaAdmin.getConfigurationProperties())) {
             // Resource representing the topic configuration
