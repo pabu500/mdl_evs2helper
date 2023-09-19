@@ -117,7 +117,8 @@ public class KafkaHelper {
             logger.severe(e.getMessage());
         }
     }
-    public void send(String topic, String key, String message, boolean log) {
+    public void send(String topic, String key, String message, Integer logSetting) {
+
         CompletableFuture<SendResult<String, String>> future = null;
         if(key == null || key.isBlank()){
             future = kafkaTemplate.send(topic, message);
@@ -130,8 +131,13 @@ public class KafkaHelper {
             } else {
                 ProducerRecord<String, String> producerRecord = result.getProducerRecord();
                 RecordMetadata recordMetadata = result.getRecordMetadata();
-                if(log){
-                    logger.info("message sent. t:" + producerRecord.topic() + " p:" + recordMetadata.partition() + ", o:" + recordMetadata.offset() + ", k:" + producerRecord.key() + ", v:" + producerRecord.value());
+                //0: no log, 1: log meta, 2: log message, 3: log message and meta
+                if(logSetting == 1) {
+                    logger.info("t:" + producerRecord.topic() + " p:" + recordMetadata.partition() + ", o:" + recordMetadata.offset() + ", k:" + producerRecord.key());
+                }else if(logSetting == 2) {
+                    logger.info("v:" + producerRecord.value());
+                }else if(logSetting == 3) {
+                    logger.info("t:" + producerRecord.topic() + " p:" + recordMetadata.partition() + ", o:" + recordMetadata.offset() + ", k:" + producerRecord.key() + ", v:" + producerRecord.value());
                 }
             }
         });
