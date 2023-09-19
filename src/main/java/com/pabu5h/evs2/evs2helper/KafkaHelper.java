@@ -1,9 +1,7 @@
 package com.pabu5h.evs2.evs2helper;
 
 import org.apache.kafka.clients.admin.*;
-import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -23,6 +21,8 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -194,6 +194,44 @@ public class KafkaHelper {
                 logger.info("Received message. topic: " + record.topic() + ", partition: " + record.partition() + ", offset: " + record.offset() + ", key: " + record.key() + ", value: " + record.value());
             });
 
+        }
+    }
+    public void consumeFromTo(LocalDateTime fromTime, LocalDateTime toTime) {
+        Properties props = new Properties();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "my-time-based-group");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+
+        long fromTimeMillis = fromTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+        long toTimeMillis = toTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+
+        try (Consumer<String, String> consumer = new KafkaConsumer<>(props)) {
+            TopicPartition partition0 = new TopicPartition("my_topic", 0);
+            consumer.assign(Collections.singletonList(partition0));
+
+            Map<TopicPartition, Long> timestampsToSearch = new HashMap<>();
+            timestampsToSearch.put(partition0, fromTimeMillis);
+
+            Map<TopicPartition, OffsetAndTimestamp> offsetsForTimes = consumer.offsetsForTimes(timestampsToSearch);
+
+            OffsetAndTimestamp offsetAndTimestamp = offsetsForTimes.get(partition0);
+            long startOffset = offsetAndTimestamp.offset();
+
+            consumer.seek(partition0, startOffset);
+
+            while (true) {
+                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+                records.forEach(record -> {
+                    long timestamp = record.timestamp();
+                    if (timestamp <= toTimeMillis) {
+                        logger.info("Received message. topic: " + record.topic() + ", partition: " + record.partition() + ", offset: " + record.offset() + ", key: " + record.key() + ", value: " + record.value());
+                    } else {
+                        consumer.close();
+                        return;
+                    }
+                });
+            }
         }
     }
     public void flushTopic(String topicName) {
