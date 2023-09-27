@@ -2,9 +2,11 @@ package com.pabu5h.evs2.evs2helper;
 
 import com.pabu5h.evs2.dto.TransactionLogDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 public class PaymentDef {
     public static int offerId = 172;
     public static final int paymentModeVirtual = 4;
