@@ -5,12 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
-@Configuration
+@Service
 public class LocalHelper {
     @Value("${local.setting.countryCode}")
     private String countryCode;
 
-    @Bean
     public LocalSetting localSetting() {
         switch (countryCode.toUpperCase()){
             case "SG":
