@@ -15,18 +15,22 @@ import java.util.Map;
 public class TcmHelper {
     @Value("${tcm.path}")
     private String tcmPath;
-    @Value("${tcm.etp.insert_one_credit}")
-    private String tcmEtpInsertOneCredit;
-    @Value("${tcm.etp.reset_one_ref_bal}")
-    private String tcmEtpResetOneRefBal;
-    @Value("${tcm.etp.update_meter_bypass_policy}")
-    private String tcmEtpUpdateMeterBypassPolicy;
+    @Value("${tcm.ept.do_one_topup}")
+    private String tcmEptDoOneTopup;
+    @Value("${tcm.ept.do_batch_topup}")
+    private String tcmEptDoBatchTopup;
+    @Value("${tcm.ept.do_one_reset_ref_bal}")
+    private String tcmEptDoOneResetRefBal;
+    @Value("${tcm.ept.do_batch_reset_ref_bal}")
+    private String tcmEptDoBatchResetRefBal;
+    @Value("${tcm.ept.update_meter_bypass_policy}")
+    private String tcmEptUpdateMeterBypassPolicy;
 
     @Autowired
     private RestTemplate restTemplate;
 
-    public Map<String, Object> insertOnceCredit(TransactionLogDto transactionLogDto) throws Exception {
-        String tcmEpt = tcmPath + tcmEtpInsertOneCredit;
+    public Map<String, Object> doOneTopup(TransactionLogDto transactionLogDto) throws Exception {
+        String tcmEpt = tcmPath + tcmEptDoOneTopup;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -43,10 +47,28 @@ public class TcmHelper {
         } catch (Exception e) {
             throw new Exception("TCM Query Error: " + e.getMessage());
         }
+    }
+    public Map<String, Object> doBatchTopup(List<Map<String, Object>> topupList) throws Exception {
+        String tcmEpt = tcmPath + tcmEptDoOneTopup;
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<List<Map<String, Object>>> requestEntity = new HttpEntity<>(topupList, headers);
+
+        try {
+            ResponseEntity<Map<String, Object>> response = this.restTemplate.exchange(tcmEpt, HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<String, Object>>() {});
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return response.getBody();
+            } else {
+                throw new Exception("TCM Query Error: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new Exception("TCM Query Error: " + e.getMessage());
+        }
     }
     public Map<String, Object> resetOneRefBal(Map<String, Object> resetMap) throws Exception {
-        String tcmEpt = tcmPath + tcmEtpResetOneRefBal;
+        String tcmEpt = tcmPath + tcmEptDoOneResetRefBal;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -64,8 +86,27 @@ public class TcmHelper {
             throw new Exception("TCM Query Error: " + e.getMessage());
         }
     }
+    public Map<String, Object> doBatchResetRefBal(List<Map<String, Object>> resetList) throws Exception {
+        String tcmEpt = tcmPath + tcmEptDoOneResetRefBal;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<List<Map<String, Object>>> requestEntity = new HttpEntity<>(resetList, headers);
+
+        try {
+            ResponseEntity<Map<String, Object>> response = this.restTemplate.exchange(tcmEpt, HttpMethod.POST, requestEntity, new ParameterizedTypeReference<Map<String, Object>>() {});
+            if (response.getStatusCode() == HttpStatus.OK) {
+                return response.getBody();
+            } else {
+                throw new Exception("TCM Query Error: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new Exception("TCM Query Error: " + e.getMessage());
+        }
+    }
     public Map<String, Object> updateMeterBypassPolicy(List<String> meterSns) throws Exception {
-        String tcmEpt = tcmPath + tcmEtpUpdateMeterBypassPolicy;
+        String tcmEpt = tcmPath + tcmEptUpdateMeterBypassPolicy;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
