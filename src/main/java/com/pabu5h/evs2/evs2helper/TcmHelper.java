@@ -49,7 +49,7 @@ public class TcmHelper {
         }
     }
     public Map<String, Object> doBatchTopup(List<Map<String, Object>> topupList) throws Exception {
-        String tcmEpt = tcmPath + tcmEptDoOneTopup;
+        String tcmEpt = tcmPath + tcmEptDoBatchTopup;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -87,7 +87,7 @@ public class TcmHelper {
         }
     }
     public Map<String, Object> doBatchResetRefBal(List<Map<String, Object>> resetList) throws Exception {
-        String tcmEpt = tcmPath + tcmEptDoOneResetRefBal;
+        String tcmEpt = tcmPath + tcmEptDoBatchResetRefBal;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
