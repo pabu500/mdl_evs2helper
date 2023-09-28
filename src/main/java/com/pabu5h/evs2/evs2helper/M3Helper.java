@@ -255,6 +255,10 @@ public class M3Helper {
             if(resp.getError()!= null){
                 return Collections.singletonMap("error", resp.getError());
             }
+            //M3 return 'success' or 'error' field for this endpoint
+            if(resp.getSuccess()!= null) {
+                return Collections.singletonMap("result", resp.getSuccess());
+            }
             return Collections.singletonMap("result", resp.getResult());
         } catch (Exception e) {
             return Collections.singletonMap("error", e.getMessage());
