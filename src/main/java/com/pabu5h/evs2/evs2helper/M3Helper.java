@@ -25,8 +25,8 @@ public class M3Helper {
 
     @Autowired
     private MeterHelper meterHelper;
-    @Autowired
-    private M3Helper m3Helper;
+//    @Autowired
+//    private M3Helper m3Helper;
 
     @Value("${m3.ept.mms_status}")
     public String m3EptMmsStatus;
@@ -81,7 +81,7 @@ public class M3Helper {
         try {
             QueryCredDto cred = new QueryCredDto(svcClaimDto.getUsername(), "0");
             QueryReqDto<Map<String, Object>> m3req = new QueryReqDto<Map<String, Object>>(Map.of());
-            resp = m3Helper.M3R(cred, m3req, m3EptMmsStatus);
+            resp = M3R(cred, m3req, m3EptMmsStatus);
 
             if(resp.getError()!= null){
                 return Collections.singletonMap("error", resp.getError());
@@ -128,7 +128,7 @@ public class M3Helper {
         try {
             QueryCredDto cred = new QueryCredDto(svcClaimDto.getUsername(), "0");
             QueryReqDto<Map<String, Object>> m3req = new QueryReqDto<Map<String, Object>>(Map.of("meter_sn", meterSn));
-            resp = m3Helper.M3R(cred, m3req, m3EptGetMeterData);
+            resp = M3R(cred, m3req, m3EptGetMeterData);
 
             if(resp.getError()!= null){
                 return Collections.singletonMap("error", resp.getError());
@@ -149,7 +149,7 @@ public class M3Helper {
         try {
             QueryCredDto cred = new QueryCredDto(svcClaimDto.getUsername(), "0");
             QueryReqDto<Map<String, Object>> m3req = new QueryReqDto<Map<String, Object>>(Map.of("meter_sn", meterSn, "resp_millis", respMillis));
-            resp = m3Helper.M3R(cred, m3req, m3EptGetMeterRLS);
+            resp = M3R(cred, m3req, m3EptGetMeterRLS);
 
             if(resp.getResult()!= null) {
                 return Collections.singletonMap("meter_rls", resp.getRls());
@@ -169,7 +169,7 @@ public class M3Helper {
         try {
             QueryCredDto cred = new QueryCredDto(svcClaimDto.getUsername(), "0");
             QueryReqDto<Map<String, Object>> m3req = new QueryReqDto<Map<String, Object>>(Map.of("meter_sn", meterSn, "mid", mid));
-            resp = m3Helper.M3R(cred, m3req, m3EptCheckRlsMidSubscribe);
+            resp = M3R(cred, m3req, m3EptCheckRlsMidSubscribe);
 
             if(resp.getResult()!= null) {
                 return Collections.singletonMap("meter_rls", resp.getRls());
@@ -188,7 +188,7 @@ public class M3Helper {
         try {
             QueryCredDto cred = new QueryCredDto(svcClaimDto.getUsername(), "0");
             QueryReqDto<Map<String, Object>> m3req = new QueryReqDto<Map<String, Object>>(Map.of("meter_sn", meterSn, "resp_millis", respMillis));
-            resp = m3Helper.M3R(cred, m3req, m3EptGetMeterComm);
+            resp = M3R(cred, m3req, m3EptGetMeterComm);
 
             if(resp.getResult()!= null) {
                 Map<String, String> meterComm = Map.of("result", resp.getResult().toString(), "status", resp.getStatus()==null?"":resp.getStatus());
@@ -210,7 +210,7 @@ public class M3Helper {
                     "meter_sn", meterSn,
                     "op_target", opTarget,
                     "resp_millis", respMillis));
-            resp = m3Helper.M3R(cred, m3req, m3EptTurnMeterOnOff);
+            resp = M3R(cred, m3req, m3EptTurnMeterOnOff);
 
             if(resp.getResult()!= null) {
                 return Collections.singletonMap("result_rls", resp.getRls());
@@ -230,7 +230,7 @@ public class M3Helper {
             QueryReqDto<Map<String, Object>> m3req = new QueryReqDto<Map<String, Object>>(Map.of(
                     "meter_sn", meterSn,
                     "op_target", opTarget));
-            resp = m3Helper.M3R(cred, m3req, m3EptSubmitRelayOnOff);
+            resp = M3R(cred, m3req, m3EptSubmitRelayOnOff);
 
 //            if(resp.getResult()!= null) {
 //                return Collections.singletonMap("result", resp.getResult());
@@ -250,7 +250,7 @@ public class M3Helper {
             QueryReqDto<Map<String, Object>> m3req = new QueryReqDto<Map<String, Object>>(Map.of(
                     "meter_sn", meterSn,
                     "command", command));
-            resp = m3Helper.M3R(cred, m3req, m3EptTurnAcLockOnOff);
+            resp = M3R(cred, m3req, m3EptTurnAcLockOnOff);
 
             if(resp.getError()!= null){
                 return Collections.singletonMap("error", resp.getError());
@@ -267,7 +267,7 @@ public class M3Helper {
             QueryReqDto<Map<String, Object>> m3req = new QueryReqDto<Map<String, Object>>(Map.of(
                     "meter_sn", meterSn,
                     "resp_millis", respMillis));
-            resp = m3Helper.M3R(cred, m3req, m3EptCheckAcLockStatus);
+            resp = M3R(cred, m3req, m3EptCheckAcLockStatus);
 
             if(resp.getError()!= null){
                 return Collections.singletonMap("error", resp.getError());
