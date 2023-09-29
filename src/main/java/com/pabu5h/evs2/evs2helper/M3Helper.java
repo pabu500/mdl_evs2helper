@@ -259,7 +259,7 @@ public class M3Helper {
             if(resp.getSuccess()!= null) {
                 return Collections.singletonMap("result", resp.getSuccess());
             }
-            return Collections.singletonMap("result", resp.getResult());
+            return Collections.singletonMap("result", resp);
         } catch (Exception e) {
             return Collections.singletonMap("error", e.getMessage());
         }
