@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class LocalHelper {
     @Value("${local.setting.countryCode}")
@@ -17,5 +19,8 @@ public class LocalHelper {
             default:
                 throw new IllegalArgumentException("Invalid country code: " + countryCode);
         }
+    }
+    public LocalDateTime getLocalNow() {
+        return localSetting().getLocalNow();
     }
 }
