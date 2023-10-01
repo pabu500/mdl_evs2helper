@@ -23,4 +23,7 @@ public class LocalHelper {
     public LocalDateTime getLocalNow() {
         return localSetting().getLocalNow();
     }
+    public String getLocalNowStr() {
+        return localSetting().getLocalNowStr();
+    }
 }
