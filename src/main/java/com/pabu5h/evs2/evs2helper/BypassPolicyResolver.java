@@ -33,18 +33,16 @@ public class BypassPolicyResolver {
 //            logger.info("debug bypass policy");
         }
 
-        boolean meterInfoFound = false;
+
         Map<String, MeterInfoDto> meterInfo = meterInfoCache.getMeterInfo(meterSn);
         MeterInfoDto meterInfoDto = null;
         if(meterInfo != null) {
-            meterInfoFound = true;
             meterInfoDto = meterInfo.get("meter_info");
-        }
-        if(!meterInfoFound){
+        }else {
             Map<String, Object>result = queryHelper.getMeterInfoDtoFromSn(meterSn);
             if(result.containsKey("meter_info")){
                 meterInfo = (Map<String, MeterInfoDto>) result.get("meter_info");
-                meterInfoFound = true;
+                meterInfoDto = meterInfo.get("meter_info");
             }
         }
 
