@@ -21,7 +21,7 @@ public class BypassPolicyResolver {
 
     // bypass: {"result": "ok"}
     // no bypass: {"result": "no"}
-    public Map<String, Object> resolveBypassPolicy(String meterSn, String timestamp) {
+    public Map<String, Object> resolveBypassPolicy(String meterSn, String timestamp, String bypassPolicyTableName) {
         if(meterSn.equals("202206000050")||
            meterSn.equals("202206000051")||
            meterSn.equals("202206000052")||
@@ -38,7 +38,7 @@ public class BypassPolicyResolver {
         if(meterInfo != null) {
             meterInfoDto = meterInfo.get("meter_info");
         }else {
-            Map<String, Object>result = queryHelper.getMeterInfoDtoFromSn(meterSn);
+            Map<String, Object>result = queryHelper.getMeterInfoDtoFromSn2(meterSn, bypassPolicyTableName);
             if(result.containsKey("meter_info")){
                 meterInfoDto = (MeterInfoDto) result.get("meter_info");
             }
