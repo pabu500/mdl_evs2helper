@@ -40,8 +40,7 @@ public class BypassPolicyResolver {
         }else {
             Map<String, Object>result = queryHelper.getMeterInfoDtoFromSn(meterSn);
             if(result.containsKey("meter_info")){
-                meterInfo = (Map<String, MeterInfoDto>) result.get("meter_info");
-                meterInfoDto = meterInfo.get("meter_info");
+                meterInfoDto = (MeterInfoDto) result.get("meter_info");
             }
         }
 
