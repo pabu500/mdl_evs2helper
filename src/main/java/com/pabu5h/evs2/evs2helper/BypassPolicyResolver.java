@@ -2,6 +2,7 @@ package com.pabu5h.evs2.evs2helper;
 
 import com.pabu5h.evs2.dto.MeterBypassDto;
 import com.pabu5h.evs2.dto.MeterInfoDto;
+import com.pabu5h.evs2.oqghelper.QueryHelper;
 import com.xt.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public class BypassPolicyResolver {
     private final Logger logger = Logger.getLogger(BypassPolicyResolver.class.getName());
     @Autowired
     private MeterInfoCache meterInfoCache;
+    @Autowired
+    private QueryHelper queryHelper;
 
     // bypass: {"result": "ok"}
     // no bypass: {"result": "no"}
@@ -30,13 +33,21 @@ public class BypassPolicyResolver {
 //            logger.info("debug bypass policy");
         }
 
+        boolean meterInfoFound = false;
         Map<String, MeterInfoDto> meterInfo = meterInfoCache.getMeterInfo(meterSn);
-        if(meterInfo == null) {
-            logger.warning("Unable to resolve bypass policy: " + meterSn + ", meter not found. Default to no bypass.");
-            return Map.of("result", "no",
-                          "message", "meter not found");
+        MeterInfoDto meterInfoDto = null;
+        if(meterInfo != null) {
+            meterInfoFound = true;
+            meterInfoDto = meterInfo.get("meter_info");
         }
-        MeterInfoDto meterInfoDto = meterInfo.get("meter_info");
+        if(!meterInfoFound){
+            Map<String, Object>result = queryHelper.getMeterInfoDtoFromSn(meterSn);
+            if(result.containsKey("meter_info")){
+                meterInfo = (Map<String, MeterInfoDto>) result.get("meter_info");
+                meterInfoFound = true;
+            }
+        }
+
         if(meterInfoDto == null) {
             logger.warning("Unable to resolve bypass policy: " + meterSn + ", meter info not found. Default to no bypass.");
             return Map.of("result", "no",
