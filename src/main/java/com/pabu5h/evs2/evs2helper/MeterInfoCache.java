@@ -26,6 +26,14 @@ public class MeterInfoCache {
         return null;
     }
 
+    public Map<String, Object> getMeterInfo2(String meterSn) {
+        MeterInfoDto meterInfo = meterInfoMap.get(meterSn);
+        if(meterInfo != null) {
+            return Map.of("meter_info", meterInfo);
+        }
+        return Map.of("info", "meter not found");
+    }
+
     public void refreshMeterInfoMap(List<MeterInfoDto> meterInfoList) {
         refreshing = true;
         meterInfoMap.clear();
