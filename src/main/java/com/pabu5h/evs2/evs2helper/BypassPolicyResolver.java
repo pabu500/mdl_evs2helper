@@ -16,6 +16,8 @@ public class BypassPolicyResolver {
     @Autowired
     private MeterInfoCache meterInfoCache;
 
+    // bypass: {"result": "ok"}
+    // no bypass: {"result": "no"}
     public Map<String, Object> resolveBypassPolicy(String meterSn, String timestamp) {
         if(meterSn.equals("202206000050")||
            meterSn.equals("202206000051")||
