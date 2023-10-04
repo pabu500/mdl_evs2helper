@@ -33,7 +33,6 @@ public class BypassPolicyResolver {
 //            logger.info("debug bypass policy");
         }
 
-
         Map<String, MeterInfoDto> meterInfo = meterInfoCache.getMeterInfo(meterSn);
         MeterInfoDto meterInfoDto = null;
         if(meterInfo != null) {
