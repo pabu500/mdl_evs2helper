@@ -57,7 +57,7 @@ public class BypassPolicyResolver {
         }
         MeterBypassDto meterBypassDto = meterInfoDto.getBypassPolicy();
         if(logging){
-            logger.info("Meter bypass policy: " + meterSn + ", " + meterBypassDto.isBypassAlways());
+            logger.info("Meter bypass policy: " + meterSn + ", " + meterBypassDto.toString());
         }
         if(meterBypassDto == null) {
             logger.warning("Unable to resolve bypass policy: " + meterSn + ", bypass policy not found. Default to no bypass.");
