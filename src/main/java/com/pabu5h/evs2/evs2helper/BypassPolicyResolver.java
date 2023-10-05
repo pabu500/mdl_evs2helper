@@ -21,7 +21,7 @@ public class BypassPolicyResolver {
 
     // bypass: {"result": "ok"}
     // no bypass: {"result": "no"}
-    public Map<String, Object> resolveBypassPolicy(String meterSn, String timestamp, String bypassPolicyTableName) {
+    public Map<String, Object> resolveBypassPolicy(String meterSn, String timestamp, String bypassPolicyTableName, boolean logging) {
         if(meterSn.equals("202206000050")||
            meterSn.equals("202206000051")||
            meterSn.equals("202206000052")||
@@ -36,10 +36,16 @@ public class BypassPolicyResolver {
         Map<String, MeterInfoDto> meterInfo = meterInfoCache.getMeterInfo(meterSn);
         MeterInfoDto meterInfoDto = null;
         if(meterInfo != null) {
+            if(logging){
+                logger.info("Meter info found in cache: " + meterSn);
+            }
             meterInfoDto = meterInfo.get("meter_info");
         }else {
             Map<String, Object>result = queryHelper.getMeterInfoDtoFromSn2(meterSn, bypassPolicyTableName);
             if(result.containsKey("meter_info")){
+                if(logging){
+                    logger.info("Meter info found in DB: " + meterSn);
+                }
                 meterInfoDto = (MeterInfoDto) result.get("meter_info");
             }
         }
@@ -50,6 +56,9 @@ public class BypassPolicyResolver {
                           "message", "meter info not found");
         }
         MeterBypassDto meterBypassDto = meterInfoDto.getBypassPolicy();
+        if(logging){
+            logger.info("Meter bypass policy: " + meterSn + ", " + meterBypassDto.toString());
+        }
         if(meterBypassDto == null) {
             logger.warning("Unable to resolve bypass policy: " + meterSn + ", bypass policy not found. Default to no bypass.");
             return Map.of("result", "no",
