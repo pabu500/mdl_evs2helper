@@ -37,6 +37,8 @@ public class LocalSettingSG implements LocalSetting {
     }
     @Override
     public String getLocalNowStr() {
-        return DateTimeUtil.getZonedDateTimeStr(getLocalNow(), ZoneId.of(getTimeZone()));
+        //bug: getLocalNow() is already zoned,
+//        return DateTimeUtil.getZonedDateTimeStr(getLocalNow(), ZoneId.of(getTimeZone()));
+        return DateTimeUtil.getZonedDateTimeStr(LocalDateTime.now(), ZoneId.of("Asia/Singapore"));
     }
 }
