@@ -1,6 +1,6 @@
-package com.pabu5h.evs2.evs2helper;
+package com.pabu5h.evs2.evs2helper.locale;
 
-import com.pabu5h.evs2.evs2helper.LocalSetting;
+import com.pabu5h.evs2.evs2helper.locale.LocalSetting;
 import com.xt.utils.DateTimeUtil;
 
 import java.time.LocalDateTime;

@@ -1,8 +1,6 @@
-package com.pabu5h.evs2.evs2helper;
+package com.pabu5h.evs2.evs2helper.locale;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

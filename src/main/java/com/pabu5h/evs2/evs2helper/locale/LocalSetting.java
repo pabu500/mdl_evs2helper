@@ -1,4 +1,4 @@
-package com.pabu5h.evs2.evs2helper;
+package com.pabu5h.evs2.evs2helper.locale;
 
 import java.time.LocalDateTime;
 
