@@ -1,4 +1,4 @@
-package com.pabu5h.evs2.evs2helper;
+package com.pabu5h.evs2.evs2helper.email;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,6 +2,7 @@ package com.pabu5h.evs2.evs2helper;
 
 import com.pabu5h.evs2.dto.MeterBypassDto;
 import com.pabu5h.evs2.dto.MeterInfoDto;
+import com.pabu5h.evs2.evs2helper.cache.MeterInfoCache;
 import com.pabu5h.evs2.oqghelper.QueryHelper;
 import com.xt.utils.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
