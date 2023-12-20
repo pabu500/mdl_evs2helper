@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -13,11 +14,11 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @Service
-@AllArgsConstructor
 public class AuthHelper {
     Logger logger = Logger.getLogger(AuthHelper.class.getName());
 
-    private final RsaKeyProperties rsaKeyProperties;
+    @Autowired
+    RsaKeyProperties rsaKeyProperties;
 
     public String genToken(Map<String, String> claims) {
         Instant now = Instant.now();
