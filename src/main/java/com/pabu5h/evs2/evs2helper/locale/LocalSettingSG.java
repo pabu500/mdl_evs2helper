@@ -29,7 +29,7 @@ public class LocalSettingSG implements LocalSetting {
     }
     @Override
     public double getGST() {
-        return 8;
+        return 9;
     }
     @Override
     public LocalDateTime getLocalNow() {
