@@ -60,7 +60,7 @@ public class EmailService {
             helper.setText(text);
 
             // Add attachment
-            helper.addAttachment("Report", attachedFile);
+            helper.addAttachment(attachedFile.getName(), attachedFile);
 
             try {
                 mailSender.send(mimeMessage);
