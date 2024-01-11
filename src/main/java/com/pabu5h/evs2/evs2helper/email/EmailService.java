@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 
@@ -39,6 +40,27 @@ public class EmailService {
             message.setTo(to);
             message.setSubject(subject);
             message.setText(text);
+
+            try {
+                mailSender.send(mimeMessage);
+            }catch (Exception e){
+                logger.info("mailSender error: " + e.getMessage());
+            }
+        }catch (Exception e){
+            logger.info("mailSender error: " + e.getMessage());
+        }
+    }
+    public void sendEmailWithAttachment(String from, String to, String subject, String text, File attachedFile) {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setFrom(from);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(text);
+
+            // Add attachment
+            helper.addAttachment("Report", attachedFile);
 
             try {
                 mailSender.send(mimeMessage);

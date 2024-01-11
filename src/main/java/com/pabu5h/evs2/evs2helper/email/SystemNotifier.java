@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.util.Map;
 
 @Component
@@ -30,5 +31,8 @@ public class SystemNotifier {
         String title = message.get("title") == null ? "Message" : message.get("title");
         String text = "Source: " + source + "\n" + title+": " + message.get("message");
         emailService.sendSimpleEmail(emailFrom, emailTo, subject, text);
+    }
+    public void sendEmailWithAttachment(String subject, String text, File attachedFile) {
+        emailService.sendEmailWithAttachment(emailFrom, emailTo, subject, text, attachedFile);
     }
 }
