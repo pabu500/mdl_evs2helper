@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.pabu5h.evs2</groupId>
 	<artifactId>evs2helper</artifactId>
-	<version>3.2.3</version>
+	<version>3.2.5</version>
 	<name>evs2helper</name>
 	<description>EVS2 Helper Module</description>
 
