@@ -79,6 +79,7 @@ public class KafkaHelper {
         config.put("sasl.mechanism", saslMechanism);
         config.put("sasl.jaas.config", saslJaasConfig);
         config.put("sasl.client.callback.handler.class", saslClientCallbackHandlerClass);
+
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(config));
         return factory;
