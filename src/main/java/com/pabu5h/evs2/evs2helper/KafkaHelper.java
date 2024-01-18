@@ -33,6 +33,8 @@ import java.util.logging.Logger;
 @Service
 public class KafkaHelper {
     private final Logger logger = Logger.getLogger(KafkaHelper.class.getName());
+    @Value("${kafka.groupId}")
+    private String kafkaGroupId;
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
     @Value("${spring.kafka.properties.security.protocol}")
@@ -70,7 +72,7 @@ public class KafkaHelper {
 
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        config.put(ConsumerConfig.GROUP_ID_CONFIG, "ktest");
+        config.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaGroupId);
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put("security.protocol", securityProtocol);
