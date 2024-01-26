@@ -39,6 +39,5 @@ public class SmrtHelper {
     }
 }
 
-@Getter
 record Station(String code, String name, String siteTag) {
 }
