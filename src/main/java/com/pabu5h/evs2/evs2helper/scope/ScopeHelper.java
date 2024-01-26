@@ -1,4 +1,4 @@
-package com.pabu5h.evs2.evs2helper;
+package com.pabu5h.evs2.evs2helper.scope;
 
 import com.pabu5h.evs2.dto.ItemIdTypeEnum;
 import org.springframework.stereotype.Service;
@@ -9,8 +9,8 @@ import java.util.function.Function;
 import java.util.logging.Logger;
 
 @Service
-public class ScopeItemHelper {
-    Logger logger = Logger.getLogger(ScopeItemHelper.class.getName());
+public class ScopeHelper {
+    Logger logger = Logger.getLogger(ScopeHelper.class.getName());
 
     public Map<String, Object> getItemTypeConfig(String projectScope, String itemIdTypeStr){
         ItemIdTypeEnum itemIdType = itemIdTypeStr.isEmpty()? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
