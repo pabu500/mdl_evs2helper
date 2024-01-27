@@ -130,7 +130,7 @@ public class AlarmHelper {
                 + "<a href=\"[[URL]]\" style=\"background-color: #00abb5; color: white; padding: 8px 20px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer; border: none; border-radius: 3px;\" target=\"_self\">Acknowledge</a><br>"
                 + ackExplain
                 + "Thank you,<br>"
-                + "EMS/EVS Team<br><br>";
+                + "EMS/EVS System Watch<br><br>";
 
         content = content.replace("[[name]]", salutation);
 
