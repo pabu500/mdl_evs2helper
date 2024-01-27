@@ -130,6 +130,16 @@ public class AlarmHelper {
         }
     }
 
+    public void ackAlarm(long subId, String alarmStreamUid) {
+        LocalDateTime localNow = localHelper.getLocalNow();
+        String sql = "update alarm_ack set ack_timestamp = '" + localNow + "' where alarm_sub_id = " + subId + " and alarm_stream_uid = '" + alarmStreamUid + "'";
+        try {
+            oqgHelper.OqgIU(sql);
+        } catch (Exception e) {
+            logger.warning("Error updating alarm_ack: " + e.getMessage());
+        }
+    }
+
     private boolean resolveSend(long subId, long alarmTopicId, String alarmStreamUid, Duration lookbackDuration){
         if(lookbackDuration == null) {
             lookbackDuration = Duration.ofHours(24);
