@@ -19,8 +19,12 @@ import java.util.logging.Logger;
 public class AlarmHelper {
     Logger logger = Logger.getLogger(AlarmHelper.class.getName());
 
-    @Value("${alarm.ack.url}")
-    private String alarmAckUrl;
+    @Value("${alarm.ack.url.evs2}")
+    private String alarmAckUrlEvs2;
+    @Value("${alarm.ack.url.smrt}")
+    private String alarmAckUrlSmrt;
+    @Value("${alarm.ack.url.cwnus}")
+    private String alarmAckUrlCwnus;
     @Autowired
     private EmailService emailService;
     @Autowired
@@ -96,14 +100,24 @@ public class AlarmHelper {
                     String scopePrefix = scopeStr.isEmpty()?"":scopeStr;
                     scopePrefix += siteTag.isEmpty()?"":"-"+siteTag;
                     String subject = scopePrefix.toUpperCase() + " Alert - " + topic.get("label");
-                    sendAlarmNotice(subId, salutation, email, subject, lastAlarmMessage, lastAlarmStreamUid);
+
+                    String ackUrl = "";
+                    if(scopeStr.equalsIgnoreCase("smrt")) {
+                        ackUrl = alarmAckUrlSmrt;
+                    }else if(scopeStr.equalsIgnoreCase("ems_cw_nus")) {
+                        ackUrl = alarmAckUrlCwnus;
+                    }else {
+                        ackUrl = alarmAckUrlEvs2;
+                    }
+
+                    sendAlarmNotice(subId, salutation, email, subject, lastAlarmMessage, lastAlarmStreamUid, ackUrl);
                     noticeCount++;
                 }
             }
         }
         return Map.of("notice_count", noticeCount);
     }
-    public void sendAlarmNotice(long subId, String salutation, String email, String subject, String message, String alarmStreamUid) {
+    public void sendAlarmNotice(long subId, String salutation, String email, String subject, String message, String alarmStreamUid, String ackUrl) {
         String fromAddress = "no-reply@evs.com.sg";
         String senderName = "EMS/EVS System Watch"; //evs2OpsName;
         String pleaseAck = "Please click the link below to acknowledge:<br>";
@@ -120,7 +134,7 @@ public class AlarmHelper {
 
         content = content.replace("[[name]]", salutation);
 
-        String ackURL = alarmAckUrl + "/" + subId + "/" + alarmStreamUid;
+        String ackURL = ackUrl + "/" + subId + "/" + alarmStreamUid;
 
         content = content.replace("[[URL]]", ackURL);
         try {
