@@ -143,6 +143,21 @@ public class AlarmHelper {
         }
     }
 
+    public Map<String, Object> isAcked(long subId, String alarmStreamUid) {
+        String sql = "select * from alarm_ack where alarm_sub_id = " + subId + " and alarm_stream_uid = '" + alarmStreamUid + "'";
+        List<Map<String, Object>> resp;
+        try {
+            resp = oqgHelper.OqgR2(sql, true);
+        } catch (Exception e) {
+            logger.warning("Error querying alarm_ack: " + e.getMessage());
+            return Map.of("error", "Error querying alarm_ack: " + e.getMessage());
+        }
+        if(resp.isEmpty()) {
+            return Map.of("acked", false);
+        }
+        return Map.of("acked", true);
+    }
+
     private boolean resolveSend(long subId, long alarmTopicId, String alarmStreamUid, Duration lookbackDuration){
         if(lookbackDuration == null) {
             lookbackDuration = Duration.ofHours(24);
