@@ -158,6 +158,34 @@ public class AlarmHelper {
         return Map.of("acked", true);
     }
 
+    public Map<String, Object> checkAck(long subId, String alarmStreamUid) {
+        String sqlStream = "select * from alarm_stream where uid = '" + alarmStreamUid + "'";
+        List<Map<String, Object>> resp;
+        try {
+            resp = oqgHelper.OqgR2(sqlStream, true);
+        } catch (Exception e) {
+            logger.warning("Error querying alarm_ack: " + e.getMessage());
+            return Map.of("error", "Error querying alarm_ack: " + e.getMessage());
+        }
+        if(resp.isEmpty()) {
+            return Map.of("error", "No alarm_stream found for uid: " + alarmStreamUid);
+        }
+        String message = (String) resp.getFirst().get("message");
+
+        String sqlAck = "select * from alarm_ack where alarm_sub_id = " + subId + " and alarm_stream_uid = '" + alarmStreamUid + "'";
+        List<Map<String, Object>> respAck;
+        try {
+            respAck = oqgHelper.OqgR2(sqlAck, true);
+        } catch (Exception e) {
+            logger.warning("Error querying alarm_ack: " + e.getMessage());
+            return Map.of("error", "Error querying alarm_ack: " + e.getMessage());
+        }
+        if(respAck.isEmpty()) {
+            return Map.of("acked", false, "message", message);
+        }
+        return Map.of("acked", true, "message", message);
+    }
+
     private boolean resolveSend(long subId, long alarmTopicId, String alarmStreamUid, Duration lookbackDuration){
         if(lookbackDuration == null) {
             lookbackDuration = Duration.ofHours(24);
