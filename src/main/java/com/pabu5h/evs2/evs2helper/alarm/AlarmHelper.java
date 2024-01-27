@@ -132,7 +132,8 @@ public class AlarmHelper {
 
     public Map<String, Object> ackAlarm(long subId, String alarmStreamUid) {
         LocalDateTime localNow = localHelper.getLocalNow();
-        String sql = "update alarm_ack set ack_timestamp = '" + localNow + "' where alarm_sub_id = " + subId + " and alarm_stream_uid = '" + alarmStreamUid + "'";
+        String sql = "insert into alarm_ack (alarm_sub_id, alarm_stream_uid, ack_timestamp) values (" +
+                subId + ", '" + alarmStreamUid + "', '" + localNow + "')";
         try {
             oqgHelper.OqgIU(sql);
             return Map.of("success", "Alarm acknowledged");
