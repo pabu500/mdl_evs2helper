@@ -130,13 +130,15 @@ public class AlarmHelper {
         }
     }
 
-    public void ackAlarm(long subId, String alarmStreamUid) {
+    public Map<String, Object> ackAlarm(long subId, String alarmStreamUid) {
         LocalDateTime localNow = localHelper.getLocalNow();
         String sql = "update alarm_ack set ack_timestamp = '" + localNow + "' where alarm_sub_id = " + subId + " and alarm_stream_uid = '" + alarmStreamUid + "'";
         try {
             oqgHelper.OqgIU(sql);
+            return Map.of("success", "Alarm acknowledged");
         } catch (Exception e) {
             logger.warning("Error updating alarm_ack: " + e.getMessage());
+            return Map.of("error", "Error updating alarm_ack: " + e.getMessage());
         }
     }
 
