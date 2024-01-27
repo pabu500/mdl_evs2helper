@@ -102,9 +102,9 @@ public class AlarmHelper {
                     String subject = scopePrefix.toUpperCase() + " Alert - " + topic.get("label");
 
                     String ackUrl = "";
-                    if(scopeStr.equalsIgnoreCase("smrt")) {
+                    if(scopeStr.toLowerCase().contains("ems_smrt")) {
                         ackUrl = alarmAckUrlSmrt;
-                    }else if(scopeStr.equalsIgnoreCase("ems_cw_nus")) {
+                    }else if(scopeStr.toLowerCase().contains("ems_cw_nus")) {
                         ackUrl = alarmAckUrlCwnus;
                     }else {
                         ackUrl = alarmAckUrlEvs2;
