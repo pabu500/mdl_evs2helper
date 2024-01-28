@@ -701,7 +701,7 @@ public class DataNormalizer {
 
         return IotHistoryDto.builder().history2(iotHistoryNormalized).metas(metaMap).build();
     }
-    private static Map<String, List<IotHistoryRowDto2>> alignTimeRange(
+    public static Map<String, List<IotHistoryRowDto2>> alignTimeRange(
             List<IotHistoryRowDto2> historyDto2,
             LocalDateTime targetStartDateTime, LocalDateTime targetEndDateTime,
             long dominantIntervalMinute){
@@ -745,7 +745,6 @@ public class DataNormalizer {
                 insertDatTime = insertDatTime.minusMinutes(dominantIntervalMinute);
             }
         }
-
         return Map.of("aligned_history", alignedHistory);
     }
 
