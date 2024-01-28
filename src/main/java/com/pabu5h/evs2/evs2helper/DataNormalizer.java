@@ -722,7 +722,7 @@ public class DataNormalizer {
                         .isOt(0)
                         .isEmpty(1)
                         .build();
-                alignedHistory.add(rowDto);
+                alignedHistory.addFirst(rowDto);
                 insertDatTime = insertDatTime.plusMinutes(dominantIntervalMinute);
             }
         }
