@@ -692,8 +692,8 @@ public class DataNormalizer {
         }
 
         if(forceAlignTimeRange){
-            LocalDateTime targetStartDateTime = (LocalDateTime) config.get("startDatetime");
-            LocalDateTime targetEndDateTime = (LocalDateTime) config.get("endDatetime");
+            LocalDateTime targetStartDateTime = DateTimeUtil.getLocalDateTime((String) config.get("startDatetime"));
+            LocalDateTime targetEndDateTime = DateTimeUtil.getLocalDateTime((String) config.get("endDatetime"));
             Map<String, List<IotHistoryRowDto2>> result =
                     alignTimeRange(iotHistoryNormalized, targetStartDateTime, targetEndDateTime, dominantIntervalMinute);
             iotHistoryNormalized = result.get("aligned_history");
