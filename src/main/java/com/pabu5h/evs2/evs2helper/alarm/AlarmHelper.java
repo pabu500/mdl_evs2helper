@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -226,7 +227,40 @@ public class AlarmHelper {
         }
         return resp.isEmpty();
     }
-
+    public Map<String, Object> getAlarms(String scopeStr, String siteTag){
+        String sql = "select * from alarm_topic where 1 = 1 ";
+        if (scopeStr != null && !scopeStr.isEmpty()) {
+            sql += " and scope_str ilike '%" + scopeStr + "%' ";
+        }
+        if (siteTag != null && !siteTag.isEmpty()) {
+            sql += " and site_tag = '" + siteTag + "' ";
+        }
+        List<Map<String, Object>> resp;
+        try {
+            resp = oqgHelper.OqgR2(sql, true);
+        } catch (Exception e) {
+            logger.warning("Error querying alarm_topic: " + e.getMessage());
+            return Map.of("error", "Error querying alarm_topic: " + e.getMessage());
+        }
+        if(resp.isEmpty()) {
+            logger.warning("No alarm_topic found for " + scopeStr + " " + siteTag);
+            return Map.of("error", "No alarm_topic found for " + scopeStr + " " + siteTag);
+        }
+        List<Map<String, Object>> alarmList = new ArrayList<>();
+        for (Map<String, Object> alarmTopic : resp) {
+            long topicId = MathUtil.ObjToLong(alarmTopic.get("id"));
+            Map<String, Object> lastAlarmStreamItem = getLastAlarmStreamItem(topicId);
+            if(lastAlarmStreamItem.containsKey("error")) {
+                logger.warning("Error getting last alarm_stream alarmTopic: " + lastAlarmStreamItem.get("error"));
+                continue;
+            }
+            alarmTopic.put("last_alarm_timestamp", lastAlarmStreamItem.get("alarm_timestamp"));
+            alarmTopic.put("last_alarm_message", lastAlarmStreamItem.get("message"));
+//            alarmTopic.put("last_alarm_stream_uid", lastAlarmStreamItem.get("uid"));
+            alarmList.add(alarmTopic);
+        }
+        return Map.of("alarm_list", alarmList);
+    }
     private Map<String, Object> getLastAlarmStreamItem(long topicId){
         String sql = "select * from alarm_stream where alarm_topic_id = " + topicId + " order by id desc limit 1";
         List<Map<String, Object>> resp;
