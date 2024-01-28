@@ -694,17 +694,20 @@ public class DataNormalizer {
         if(forceAlignTimeRange){
             LocalDateTime targetStartDateTime = DateTimeUtil.getLocalDateTime((String) config.get("startDatetime"));
             LocalDateTime targetEndDateTime = DateTimeUtil.getLocalDateTime((String) config.get("endDatetime"));
-            Map<String, List<IotHistoryRowDto2>> result =
+            Map<String, Object> result =
                     alignTimeRange(iotHistoryNormalized, targetStartDateTime, targetEndDateTime, dominantIntervalMinute);
-            iotHistoryNormalized = result.get("aligned_history");
+            iotHistoryNormalized = (List<IotHistoryRowDto2>) result.get("aligned_history");
         }
 
         return IotHistoryDto.builder().history2(iotHistoryNormalized).metas(metaMap).build();
     }
-    public static Map<String, List<IotHistoryRowDto2>> alignTimeRange(
+    public static Map<String, Object> alignTimeRange(
             List<IotHistoryRowDto2> historyDto2,
             LocalDateTime targetStartDateTime, LocalDateTime targetEndDateTime,
             long dominantIntervalMinute){
+        if(dominantIntervalMinute<15){
+            return Map.of("error", "dominant interval must be at least 15 minutes") ;
+        }
         List<IotHistoryRowDto2> alignedHistory = new ArrayList<>();
 
         // insert zero if data starts after target start date or ends before target end date
