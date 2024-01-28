@@ -1550,6 +1550,7 @@ public class DataNormalizer {
                             .readings(readings)
 //                            .riS(rowPrev.getRiS())
                             .isEst(rowPrev.getIsEst())
+                            .isEmpty(rowPrev.getIsEmpty())
                             .build();
                     consolidatedReadingHistory.add(rowDto);
                 }
@@ -1641,6 +1642,7 @@ public class DataNormalizer {
                             .readings(readings)
                             .riS(row.getRiS())
                             .isEst(row.getIsEst())
+                            .isEmpty(row.getIsEmpty())
                             .build();
                     continue;
                 }
