@@ -163,7 +163,7 @@ public class DataNormalizer {
     public IotHistoryDto normalizeIotHistory2(String normalization, String deviceID, List<Map<String, Object>> resp,
                                               String normalizationTarget, String normalizeField,
                                               Double errorThreshold,
-                                              Map<String, Boolean> config) {
+                                              Map<String, Object> config) {
 
         boolean test = false;
         if(normalizationTarget.equals(HistoryType.meter_reading.toString())) {
@@ -441,21 +441,15 @@ public class DataNormalizer {
                                                     String timeField,
                                                     List<Map<String, Object>> rawDataRows,
                                                     Double errorThreshold,
-                                                    Map<String, Boolean> config
-//                                                    boolean insertEstimate,
-//                                                    boolean offsetNegative,
-//                                                    boolean genMeta,
-//                                                    boolean postKiv,
-//                                                    boolean allowConsolidation,
-//                                                    boolean getStatOnly,
-//                                                    boolean clearRepeatedReadingOnly,
+                                                    Map<String, Object> config
                                                     ) {
 
         String[] parts = normalizeFields.trim().replace(" ", "").split(",");
 
-        boolean rawDataCheck = config.get("rawDataCheck") != null && config.get("rawDataCheck");
-        boolean clearRepeatedReadingsOnly = config.get("clearRepeatedReadingsOnly") != null && config.get("clearRepeatedReadingsOnly");
-        boolean detectRestartEvent = config.get("detectRestartEvent") != null && config.get("detectRestartEvent");
+        boolean rawDataCheck = config.get("rawDataCheck") != null && (Boolean) config.get("rawDataCheck");
+        boolean clearRepeatedReadingsOnly = config.get("clearRepeatedReadingsOnly") != null && (Boolean) config.get("clearRepeatedReadingsOnly");
+        boolean detectRestartEvent = config.get("detectRestartEvent") != null && (Boolean) config.get("detectRestartEvent");
+        boolean forceAlignTimeRange = config.get("forceAlignTimeRange") != null && (Boolean) config.get("forceAlignTimeRange");
 
         Map<String, Object> intervalCleanResult = cleanInterval(rawDataRows, timeField, clearRepeatedReadingsOnly, detectRestartEvent);
         List<Map<String, Object>> intervalCleanedDataRows = (List<Map<String, Object>>) intervalCleanResult.get("cleaned_data");
@@ -601,7 +595,7 @@ public class DataNormalizer {
             diffsMap.put(part, partDiffs);
         }
 
-        boolean genMeta = config.get("genMeta") == null || config.get("genMeta");
+        boolean genMeta = config.get("genMeta") == null || (Boolean) config.get("genMeta");
         if(!genMeta) {
             return IotHistoryDto.builder().history2(iotHistoryNormalized).build();
         }
@@ -664,12 +658,12 @@ public class DataNormalizer {
             metaMap.put(part+"_diff", metaDiff);
         }
 
-        boolean getStatOnly = config.get("getStatOnly") != null && config.get("getStatOnly");
+        boolean getStatOnly = config.get("getStatOnly") != null && (Boolean) config.get("getStatOnly");
         if(getStatOnly){
             return IotHistoryDto.builder().metas(metaMap).build();
         }
 
-        boolean allowConsolidation = config.get("allowConsolidation");
+        boolean allowConsolidation = (Boolean) config.get("allowConsolidation");
         if(allowConsolidation) {
             String targetInterval = "";
             if (historyTypeEnum == HistoryType.meter_reading) {
@@ -697,8 +691,64 @@ public class DataNormalizer {
             }
         }
 
+        if(forceAlignTimeRange){
+            LocalDateTime targetStartDateTime = (LocalDateTime) config.get("startDatetime");
+            LocalDateTime targetEndDateTime = (LocalDateTime) config.get("endDatetime");
+            Map<String, List<IotHistoryRowDto2>> result =
+                    alignTimeRange(iotHistoryNormalized, targetStartDateTime, targetEndDateTime, dominantIntervalMinute);
+            iotHistoryNormalized = result.get("aligned_history");
+        }
+
         return IotHistoryDto.builder().history2(iotHistoryNormalized).metas(metaMap).build();
     }
+    private static Map<String, List<IotHistoryRowDto2>> alignTimeRange(
+            List<IotHistoryRowDto2> historyDto2,
+            LocalDateTime targetStartDateTime, LocalDateTime targetEndDateTime,
+            long dominantIntervalMinute){
+        List<IotHistoryRowDto2> alignedHistory = new ArrayList<>();
+
+        // insert zero if data starts after target start date or ends before target end date
+        LocalDateTime dataStartDateTime = historyDto2.getLast().getDt();
+        LocalDateTime dataEndDateTime = historyDto2.getFirst().getDt();
+
+        if(targetEndDateTime.isAfter(dataEndDateTime.plusMinutes(dominantIntervalMinute))){
+            LocalDateTime insertDatTime = dataEndDateTime.plusMinutes(dominantIntervalMinute);
+            while(insertDatTime.isBefore(targetEndDateTime)){
+                IotHistoryRowDto2 rowDto = IotHistoryRowDto2.builder()
+                        .dt(insertDatTime)
+                        .readings(new HashMap<>())
+                        .riS(0D)
+                        .isEst(0)
+                        .isOt(0)
+                        .isEmpty(1)
+                        .build();
+                alignedHistory.add(rowDto);
+                insertDatTime = insertDatTime.plusMinutes(dominantIntervalMinute);
+            }
+        }
+
+        alignedHistory.addAll(historyDto2);
+
+        if(targetStartDateTime.isBefore(dataStartDateTime.minusMinutes(dominantIntervalMinute))){
+            LocalDateTime insertDatTime = dataStartDateTime.minusMinutes(dominantIntervalMinute);
+            while(insertDatTime.isAfter(targetStartDateTime)){
+                IotHistoryRowDto2 rowDto = IotHistoryRowDto2.builder()
+                        .dt(insertDatTime)
+                        .readings(new HashMap<>())
+                        .riS(0D)
+                        .isEst(0)
+                        .isOt(0)
+                        .isEmpty(1)
+                        .build();
+//                alignedHistory.add(0, rowDto);
+                alignedHistory.add(rowDto);
+                insertDatTime = insertDatTime.minusMinutes(dominantIntervalMinute);
+            }
+        }
+
+        return Map.of("aligned_history", alignedHistory);
+    }
+
     private static IotHistoryDto doRawDataCheck(
             List<Map<String, Object>> rawDataRows,
             String timeField, String[] parts,
