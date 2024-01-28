@@ -1770,13 +1770,13 @@ public class DataNormalizer {
         LocalDateTime end = readingHistory.getFirst().getDt();
         long duration = Duration.between(start, end).toMillis();
         for (String part : dataFieldList) {
-            double firstReadingTotal = MathUtil.ObjToDouble(readingHistory.getLast().getReadings().get(part).get("rt"));
+            Double firstReadingTotal = MathUtil.ObjToDouble(readingHistory.getLast().getReadings().get(part).get("rt"));
             LocalDateTime firstReadingDt = readingHistory.getLast().getDt();
-            double lastReadingTotal = MathUtil.ObjToDouble(readingHistory.getFirst().getReadings().get(part).get("rt"));
+            Double lastReadingTotal = MathUtil.ObjToDouble(readingHistory.getFirst().getReadings().get(part).get("rt"));
             LocalDateTime lastReadingDt = readingHistory.getFirst().getDt();
-            double firstReadingDiff = MathUtil.ObjToDouble(readingHistory.getLast().getReadings().get(part).get("rd"));
+            Double firstReadingDiff = MathUtil.ObjToDouble(readingHistory.getLast().getReadings().get(part).get("rd"));
             LocalDateTime firstReadingDiffDt = readingHistory.getLast().getDt();
-            double lastReadingDiff = MathUtil.ObjToDouble(readingHistory.getFirst().getReadings().get(part).get("rd"));
+            Double lastReadingDiff = MathUtil.ObjToDouble(readingHistory.getFirst().getReadings().get(part).get("rd"));
             LocalDateTime lastReadingDiffDt = readingHistory.getFirst().getDt();
 
             double minTotal = Double.MAX_VALUE;
@@ -1790,7 +1790,12 @@ public class DataNormalizer {
             for (IotHistoryRowDto2 iotHistoryRowDto : readingHistory) {
                 LocalDateTime dt = iotHistoryRowDto.getDt();
                 Map<String, Map<String, Object>> readings = iotHistoryRowDto.getReadings();
-                double total = MathUtil.ObjToDouble(readings.get(part).get("rt"));
+                Double total = MathUtil.ObjToDouble(readings.get(part).get("rt"));
+                Double diff = MathUtil.ObjToDouble(readings.get(part).get("rd"));
+                if(total == null || diff == null){
+                    continue;
+                }
+
                 if(total < minTotal){
                     minTotal = total;
                     minTotalDt = dt;
@@ -1799,7 +1804,7 @@ public class DataNormalizer {
                     maxTotal = total;
                     maxTotalDt = dt;
                 }
-                double diff = MathUtil.ObjToDouble(readings.get(part).get("rd"));
+
                 if(diff < minDiff){
                     minDiff = diff;
                     minDiffDt = dt;
@@ -1819,12 +1824,12 @@ public class DataNormalizer {
                     .map(m -> m.get(part))
                     .map(m -> MathUtil.ObjToDouble(m.get("rd")))
                     .collect(Collectors.toList());
-            double avgTotal = MathUtil.findAverage(partTotals);
-            double medianTotal = MathUtil.findMedian(partTotals);
-            double avgDiff = MathUtil.findAverage(partDiffs);
+            Double avgTotal = MathUtil.findAverage(partTotals);
+            Double medianTotal = MathUtil.findMedian(partTotals);
+            Double avgDiff = MathUtil.findAverage(partDiffs);
             //find the first and last total and calculate the average diff
 //            double avgDiff = (lastReadingTotal - firstReadingTotal) / /*(readingHistory.size()-1)*/ readingHistory.size();
-            double medianDiff = MathUtil.findMedian(partDiffs);
+            Double medianDiff = MathUtil.findMedian(partDiffs);
 
             IotHistoryMetaDto metaTotal = IotHistoryMetaDto.builder()
                     .duration(duration)
