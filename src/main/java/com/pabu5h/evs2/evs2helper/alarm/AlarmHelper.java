@@ -51,7 +51,7 @@ public class AlarmHelper {
         }
     }
 
-    public Map<String, Object> sendAlarms(){
+    public Map<String, Object> sendAlarms(boolean testMode){
         //get all distinct alarm_topic_id from alarm_stream in the last 55 minutes
         LocalDateTime localNow = localHelper.getLocalNow();
         LocalDateTime localNowMinus55 = localNow.minusMinutes(55);
@@ -110,8 +110,9 @@ public class AlarmHelper {
                     }else {
                         ackUrl = alarmAckUrlEvs2;
                     }
-
-                    sendAlarmNotice(subId, salutation, email, subject, lastAlarmMessage, lastAlarmStreamUid, ackUrl);
+                    if(!testMode) {
+                        sendAlarmNotice(subId, salutation, email, subject, lastAlarmMessage, lastAlarmStreamUid, ackUrl);
+                    }
                     noticeCount++;
                 }
             }
