@@ -37,7 +37,7 @@ public class MeterUsageProcessor {
         String meterSelectSql = request.get("id_select_query");
         String startDatetimeStr = request.get("start_datetime");
         String endDatetimeStr = request.get("end_datetime");
-        String itemIdTypeStr = request.get("item_id_type");
+        String itemIdTypeStr = request.get("item_id_type")==null?"":request.get("item_id_type");
 //        ItemIdTypeEnum itemIdType = itemIdTypeStr.isEmpty()? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
         String isMonthlyStr = request.get("is_monthly");
         int testCount = Integer.parseInt(request.getOrDefault("test_count", "0"));
