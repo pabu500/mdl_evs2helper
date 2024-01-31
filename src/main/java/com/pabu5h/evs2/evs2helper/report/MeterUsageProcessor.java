@@ -38,9 +38,9 @@ public class MeterUsageProcessor {
         String startDatetimeStr = request.get("start_datetime");
         String endDatetimeStr = request.get("end_datetime");
         String itemIdTypeStr = request.get("item_id_type");
-        ItemIdTypeEnum itemIdType = ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
+//        ItemIdTypeEnum itemIdType = itemIdTypeStr.isEmpty()? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
         String isMonthlyStr = request.get("is_monthly");
-        Integer testCount = Integer.parseInt(request.getOrDefault("test_count", "0"));
+        int testCount = Integer.parseInt(request.getOrDefault("test_count", "0"));
 
         boolean isMonthly = false;
         if (isMonthlyStr != null && !isMonthlyStr.isEmpty()) {
