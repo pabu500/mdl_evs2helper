@@ -27,6 +27,8 @@ public class ScopeHelper {
         String valKey = "kwh_total";
         String itemAltNameColName = "alt_name";
         String panelTagColName = "panel_tag";
+        String itemIdSel = "meter_sn, meter_displayname";
+        String itemLocColSel = "mms_building, mms_block, mms_level, mms_unit";
         Function<String, String> validator = null;
         if (projectScope.toLowerCase().contains("ems_smrt")) {
             targetReadingTableName = "meter_reading_3p";
@@ -34,6 +36,8 @@ public class ScopeHelper {
             itemIdColName = "meter_id";
             itemSnColName = "meter_sn";
             itemNameColName = "meter_id";
+            itemIdSel = "meter_id, meter_sn, panel_tag";
+            itemLocColSel = "penal_tag";
             timeKey = "dt";
             valKey = "a_imp";
 
@@ -54,6 +58,8 @@ public class ScopeHelper {
             itemSnColName = "item_sn";
             itemNameColName = "item_name";
             itemAltNameColName = "alt_name";
+            itemIdSel = "item_sn, item_name, alt_name";
+            itemLocColSel = "loc_building, loc_level";
             timeKey = "dt";
             valKey = "val";
             if(itemIdType == null){
@@ -89,6 +95,8 @@ public class ScopeHelper {
         result.put("itemNameColName", itemNameColName);
         result.put("itemAltNameColName", itemAltNameColName);
         result.put("panelTagColName", panelTagColName);
+        result.put("itemIdSel", itemIdSel);
+        result.put("itemLocColSel", itemLocColSel);
         result.put("timeKey", timeKey);
         result.put("valKey", valKey);
         result.put("validator", validator);
