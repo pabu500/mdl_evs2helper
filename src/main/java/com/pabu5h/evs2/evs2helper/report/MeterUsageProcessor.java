@@ -64,6 +64,8 @@ public class MeterUsageProcessor {
         String itemNameColName = (String) itemConfig.get("itemNameColName");
         String itemAltName = (String) itemConfig.get("itemAltNameColName");
         String panelTagColName = (String) itemConfig.get("panelTagColName");
+        String itemIdColSel = (String) itemConfig.get("itemIdColSel");
+        String itemLocColSel = (String) itemConfig.get("itemLocColSel");
         String timeKey =(String) itemConfig.get("timeKey");
         String valKey = (String) itemConfig.get("valKey");
 
@@ -97,25 +99,26 @@ public class MeterUsageProcessor {
         }
 
         // replace everything before FROM with itemSnColName and itemNameColName
-        StringBuilder fromSql = new StringBuilder("SELECT ");
-        fromSql.append(itemSnColName).append(", ").append(itemNameColName).append(" ");
+//        StringBuilder fromSql = new StringBuilder("SELECT ");
+//        fromSql.append(itemSnColName).append(", ").append(itemNameColName).append(" ");
 
-        if(meterTypeEnum == ItemTypeEnum.METER_IWOW) {
-            if (itemAltName != null && !itemAltName.isEmpty()) {
-                fromSql.append(", ").append(itemAltName).append(" ");
-            }
-        }else if(meterTypeEnum == ItemTypeEnum.METER_3P){
-            if(panelTagColName != null && !panelTagColName.isEmpty()) {
-                fromSql.append(", ").append("panel_tag").append(" ");
-            }
-        }
+//        if(meterTypeEnum == ItemTypeEnum.METER_IWOW) {
+//            if (itemAltName != null && !itemAltName.isEmpty()) {
+//                fromSql.append(", ").append(itemAltName).append(" ");
+//            }
+//        }else if(meterTypeEnum == ItemTypeEnum.METER_3P){
+//            if(panelTagColName != null && !panelTagColName.isEmpty()) {
+//                fromSql.append(", ").append("panel_tag").append(" ");
+//            }
+//        }
 
 //        String fromSql = "SELECT " + itemSnColName + ", " + itemNameColName + " " +
 //                meterSelectSql.substring(meterSelectSql.indexOf("FROM"));
-        fromSql.append(meterSelectSql.substring(meterSelectSql.indexOf("FROM")));
+//        fromSql.append(meterSelectSql.substring(meterSelectSql.indexOf("FROM")));
 //                meterSelectSql.replace("SELECT "+itemIdColName, "SELECT " + itemSnColName + ", " + itemNameColName);
 
-        String meterSelectSql2 = fromSql + " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
+//        String meterSelectSql2 = fromSql + " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
+        String meterSelectSql2 = meterSelectSql + " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
         List<Map<String, Object>> resp;
         try {
             resp = oqgHelper.OqgR2(meterSelectSql2, true);
