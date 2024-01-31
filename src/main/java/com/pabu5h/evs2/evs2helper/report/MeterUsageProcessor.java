@@ -40,6 +40,8 @@ public class MeterUsageProcessor {
         String itemIdTypeStr = request.get("item_id_type");
         ItemIdTypeEnum itemIdType = ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
         String isMonthlyStr = request.get("is_monthly");
+        Integer testCount = Integer.parseInt(request.getOrDefault("test_count", "0"));
+
         boolean isMonthly = false;
         if (isMonthlyStr != null && !isMonthlyStr.isEmpty()) {
             isMonthly = Boolean.parseBoolean(isMonthlyStr);
@@ -128,6 +130,7 @@ public class MeterUsageProcessor {
         }
 
         List<Map<String, Object>> usageSummaryList = new ArrayList<>();
+        int processedCount = 0;
         for (Map<String, Object> meterMap : resp) {
             String meterId = (String) meterMap.get(itemIdColName);
             String meterSn = meterMap.get(itemSnColName) == null ? "" : (String) meterMap.get(itemSnColName);
@@ -253,6 +256,11 @@ public class MeterUsageProcessor {
             usageSummary.put("usage", usage);
 
             usageSummaryList.add(usageSummary);
+
+            processedCount++;
+            if(testCount > 0 && processedCount >= testCount){
+                break;
+            }
         }
         result.put("meter_list_usage_summary", usageSummaryList);
         // sort
