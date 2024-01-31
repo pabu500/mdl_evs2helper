@@ -36,6 +36,10 @@ public class ScopeHelper {
             itemNameColName = "meter_id";
             timeKey = "dt";
             valKey = "a_imp";
+
+            if(itemIdType == null){
+                itemIdType = ItemIdTypeEnum.NAME;
+            }
             if (itemIdType == ItemIdTypeEnum.NAME) {
                 itemIdColName = "meter_id";
             }
@@ -52,10 +56,18 @@ public class ScopeHelper {
             itemAltNameColName = "alt_name";
             timeKey = "dt";
             valKey = "val";
+            if(itemIdType == null){
+                itemIdType = ItemIdTypeEnum.NAME;
+            }
+
             if (itemIdType == ItemIdTypeEnum.NAME) {
                 itemIdColName = "item_name";
             }
         } else {
+            if(itemIdType == null){
+                itemIdType = ItemIdTypeEnum.SN;
+            }
+
             if (itemIdType == ItemIdTypeEnum.NAME) {
                 itemIdColName = "meter_displayname";
                 validator = this::validateNameMms;
