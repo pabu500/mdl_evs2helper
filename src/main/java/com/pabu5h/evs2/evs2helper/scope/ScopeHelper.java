@@ -88,7 +88,7 @@ public class ScopeHelper {
         }
 
         Map<String, Object> result = new HashMap<>();
-        result.put("itemType", itemType.toString());
+        result.put("itemTypeEnum", itemType.toString());
         result.put("targetReadingTableName", targetReadingTableName);
         result.put("targetTableName", targetTableName);
         result.put("targetGroupTableName", targetGroupTableName);
