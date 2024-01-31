@@ -153,15 +153,19 @@ public class MeterUsageProcessor {
                 continue;
             }
 
+            if(!meterId.equals("E019")){
+                continue;
+            }
+
             if (isMonthly) {
                 Map<String, Object> resultMonthly =
-                    findMonthlyReading(
+                        findMonthlyReading(
 //                        startDatetimeStr,
-                        endDatetimeStr,
-                        meterId,
-                        targetReadingTableName,
-                        itemIdColName,
-                        timeKey, valKey);
+                                endDatetimeStr,
+                                meterId,
+                                targetReadingTableName,
+                                itemIdColName,
+                                timeKey, valKey);
 
                 if (resultMonthly.containsKey("error")) {
                     logger.info("error: " + resultMonthly.get("error"));
@@ -172,16 +176,25 @@ public class MeterUsageProcessor {
 //                    return Collections.singletonMap("info", "info: " + resultMonthly.get("info"));
                     continue;
                 }
-                Map<String, Object> usageSummary = new HashMap<>();
-                usageSummary.put(itemSnColName, meterSn);
-                usageSummary.put(itemNameColName, meterName);
+                LinkedHashMap<String, Object> usageSummary = new LinkedHashMap<>();
+//                usageSummary.put(itemSnColName, meterSn);
+//                usageSummary.put(itemNameColName, meterName);
 
-                if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
-                    usageSummary.put("alt_name", meterAltName);
-                }else if(meterTypeEnum == ItemTypeEnum.METER_3P){
-                    usageSummary.put("panel_tag", meterMap.get("panel_tag"));
-                }
+//                if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+//                    usageSummary.put("alt_name", meterAltName);
+//                }else if(meterTypeEnum == ItemTypeEnum.METER_3P){
+//                    usageSummary.put("panel_tag", meterMap.get("panel_tag"));
+//                }
 //                usageSummary.put("alt_name", meterAltName);
+                String[] idColList = itemIdColSel.split(",");
+                String[] locColList = itemLocColSel.split(",");
+                for(String idCol : idColList){
+                    usageSummary.put(idCol, meterMap.get(idCol));
+                }
+                for(String locCol : locColList){
+                    usageSummary.put(locCol, meterMap.get(locCol));
+                }
+
                 String firstReadingVal = (String) resultMonthly.get("first_reading_val");
                 String lastReadingVal = (String) resultMonthly.get("last_reading_val");
                 String firstReadingTime = (String) resultMonthly.get("first_reading_time");
@@ -193,13 +206,13 @@ public class MeterUsageProcessor {
                 lastReadingVal = String.format("%.2f", lastReadingValDouble);
                 String usage = String.format("%.2f", usageDouble);
 
-                usageSummary.put("first_reading_val", firstReadingVal);
-                usageSummary.put("last_reading_val", lastReadingVal);
                 usageSummary.put("first_reading_time", firstReadingTime);
                 usageSummary.put("last_reading_time", lastReadingTime);
-                usageSummary.put("first_reading_ref", resultMonthly.get("first_reading_ref"));
-                usageSummary.put("last_reading_ref", resultMonthly.get("last_reading_ref"));
+                usageSummary.put("first_reading_val", firstReadingVal);
+                usageSummary.put("last_reading_val", lastReadingVal);
                 usageSummary.put("usage", usage);
+//                usageSummary.put("first_reading_ref", resultMonthly.get("first_reading_ref"));
+//                usageSummary.put("last_reading_ref", resultMonthly.get("last_reading_ref"));
 
                 usageSummaryList.add(usageSummary);
                 continue;
@@ -290,7 +303,7 @@ public class MeterUsageProcessor {
 
     // for multiple meters consolidated usage history
     public Map<String, Object> getMeterConsolidatedUsageHistory(
-           Map<String, String> request) {
+            Map<String, String> request) {
         logger.info("process getMeterConsolidatedUsageHistory");
 
         String projectScope = request.get("project_scope");
@@ -522,10 +535,10 @@ public class MeterUsageProcessor {
     }
 
     Map<String, Object> findMonthlyReading(/*String monthStartDatetimeStr, */String monthEndDatetimeStr,
-                                           String meterId,
-                                           String targetReadingTableName,
-                                           String itemIdColName,
-                                           String timeKey, String valKey) {
+                                                                             String meterId,
+                                                                             String targetReadingTableName,
+                                                                             String itemIdColName,
+                                                                             String timeKey, String valKey) {
 
         LocalDateTime monthEndDatetimeDay = DateTimeUtil.getLocalDateTime(monthEndDatetimeStr);
         LocalDateTime monthEndDatetime =  monthEndDatetimeDay
