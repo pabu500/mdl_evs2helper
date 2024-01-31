@@ -48,12 +48,15 @@ public class MeterUsageProcessor {
         }
 
         String meterTypeStr = request.get("item_type");
-        ItemTypeEnum meterTypeEnum = ItemTypeEnum.METER;
+        ItemTypeEnum meterTypeEnum = null;
         if(meterTypeStr != null) {
             meterTypeEnum = ItemTypeEnum.valueOf(meterTypeStr.toUpperCase());
         }
 
         Map<String, Object> itemConfig = scopeHelper.getItemTypeConfig(projectScope, itemIdTypeStr);
+        if(meterTypeEnum==null){
+            meterTypeEnum = ItemTypeEnum.valueOf((String)itemConfig.get("itemTypeEnum"));
+        }
         String targetReadingTableName = (String) itemConfig.get("targetReadingTableName");
         String targetTableName = (String) itemConfig.get("targetTableName");
         String itemIdColName = (String) itemConfig.get("itemIdColName");
