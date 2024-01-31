@@ -169,7 +169,8 @@ public class MeterUsageProcessor {
                 }
                 if (resultMonthly.containsKey("info")) {
                     logger.info("info: " + resultMonthly.get("info"));
-                    return Collections.singletonMap("info", "info: " + resultMonthly.get("info"));
+//                    return Collections.singletonMap("info", "info: " + resultMonthly.get("info"));
+                    continue;
                 }
                 Map<String, Object> usageSummary = new HashMap<>();
                 usageSummary.put(itemSnColName, meterSn);
@@ -564,7 +565,7 @@ public class MeterUsageProcessor {
         }
         if (respStartSearchRange.size() > 1) {
             logger.info("error: mbr count " + respStartSearchRange.size());
-            return Collections.singletonMap("error", "mbr count " + respStartSearchRange.size());
+            return Collections.singletonMap("error", "mbr count " + respStartSearchRange.size() + " for meter: " + meterId);
         }
         // if mbr is found, use it
         if (respStartSearchRange.size() == 1) {
@@ -593,8 +594,8 @@ public class MeterUsageProcessor {
                 return Collections.singletonMap("error", "oqgHelper error: resp is null");
             }
             if (respFirstReadingOfCurrentMonth.isEmpty()) {
-                logger.info("no first reading of the month found");
-                return Collections.singletonMap("info", "no first reading of the month found");
+                logger.info("no first reading of the month found for meter: " + meterId);
+                return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
             }else{
                 // update the first reading of the month to mbr if it is not
                 String firstReadingOfCurrentMonthRef = (String) respFirstReadingOfCurrentMonth.getFirst().get("ref");
