@@ -215,6 +215,12 @@ public class MeterUsageProcessor {
 //                usageSummary.put("last_reading_ref", resultMonthly.get("last_reading_ref"));
 
                 usageSummaryList.add(usageSummary);
+
+                processedCount++;
+                if(testCount > 0 && processedCount >= testCount){
+                    break;
+                }
+
                 continue;
             }
 
@@ -263,21 +269,42 @@ public class MeterUsageProcessor {
                 lastReadingVal = String.format("%.2f", lastReadingValDouble);
                 usage = String.format("%.2f", usageDouble);
             }
-            Map<String, Object> usageSummary = new HashMap<>();
-            usageSummary.put(itemSnColName, meterSn);
-            usageSummary.put(itemNameColName, meterName);
-
-            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
-                usageSummary.put("alt_name", meterAltName);
-            }else if(meterTypeEnum == ItemTypeEnum.METER_3P){
-                usageSummary.put("panel_tag", meterMap.get("panel_tag"));
-            }
+            LinkedHashMap<String, Object> usageSummary = new LinkedHashMap<>();
+//            usageSummary.put(itemSnColName, meterSn);
+//            usageSummary.put(itemNameColName, meterName);
+//
+//            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+//                usageSummary.put("alt_name", meterAltName);
+//            }else if(meterTypeEnum == ItemTypeEnum.METER_3P){
+//                usageSummary.put("panel_tag", meterMap.get("panel_tag"));
+//            }
 //            usageSummary.put("alt_name", meterAltName);
 
-            usageSummary.put("first_reading_val", firstReadingVal);
-            usageSummary.put("last_reading_val", lastReadingVal);
+//            usageSummary.put("first_reading_val", firstReadingVal);
+//            usageSummary.put("last_reading_val", lastReadingVal);
+//            usageSummary.put("first_reading_time", firstReadingTime);
+//            usageSummary.put("last_reading_time", lastReadingTime);
+//            usageSummary.put("usage", usage);
+            String[] idColList = itemIdColSel.split(",");
+            String[] locColList = itemLocColSel.split(",");
+            for(String idCol : idColList){
+                usageSummary.put(idCol, meterMap.get(idCol));
+            }
+            for(String locCol : locColList){
+                usageSummary.put(locCol, meterMap.get(locCol));
+            }
+
+            Double firstReadingValDouble = Double.parseDouble(firstReadingVal);
+            Double lastReadingValDouble = Double.parseDouble(lastReadingVal);
+            Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+            firstReadingVal = String.format("%.2f", firstReadingValDouble);
+            lastReadingVal = String.format("%.2f", lastReadingValDouble);
+            usage = String.format("%.2f", usageDouble);
+
             usageSummary.put("first_reading_time", firstReadingTime);
             usageSummary.put("last_reading_time", lastReadingTime);
+            usageSummary.put("first_reading_val", firstReadingVal);
+            usageSummary.put("last_reading_val", lastReadingVal);
             usageSummary.put("usage", usage);
 
             usageSummaryList.add(usageSummary);
