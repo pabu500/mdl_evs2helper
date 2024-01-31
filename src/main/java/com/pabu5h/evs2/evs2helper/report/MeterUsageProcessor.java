@@ -153,9 +153,9 @@ public class MeterUsageProcessor {
                 continue;
             }
 
-            if(!meterId.equals("E019")){
-                continue;
-            }
+//            if(!meterId.equals("E019")){
+//                continue;
+//            }
 
             if (isMonthly) {
                 Map<String, Object> resultMonthly =
