@@ -1,6 +1,7 @@
 package com.pabu5h.evs2.evs2helper.scope;
 
 import com.pabu5h.evs2.dto.ItemIdTypeEnum;
+import com.pabu5h.evs2.dto.ItemTypeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -29,8 +30,10 @@ public class ScopeHelper {
         String panelTagColName = "panel_tag";
         String itemIdColSel = "meter_sn,meter_displayname";
         String itemLocColSel = "mms_building,mms_block,mms_level,mms_unit";
+        ItemTypeEnum itemType = ItemTypeEnum.METER;
         Function<String, String> validator = null;
         if (projectScope.toLowerCase().contains("ems_smrt")) {
+            itemType = ItemTypeEnum.METER_3P;
             targetReadingTableName = "meter_reading_3p";
             targetTableName = "meter_3p";
             itemIdColName = "meter_id";
@@ -48,6 +51,7 @@ public class ScopeHelper {
                 itemIdColName = "meter_id";
             }
         } else if (projectScope.toLowerCase().contains("ems_cw_nus")) {
+            itemType = ItemTypeEnum.METER_IWOW;
             targetReadingTableName = "meter_reading_iwow";
             targetTableName = "meter_iwow";
             targetGroupTableName = "meter_group";
@@ -84,6 +88,7 @@ public class ScopeHelper {
         }
 
         Map<String, Object> result = new HashMap<>();
+        result.put("itemType", itemType.toString());
         result.put("targetReadingTableName", targetReadingTableName);
         result.put("targetTableName", targetTableName);
         result.put("targetGroupTableName", targetGroupTableName);
