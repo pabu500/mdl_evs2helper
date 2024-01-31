@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 public class MeterUsageProcessor {
     Logger logger = Logger.getLogger(MeterUsageProcessor.class.getName());
 
+
     @Autowired
     private OqgHelper oqgHelper;
     @Autowired
@@ -194,7 +195,10 @@ public class MeterUsageProcessor {
                 for(String locCol : locColList){
                     usageSummary.put(locCol, meterMap.get(locCol));
                 }
-
+                usageSummary.put("site_tag", meterMap.get("site_tag"));
+                if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                    usageSummary.put("meter_type", meterMap.get("meter_type"));
+                }
                 String firstReadingVal = (String) resultMonthly.get("first_reading_val");
                 String lastReadingVal = (String) resultMonthly.get("last_reading_val");
                 String firstReadingTime = (String) resultMonthly.get("first_reading_time");
