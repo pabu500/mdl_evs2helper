@@ -77,8 +77,13 @@ public class MeterUsageProcessor {
         int limit = Integer.parseInt(request.getOrDefault("max_rows_per_page", "20"));
         int page = Integer.parseInt(request.getOrDefault("current_page", "1"));
         int offset = (page - 1) * limit;
+        String getCount = request.get("get_count");
+        boolean getCountBool = true;
+        if(getCount != null && !getCount.isEmpty()){
+            getCountBool = Boolean.parseBoolean(getCount);
+        }
         //get count if it's the first page
-        if (page == 1) {
+        if (page == 1 && getCountBool) {
             String getCountQuery = meterSelectSql.replace("SELECT " + itemIdColName, "SELECT count(*)");
 //            String getCountQuery = "SELECT count(*) FROM " + targetTableName;
             List<Map<String, Object>> resp;
