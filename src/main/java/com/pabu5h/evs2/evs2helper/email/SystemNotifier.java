@@ -32,7 +32,7 @@ public class SystemNotifier {
         String text = "Source: " + source + "\n" + title+": " + message.get("message");
         emailService.sendSimpleEmail(emailFrom, emailTo, subject, text);
     }
-    public void sendEmailWithAttachment(String emailTo, String subject, String text, File attachedFile, boolean isHtml) {
-        emailService.sendEmailWithAttachment(emailFrom, emailTo, subject, text, attachedFile, isHtml);
+    public void sendEmailWithAttachment(String senderName, String emailTo, String subject, String text, File attachedFile, boolean isHtml) {
+        emailService.sendEmailWithAttachment(emailFrom, senderName, emailTo, subject, text, attachedFile, isHtml);
     }
 }
