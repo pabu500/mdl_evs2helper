@@ -50,14 +50,14 @@ public class EmailService {
             logger.info("mailSender error: " + e.getMessage());
         }
     }
-    public void sendEmailWithAttachment(String from, String to, String subject, String text, File attachedFile) {
+    public void sendEmailWithAttachment(String from, String to, String subject, String text, File attachedFile, boolean isHtml) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(from);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(text);
+            helper.setText(text, isHtml);
 
             // Add attachment
             helper.addAttachment(attachedFile.getName(), attachedFile);
