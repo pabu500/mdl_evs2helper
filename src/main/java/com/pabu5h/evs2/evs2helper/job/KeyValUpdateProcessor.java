@@ -6,6 +6,7 @@ import com.pabu5h.evs2.evs2helper.cache.DataAgent;
 import com.pabu5h.evs2.evs2helper.email.SystemNotifier;
 import com.pabu5h.evs2.evs2helper.event.OpResultEvent;
 import com.pabu5h.evs2.evs2helper.event.OpResultPublisher;
+import com.pabu5h.evs2.evs2helper.locale.LocalHelper;
 import com.pabu5h.evs2.evs2helper.report.ReportHelper;
 import com.pabu5h.evs2.evs2helper.scope.ScopeHelper;
 import com.pabu5h.evs2.oqghelper.OqgHelper;
@@ -37,6 +38,8 @@ public class KeyValUpdateProcessor {
     ScopeHelper scopeHelper;
     @Autowired
     private ReportHelper reportHelper;
+    @Autowired
+    private LocalHelper localHelper;
 
 //    private final Map<String, String> meterInfo = new ConcurrentHashMap<>();
 
@@ -215,7 +218,7 @@ public class KeyValUpdateProcessor {
                 }
             }else {
                 //live
-                String localNowStr = DateTimeUtil.getSgNowStr();
+                String localNowStr = localHelper.getLocalNowStr();
 
                 String val = (String) item.get(keyName);
                 //if val is a number, do not quote it
