@@ -6,6 +6,7 @@ import com.pabu5h.evs2.evs2helper.cache.DataAgent;
 import com.pabu5h.evs2.evs2helper.email.SystemNotifier;
 import com.pabu5h.evs2.evs2helper.event.OpResultEvent;
 import com.pabu5h.evs2.evs2helper.event.OpResultPublisher;
+import com.pabu5h.evs2.evs2helper.report.ReportHelper;
 import com.pabu5h.evs2.evs2helper.scope.ScopeHelper;
 import com.pabu5h.evs2.oqghelper.OqgHelper;
 import com.pabu5h.evs2.oqghelper.QueryHelper;
@@ -15,10 +16,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Service
@@ -37,6 +35,8 @@ public class KeyValUpdateProcessor {
     SystemNotifier systemNotifier;
     @Autowired
     ScopeHelper scopeHelper;
+    @Autowired
+    private ReportHelper reportHelper;
 
 //    private final Map<String, String> meterInfo = new ConcurrentHashMap<>();
 
@@ -62,7 +62,8 @@ public class KeyValUpdateProcessor {
     public Map<String, Object> doOpSingleKeyValUpdate(
             String opName, String scopeStr,
             Map<String, Object> request,
-            List<Map<String, Object>> opList) {
+            List<Map<String, Object>> opList,
+            boolean isScheduledJobMode) {
 
         String meterTypeStr = (String) request.get("item_type");
         ItemTypeEnum itemTypeEnum = ItemTypeEnum.METER;
@@ -325,7 +326,27 @@ public class KeyValUpdateProcessor {
                     .meterOp(/*"do_op_" + */opName)
                     .build());
         }
-        return Map.of("list_op_result", opList);
+
+        if(isScheduledJobMode) {
+            List<LinkedHashMap<String, Object>> report = new ArrayList<>();
+            for (Map<String, Object> item : opList) {
+                LinkedHashMap<String, Object> rec = new LinkedHashMap<>();
+                for (String key : item.keySet()) {
+                    rec.put(key, item.get(key));
+                }
+                report.add(rec);
+            }
+
+            LinkedHashMap<String, Integer> headerMap = new LinkedHashMap<>();
+            for (String key : opList.getFirst().keySet()) {
+                headerMap.put(key, 5000);
+            }
+
+            Map<String, Object> result = reportHelper.genReportExcel(opName, report, headerMap, "result");
+            return result;
+        }else{
+            return Map.of("list_op_result", opList);
+        }
     }
 
     public Map<String, Object> doOpMultiKeyValUpdate(Map<String, Object> request,
