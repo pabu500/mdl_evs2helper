@@ -321,10 +321,12 @@ public class KeyValUpdateProcessor {
                 }
 
             }
-            meterOpResultPublisher.publishEvent(OpResultEvent.builder()
-                    .updatedBatchList(opList)
-                    .meterOp(/*"do_op_" + */opName)
-                    .build());
+            if(!isScheduledJobMode) {
+                meterOpResultPublisher.publishEvent(OpResultEvent.builder()
+                        .updatedBatchList(opList)
+                        .meterOp(/*"do_op_" + */opName)
+                        .build());
+            }
         }
 
         if(isScheduledJobMode) {
