@@ -50,7 +50,7 @@ public class KeyValUpdateProcessor {
                 if(resp.isEmpty()){
                     continue;
                 }
-                result.add(resp.get(0));
+                result.add(resp.getFirst());
             } catch (Exception e) {
                 logger.info("Error while getting" + keyName + " for meter: " + meterSn);
                 systemNotifier.sendException("ORE Alert", KeyValUpdateProcessor.class.getName(), e.getMessage());
@@ -59,13 +59,17 @@ public class KeyValUpdateProcessor {
         return Map.of("conc_list", result);
     }
 
-    public Map<String, Object> doOpSingleKeyValUpdate(Map<String, Object> request,
-//                                                      String opName,
-//                                                      String tableName,
-//                                                      String keyName,
-                                                      List<Map<String, Object>> opList
-//                                                      String scope,
-//                                                      SvcClaimDto svcClaimDto
+    public Map<String, Object> doOpSingleKeyValUpdate(
+//            Map<String, Object> request,
+////                                                      String opName,
+////                                                      String tableName,
+////                                                      String keyName,
+//                                                      List<Map<String, Object>> opList
+////                                                      String scope,
+////                                                      SvcClaimDto svcClaimDto
+            String opName, String scopeStr,
+            Map<String, Object> request,
+            List<Map<String, Object>> opList
     ) {
 
         String meterTypeStr = (String) request.get("item_type");
@@ -77,7 +81,7 @@ public class KeyValUpdateProcessor {
 //
 //        ItemTypeEnum itemTypeEnum = ItemTypeEnum.valueOf((String) scopeConfig.get("itemTypeEnum"));
 
-        String opName = (String) request.get("op_name");
+//        String opName = (String) request.get("op_name");
         String keyName = (String) request.get("key_name");
 
         String itemTableName = "meter";
