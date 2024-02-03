@@ -60,17 +60,9 @@ public class KeyValUpdateProcessor {
     }
 
     public Map<String, Object> doOpSingleKeyValUpdate(
-//            Map<String, Object> request,
-////                                                      String opName,
-////                                                      String tableName,
-////                                                      String keyName,
-//                                                      List<Map<String, Object>> opList
-////                                                      String scope,
-////                                                      SvcClaimDto svcClaimDto
             String opName, String scopeStr,
             Map<String, Object> request,
-            List<Map<String, Object>> opList
-    ) {
+            List<Map<String, Object>> opList) {
 
         String meterTypeStr = (String) request.get("item_type");
         ItemTypeEnum itemTypeEnum = ItemTypeEnum.METER;
