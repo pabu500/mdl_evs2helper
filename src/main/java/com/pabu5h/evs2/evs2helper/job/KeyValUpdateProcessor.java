@@ -199,8 +199,10 @@ public class KeyValUpdateProcessor {
                 //mock
                 try {
                     Thread.sleep(800);
-                    if(item.get("meter_displayname").equals("10013014")) {
-                        throw new Exception("Meter displayname error");
+                    if(item.get("meter_displayname")!=null) {
+                        if (item.get("meter_displayname").equals("10013014")) {
+                            throw new Exception("Meter displayname error");
+                        }
                     }
                     item.put("prev_status", item.get("status"));
                     item.put("status", op + " success");
@@ -451,9 +453,11 @@ public class KeyValUpdateProcessor {
             if(mock){
                 //mock
                 try {
-                    Thread.sleep(600);
-                    if(item.get(itemNameKey).equals("10013014")) {
-                        throw new Exception("Meter displayname error");
+                    Thread.sleep(800);
+                    if(item.get(itemNameKey)!=null){
+                        if(item.get(itemNameKey).equals("10013014")) {
+                            throw new Exception("Meter displayname error");
+                        }
                     }
                     item.put("prev_status", item.get("status"));
                     item.put("status", op + " success");
