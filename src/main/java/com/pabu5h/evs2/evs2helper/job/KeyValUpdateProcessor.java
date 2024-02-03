@@ -63,7 +63,7 @@ public class KeyValUpdateProcessor {
             String opName, String scopeStr,
             Map<String, Object> request,
             List<Map<String, Object>> opList,
-            boolean isScheduledJobMode) {
+            boolean isScheduledJobMode, boolean isMock) {
 
         String meterTypeStr = (String) request.get("item_type");
         ItemTypeEnum itemTypeEnum = ItemTypeEnum.METER;
@@ -194,11 +194,11 @@ public class KeyValUpdateProcessor {
             String newTargetKey = "new_" + keyName;
 
             logger.info("Doing " + opName + " op for item: " + itemSn);
-            boolean mock = false;
-            if(mock){
+//            boolean mock = false;
+            if(isMock){
                 //mock
                 try {
-                    Thread.sleep(600);
+                    Thread.sleep(800);
                     if(item.get("meter_displayname").equals("10013014")) {
                         throw new Exception("Meter displayname error");
                     }
