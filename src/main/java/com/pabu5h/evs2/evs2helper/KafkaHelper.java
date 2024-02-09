@@ -1,5 +1,6 @@
 package com.pabu5h.evs2.evs2helper;
 
+import com.pabu5h.evs2.evs2helper.email.SystemNotifier;
 import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -8,6 +9,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.TopicPartitionInfo;
 import org.apache.kafka.common.config.ConfigResource;
+import org.apache.kafka.common.errors.DisconnectException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +17,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
+import org.springframework.kafka.listener.CommonErrorHandler;
 import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 import org.springframework.stereotype.Service;
+import org.springframework.util.backoff.BackOff;
+import org.springframework.util.backoff.FixedBackOff;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -52,6 +58,8 @@ public class KafkaHelper {
     private KafkaTemplate<String, String> kafkaTemplate;
     @Autowired
     private ConsumerFactory<String, String> consumerFactory;
+    @Autowired
+    private SystemNotifier systemNotifier;
 
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
@@ -80,10 +88,28 @@ public class KafkaHelper {
         config.put("sasl.jaas.config", saslJaasConfig);
         config.put("sasl.client.callback.handler.class", saslClientCallbackHandlerClass);
 
+        factory.setCommonErrorHandler(errorHandler());
+
 //        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         factory.setConsumerFactory(new DefaultKafkaConsumerFactory<>(config));
         return factory;
     }
+
+    @Bean
+    public DefaultErrorHandler errorHandler() {
+        long interval = 2000;
+        int maxAttempts = 5;
+        BackOff fixedBackOff = new FixedBackOff(interval, maxAttempts);
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler((consumerRecord, exception) -> {
+            // logic to execute when all the retry attemps are exhausted
+            logger.severe("All retry attempts are exhausted");
+            systemNotifier.sendEmail("Kafka Error", "All retry attempts are exhausted: " + exception.getMessage());
+        }, fixedBackOff);
+        errorHandler.addRetryableExceptions(DisconnectException.class);
+        errorHandler.addNotRetryableExceptions(NullPointerException.class);
+        return errorHandler;
+    }
+
     public void describeTopicConfig(String topicName) {
         try (AdminClient adminClient = AdminClient.create(kafkaAdmin.getConfigurationProperties())) {
             ConfigResource resource = new ConfigResource(ConfigResource.Type.TOPIC, topicName);
