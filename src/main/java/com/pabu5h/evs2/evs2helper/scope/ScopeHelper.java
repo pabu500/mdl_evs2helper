@@ -58,7 +58,7 @@ public class ScopeHelper {
             targetGroupTargetTableName = "meter_group_meter_iwow";
             tenantTableName = "tenant";
             tenantTargetGroupTableName = "tenant_meter_group_iwow";
-            itemIdColName = "item_sn";
+            itemIdColName = "item_name";
             itemSnColName = "item_sn";
             itemNameColName = "item_name";
             itemAltNameColName = "alt_name";
