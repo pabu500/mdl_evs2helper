@@ -29,7 +29,7 @@ public class KeyValUpdateProcessor {
     @Autowired
     private QueryHelper queryHelper;
     @Autowired
-    OpResultPublisher meterOpResultPublisher;
+    OpResultPublisher opResultPublisher;
     @Autowired
     private DataAgent dataAgent;
     @Autowired
@@ -118,6 +118,16 @@ public class KeyValUpdateProcessor {
                 itemTableName = "concentrator_tariff";
                 itemSnKey = "concentrator_id";
 //                itemNameKey = "tariff_price";
+            }
+            case JOB_TYPE -> {
+                itemTableName = "job_type";
+                itemSnKey = "id";
+                itemNameKey = "name";
+            }
+            case JOB -> {
+                itemTableName = "job";
+                itemSnKey = "id";
+                itemNameKey = "name";
             }
 
             default -> {
@@ -327,7 +337,7 @@ public class KeyValUpdateProcessor {
 
             }
             if(!isScheduledJobMode) {
-                meterOpResultPublisher.publishEvent(OpResultEvent.builder()
+                opResultPublisher.publishEvent(OpResultEvent.builder()
                         .updatedBatchList(opList)
                         .meterOp(/*"do_op_" + */opName)
                         .build());
@@ -561,7 +571,7 @@ public class KeyValUpdateProcessor {
 //                        continue;
                 }
             }
-            meterOpResultPublisher.publishEvent(OpResultEvent.builder()
+            opResultPublisher.publishEvent(OpResultEvent.builder()
                     .updatedBatchList(opList)
                     .meterOp(/*"do_op_" + */opName)
                     .build());
