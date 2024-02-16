@@ -119,6 +119,11 @@ public class KeyValUpdateProcessor {
                 itemSnKey = "concentrator_id";
 //                itemNameKey = "tariff_price";
             }
+            case TARIFF_PACKAGE -> {
+                itemTableName = "tariff_package";
+                itemSnKey = "id";
+                itemNameKey = "name";
+            }
             case JOB_TYPE -> {
                 itemTableName = "job_type";
                 itemSnKey = "id";
@@ -129,7 +134,6 @@ public class KeyValUpdateProcessor {
                 itemSnKey = "id";
                 itemNameKey = "name";
             }
-
             default -> {
                 return Map.of("error", "item_type not supported");
             }
