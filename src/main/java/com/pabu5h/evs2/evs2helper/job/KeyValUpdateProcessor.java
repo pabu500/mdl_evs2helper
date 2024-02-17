@@ -512,7 +512,8 @@ public class KeyValUpdateProcessor {
                 }
             }else {
                 //live
-                String localNowStr = DateTimeUtil.getSgNowStr();
+//                String localNowStr = DateTimeUtil.getSgNowStr();
+                String localNowStr = localHelper.getLocalNowStr();
 
                 //sort thru the item map for key and non-empty value pairs to update
                 Map<String, Object> content = new HashMap<>();
