@@ -542,6 +542,8 @@ public class KeyValUpdateProcessor {
                             }
                             content.put("tenant_name", newTenantName);
                         }
+                    }else if(meterTypeEnum == ItemTypeEnum.JOB_TYPE_SUB){
+                        content.put("updated_timestamp", localNowStr);
                     }else if(opName.equals("replacement")) {
                         if (key.equals(itemNameKey)) {
                             continue;
