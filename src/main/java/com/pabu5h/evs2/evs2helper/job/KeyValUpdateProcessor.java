@@ -134,6 +134,11 @@ public class KeyValUpdateProcessor {
                 itemSnKey = "id";
                 itemNameKey = "name";
             }
+            case JOB_TYPE_SUB -> {
+                itemTableName = "job_sub";
+                itemSnKey = "id";
+//                itemNameKey = "name";
+            }
             default -> {
                 return Map.of("error", "item_type not supported");
             }
@@ -422,6 +427,11 @@ public class KeyValUpdateProcessor {
                 itemTableName = "job";
                 itemSnKey = "id";
                 itemNameKey = "name";
+            }
+            case JOB_TYPE_SUB -> {
+                itemTableName = "job_sub";
+                itemSnKey = "id";
+//                itemNameKey = "name";
             }
             default -> {
                 return Map.of("error", "item_type not supported");
