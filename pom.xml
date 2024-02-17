@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>com.github.evs2bu500</groupId>
 			<artifactId>mdl_oqghelper</artifactId>
-			<version>3.22.1</version>
+			<version>3.23.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.evs2bu500</groupId>
