@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.pabu5h.evs2</groupId>
 	<artifactId>evs2helper</artifactId>
-	<version>3.10.23</version>
+	<version>3.10.25</version>
 	<name>evs2helper</name>
 	<description>EVS2 Helper Module</description>
 
@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>com.github.evs2bu500</groupId>
 			<artifactId>mdl_oqghelper</artifactId>
-			<version>3.23.3</version>
+			<version>3.23.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.evs2bu500</groupId>
