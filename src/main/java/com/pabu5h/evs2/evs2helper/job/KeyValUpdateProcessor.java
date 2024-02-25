@@ -11,7 +11,6 @@ import com.pabu5h.evs2.evs2helper.report.ReportHelper;
 import com.pabu5h.evs2.evs2helper.scope.ScopeHelper;
 import com.pabu5h.evs2.oqghelper.OqgHelper;
 import com.pabu5h.evs2.oqghelper.QueryHelper;
-import com.xt.utils.DateTimeUtil;
 import com.xt.utils.SqlUtil;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import java.util.logging.Logger;
 @Getter
 public class KeyValUpdateProcessor {
     private static final Logger logger = Logger.getLogger(KeyValUpdateProcessor.class.getName());
+
     @Autowired
     OqgHelper oqgHelper;
     @Autowired
@@ -251,7 +251,7 @@ public class KeyValUpdateProcessor {
                 content.put(keyName, val);
 
                 if(opName.contains("replacement")) {
-                    content.put("commission_timestamp", localNowStr);
+                    content.put("commissioned_timestamp", localNowStr);
                 }
 
                 if(opName.contains("setsite")){
@@ -524,6 +524,8 @@ public class KeyValUpdateProcessor {
                         if (key.equals("item_name")){
                             continue;
                         }
+                        content.put("updated_timestamp", localNowStr);
+
                     }else if(meterTypeEnum == ItemTypeEnum.TENANT){
                         if (key.equals("tenant_name")){
                             continue;
@@ -561,7 +563,7 @@ public class KeyValUpdateProcessor {
                     }
                     content.put(key, val);
                     if(opName.equals("replacement")) {
-                        content.put("commission_timestamp", localNowStr);
+                        content.put("commissioned_timestamp", localNowStr);
                     }
                 }
                 if(content.isEmpty()){
