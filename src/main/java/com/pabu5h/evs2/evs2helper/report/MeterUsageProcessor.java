@@ -7,9 +7,11 @@ import com.pabu5h.evs2.evs2helper.scope.ScopeHelper;
 import com.pabu5h.evs2.oqghelper.OqgHelper;
 import com.pabu5h.evs2.oqghelper.QueryHelper;
 import com.xt.utils.DateTimeUtil;
+import com.xt.utils.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,12 +32,12 @@ public class MeterUsageProcessor {
     private LocalHelper localHelper;
 
     //for list of single meter usage history
-    public Map<String, Object> getMeterListUsageSummary(Map<String, String> request) {
+    public Map<String, Object> getMeterListUsageSummary(Map<String, String> request, List<Map<String, Object>> meterList) {
         logger.info("process getMeterListUsageSummary");
 
         String projectScope = request.get("project_scope");
         String siteScope = request.get("site_scope");
-        String meterSelectSql = request.get("id_select_query");
+        String meterSelectSql = request.get("id_select_query") == null ? "" : request.get("id_select_query");
         String startDatetimeStr = request.get("start_datetime");
         String endDatetimeStr = request.get("end_datetime");
         String itemIdTypeStr = request.get("item_id_type")==null?"":request.get("item_id_type");
@@ -111,29 +113,36 @@ public class MeterUsageProcessor {
         }
         meterSelectSql2 += " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
 
-        List<Map<String, Object>> resp;
-        try {
-            resp = oqgHelper.OqgR2(meterSelectSql2, true);
-        } catch (Exception e) {
-            logger.info("oqgHelper error: " + e.getMessage());
-            return Collections.singletonMap("error", "oqgHelper error: " + e.getMessage());
-        }
-        if (resp == null) {
-            logger.info("oqgHelper error: resp is null");
-            return Collections.singletonMap("error", "oqgHelper error: resp is null");
-        }
-        if (resp.isEmpty()) {
-            logger.info("no meter found");
-            return Collections.singletonMap("info", "no meter found");
+        List<Map<String, Object>> selectedMeterList;
+        if(meterList != null) {
+            selectedMeterList = meterList;
+        }else {
+            List<Map<String, Object>> resp;
+            try {
+                resp = oqgHelper.OqgR2(meterSelectSql2, true);
+            } catch (Exception e) {
+                logger.info("oqgHelper error: " + e.getMessage());
+                return Collections.singletonMap("error", "oqgHelper error: " + e.getMessage());
+            }
+            if (resp == null) {
+                logger.info("oqgHelper error: resp is null");
+                return Collections.singletonMap("error", "oqgHelper error: resp is null");
+            }
+            if (resp.isEmpty()) {
+                logger.info("no meter found");
+                return Collections.singletonMap("info", "no meter found");
+            }
+            selectedMeterList = resp;
         }
 
         List<Map<String, Object>> usageSummaryList = new ArrayList<>();
         int processedCount = 0;
-        for (Map<String, Object> meterMap : resp) {
+        for (Map<String, Object> meterMap : selectedMeterList) {
             String meterId = (String) meterMap.get(itemIdColName);
             String meterSn = meterMap.get(itemSnColName) == null ? "" : (String) meterMap.get(itemSnColName);
             String meterName = meterMap.get(itemNameColName) == null ? "" : (String) meterMap.get(itemNameColName);
             String meterAltName = meterMap.get(itemAltName) == null ? "" : (String) meterMap.get(itemAltName);
+            String meterLcStatus = meterMap.get("lc_status") == null ? "" : (String) meterMap.get("lc_status");
             String commissionedTimestampStr = meterMap.get("commissioned_timestamp") == null ? "" : (String) meterMap.get("commissioned_timestamp");
             LocalDateTime commissionedDatetime = DateTimeUtil.getLocalDateTime(commissionedTimestampStr);
             Integer commissionedYear = null;
@@ -182,6 +191,11 @@ public class MeterUsageProcessor {
 //                    usageSummary.put("panel_tag", meterMap.get("panel_tag"));
 //                }
 //                usageSummary.put("alt_name", meterAltName);
+
+                if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                    usageSummary.put("lc_status", meterLcStatus);
+                }
+
                 String[] idColList = itemIdColSel.split(",");
                 String[] locColList = itemLocColSel.split(",");
                 for(String idCol : idColList){
@@ -200,9 +214,13 @@ public class MeterUsageProcessor {
                 String lastReadingTime = (String) resultMonthly.get("last_reading_time");
                 Double firstReadingValDouble = Double.parseDouble(firstReadingVal);
                 Double lastReadingValDouble = Double.parseDouble(lastReadingVal);
-                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-                firstReadingVal = String.format("%.2f", firstReadingValDouble);
-                lastReadingVal = String.format("%.2f", lastReadingValDouble);
+                //round to 2 decimals
+                Double firstReadingValDouble2 = MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
+                Double lastReadingValDouble2 = MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
+                Double usageDouble = lastReadingValDouble2 - firstReadingValDouble2;
+//                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+                firstReadingVal = String.format("%.2f", firstReadingValDouble2);
+                lastReadingVal = String.format("%.2f", lastReadingValDouble2);
                 String usage = String.format("%.2f", usageDouble);
 
                 usageSummary.put("first_reading_time", firstReadingTime);
@@ -263,7 +281,10 @@ public class MeterUsageProcessor {
                 lastReadingTime = (String) resp2.getFirst().get("last_reading_time");
                 Double firstReadingValDouble = Double.parseDouble(firstReadingVal);
                 Double lastReadingValDouble = Double.parseDouble(lastReadingVal);
-                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+                Double firstReadingValDouble2 = MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
+                Double lastReadingValDouble2 = MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
+                Double usageDouble = lastReadingValDouble2 - firstReadingValDouble2;
+//                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
                 firstReadingVal = String.format("%.2f", firstReadingValDouble);
                 lastReadingVal = String.format("%.2f", lastReadingValDouble);
                 usage = String.format("%.2f", usageDouble);
@@ -279,12 +300,9 @@ public class MeterUsageProcessor {
                 usageSummary.put(locCol, meterMap.get(locCol));
             }
 
-            Double firstReadingValDouble = Double.parseDouble(firstReadingVal);
-            Double lastReadingValDouble = Double.parseDouble(lastReadingVal);
-            Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-            firstReadingVal = String.format("%.2f", firstReadingValDouble);
-            lastReadingVal = String.format("%.2f", lastReadingValDouble);
-            usage = String.format("%.2f", usageDouble);
+            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                usageSummary.put("lc_status", meterLcStatus);
+            }
 
             usageSummary.put("first_reading_time", firstReadingTime);
             usageSummary.put("last_reading_time", lastReadingTime);
