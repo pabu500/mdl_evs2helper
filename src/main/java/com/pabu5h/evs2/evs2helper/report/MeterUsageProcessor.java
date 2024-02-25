@@ -104,27 +104,13 @@ public class MeterUsageProcessor {
             sort.put("sort_order", sortOrder);
         }
 
-        // replace everything before FROM with itemSnColName and itemNameColName
-//        StringBuilder fromSql = new StringBuilder("SELECT ");
-//        fromSql.append(itemSnColName).append(", ").append(itemNameColName).append(" ");
 
-//        if(meterTypeEnum == ItemTypeEnum.METER_IWOW) {
-//            if (itemAltName != null && !itemAltName.isEmpty()) {
-//                fromSql.append(", ").append(itemAltName).append(" ");
-//            }
-//        }else if(meterTypeEnum == ItemTypeEnum.METER_3P){
-//            if(panelTagColName != null && !panelTagColName.isEmpty()) {
-//                fromSql.append(", ").append("panel_tag").append(" ");
-//            }
-//        }
+        String meterSelectSql2 = meterSelectSql;
+        if(!meterSelectSql2.contains("commissioned_timestamp")) {
+            meterSelectSql2 += " , commissioned_timestamp";
+        }
+        meterSelectSql2 += " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
 
-//        String fromSql = "SELECT " + itemSnColName + ", " + itemNameColName + " " +
-//                meterSelectSql.substring(meterSelectSql.indexOf("FROM"));
-//        fromSql.append(meterSelectSql.substring(meterSelectSql.indexOf("FROM")));
-//                meterSelectSql.replace("SELECT "+itemIdColName, "SELECT " + itemSnColName + ", " + itemNameColName);
-
-//        String meterSelectSql2 = fromSql + " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
-        String meterSelectSql2 = meterSelectSql + " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
         List<Map<String, Object>> resp;
         try {
             resp = oqgHelper.OqgR2(meterSelectSql2, true);
@@ -148,6 +134,14 @@ public class MeterUsageProcessor {
             String meterSn = meterMap.get(itemSnColName) == null ? "" : (String) meterMap.get(itemSnColName);
             String meterName = meterMap.get(itemNameColName) == null ? "" : (String) meterMap.get(itemNameColName);
             String meterAltName = meterMap.get(itemAltName) == null ? "" : (String) meterMap.get(itemAltName);
+            String commissionedTimestampStr = meterMap.get("commissioned_timestamp") == null ? "" : (String) meterMap.get("commissioned_timestamp");
+            LocalDateTime commissionedDatetime = DateTimeUtil.getLocalDateTime(commissionedTimestampStr);
+            Integer commissionedYear = null;
+            Integer commissionedMonth = null;
+            if(commissionedDatetime != null){
+                commissionedYear = commissionedDatetime.getYear();
+                commissionedMonth = commissionedDatetime.getMonthValue();
+            }
 
             if (meterId == null || meterId.isEmpty()) {
                 logger.info("meterId is null or empty");
@@ -160,13 +154,14 @@ public class MeterUsageProcessor {
 
             if (isMonthly) {
                 Map<String, Object> resultMonthly =
-                        findMonthlyReading(
+                    findMonthlyReading(
+                        commissionedDatetime,
 //                        startDatetimeStr,
-                                endDatetimeStr,
-                                meterId,
-                                targetReadingTableName,
-                                itemIdColName,
-                                timeKey, valKey);
+                        endDatetimeStr,
+                        meterId,
+                        targetReadingTableName,
+                        itemIdColName,
+                        timeKey, valKey);
 
                 if (resultMonthly.containsKey("error")) {
                     logger.info("error: " + resultMonthly.get("error"));
@@ -274,21 +269,7 @@ public class MeterUsageProcessor {
                 usage = String.format("%.2f", usageDouble);
             }
             LinkedHashMap<String, Object> usageSummary = new LinkedHashMap<>();
-//            usageSummary.put(itemSnColName, meterSn);
-//            usageSummary.put(itemNameColName, meterName);
-//
-//            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
-//                usageSummary.put("alt_name", meterAltName);
-//            }else if(meterTypeEnum == ItemTypeEnum.METER_3P){
-//                usageSummary.put("panel_tag", meterMap.get("panel_tag"));
-//            }
-//            usageSummary.put("alt_name", meterAltName);
 
-//            usageSummary.put("first_reading_val", firstReadingVal);
-//            usageSummary.put("last_reading_val", lastReadingVal);
-//            usageSummary.put("first_reading_time", firstReadingTime);
-//            usageSummary.put("last_reading_time", lastReadingTime);
-//            usageSummary.put("usage", usage);
             String[] idColList = itemIdColSel.split(",");
             String[] locColList = itemLocColSel.split(",");
             for(String idCol : idColList){
@@ -311,6 +292,10 @@ public class MeterUsageProcessor {
             usageSummary.put("last_reading_val", lastReadingVal);
             usageSummary.put("usage", usage);
 
+            if(commissionedDatetime != null){
+                result.put("commissioned_timestamp", commissionedTimestampStr);
+            }
+
             usageSummaryList.add(usageSummary);
 
             processedCount++;
@@ -319,16 +304,6 @@ public class MeterUsageProcessor {
             }
         }
         result.put("meter_list_usage_summary", usageSummaryList);
-        // sort
-//        if(sortBy != null && !sortBy.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
-//            usageSummaryList.sort((o1, o2) -> {
-//                if (sortOrder.equalsIgnoreCase("asc")) {
-//                    return Double.compare(Double.parseDouble(o1.get(sortBy).toString()), Double.parseDouble(o2.get(sortBy).toString()));
-//                } else {
-//                    return Double.compare(Double.parseDouble(o2.get(sortBy).toString()), Double.parseDouble(o1.get(sortBy).toString()));
-//                }
-//            });
-//        }
         return result;
     }
 
@@ -447,6 +422,7 @@ public class MeterUsageProcessor {
                     LocalDateTime startDateTimeInterval = endDatetimeMonthEnd.minusMonths(i+1);
                     Map<String, Object> resultMonthly = findMonthlyReading(
 //                            startDateTimeInterval.toString(),
+                            null,
                             endDateTimeInterval.toString(),
                             meterId,
                             targetReadingTableName,
@@ -565,11 +541,13 @@ public class MeterUsageProcessor {
         return Collections.singletonMap("meter_list_consolidated_usage_history", meterListConsumptionHistory);
     }
 
-    Map<String, Object> findMonthlyReading(/*String monthStartDatetimeStr, */String monthEndDatetimeStr,
-                                                                             String meterId,
-                                                                             String targetReadingTableName,
-                                                                             String itemIdColName,
-                                                                             String timeKey, String valKey) {
+    Map<String, Object> findMonthlyReading(/*String monthStartDatetimeStr, */
+            LocalDateTime commissionedDatetime,
+            String monthEndDatetimeStr,
+            String meterId,
+            String targetReadingTableName,
+            String itemIdColName,
+            String timeKey, String valKey) {
 
         LocalDateTime monthEndDatetimeDay = DateTimeUtil.getLocalDateTime(monthEndDatetimeStr);
         LocalDateTime monthEndDatetime =  monthEndDatetimeDay
@@ -586,78 +564,124 @@ public class MeterUsageProcessor {
         String lastReadingVal = "";
 
         // find the first reading of the month
+        int theYear = monthEndDatetime.getYear();
+        int theMonth = monthEndDatetime.getMonthValue();
 
-        // search left 3 hours and right 3 hours of current month start
-        // for the first reading with 'ref' as 'mbr',
-        String firstReadingOfCurrentMonthSqlAsMbr = "SELECT " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
-                + " WHERE " +
-                itemIdColName + " = '" + meterId + "' AND " +
-                timeKey + " >= '" + monthStartDatetime.minusHours(3) + "' AND " +
-                timeKey + " < '" + monthStartDatetime.plusHours(3) + "' AND " +
-                " ref = 'mbr' " +
-                " ORDER BY " + timeKey + " LIMIT 1";
-        List<Map<String, Object>> respStartSearchRange;
-        try {
-            respStartSearchRange = oqgHelper.OqgR2(firstReadingOfCurrentMonthSqlAsMbr, true);
-        } catch (Exception e) {
-            logger.info("oqgHelper error: " + e.getMessage());
-            return Collections.singletonMap("error", "oqgHelper error: " + e.getMessage());
+        //first check commissionedDatetime
+        int commissionedYear = 0;
+        int commissionedMonth = 0;
+        if(commissionedDatetime != null){
+            commissionedYear = commissionedDatetime.getYear();
+            commissionedMonth = commissionedDatetime.getMonthValue();
         }
-        if (respStartSearchRange == null) {
-            logger.info("oqgHelper error: resp is null");
-            return Collections.singletonMap("error", "oqgHelper error: resp is null");
+        if(commissionedYear > 0){
+            if(commissionedYear > theYear || (commissionedYear == theYear && commissionedMonth > theMonth)){
+                // if commissionedDatetime is in the future, ignore the commissionedDatetime
+                //return Collections.singletonMap("info", "commissionedDatetime is in the future");
+            }
+            if(commissionedYear==theYear && commissionedMonth==theMonth){
+                //use the commissionedDatetime as the first reading of the month
+                String firstReadingOfCurrentMonthSqlAsCommissionedMonth =
+                    "SELECT " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
+                    + " WHERE "
+                    + itemIdColName + " = '" + meterId
+                    + "' AND " + timeKey + " >= '" + commissionedDatetime
+                    + "' AND " + timeKey + " < '" + monthEndDatetime
+//                        + "' AND " + " ref = 'mbr' "
+                    + " ORDER BY " + timeKey + " LIMIT 1";
+                List<Map<String, Object>> respCommissionedMonth;
+                try {
+                    respCommissionedMonth = oqgHelper.OqgR2(firstReadingOfCurrentMonthSqlAsCommissionedMonth, true);
+                } catch (Exception e) {
+                    logger.info("oqgHelper error: " + e.getMessage());
+                    return Collections.singletonMap("error", "oqgHelper error: " + e.getMessage());
+                }
+                if (respCommissionedMonth == null) {
+                    logger.info("oqgHelper error: resp is null");
+                    return Collections.singletonMap("error", "oqgHelper error: resp is null");
+                }
+                if (respCommissionedMonth.isEmpty()) {
+                    logger.info("no first reading of the month found for meter: " + meterId);
+                    return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
+                }
+                firstReadingTimestamp = (String) respCommissionedMonth.getFirst().get(timeKey);
+            }
         }
-        if (respStartSearchRange.size() > 1) {
-            logger.info("error: mbr count " + respStartSearchRange.size());
-            return Collections.singletonMap("error", "mbr count " + respStartSearchRange.size() + " for meter: " + meterId);
-        }
-        // if mbr is found, use it
-        if (respStartSearchRange.size() == 1) {
-            firstReadingTimestamp = (String) respStartSearchRange.getFirst().get(timeKey);
-            firstReadingVal = (String) respStartSearchRange.getFirst().get(valKey);
-        }
-        // if mbr near the beginning of the month is not found, use the first reading of the month
-        if(respStartSearchRange.isEmpty()){
-            LocalDateTime beginOfMonth = monthStartDatetime.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
-            LocalDateTime endOfMonth = monthStartDatetime.withDayOfMonth(monthStartDatetime.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
-            String firstReadingOfCurrentMonthSql = "SELECT id, " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
-                    + " WHERE " +
-                    itemIdColName + " = '" + meterId + "' AND " +
-                    timeKey + " >= '" + beginOfMonth + "' AND " +
-                    timeKey + " < '" + /*beginOfMonth.plusHours(3)*/ endOfMonth + "' " +
-                    " ORDER BY " + timeKey + " LIMIT 1";
-            List<Map<String, Object>> respFirstReadingOfCurrentMonth;
+
+        if(firstReadingTimestamp.isEmpty()) {
+            // search left 3 hours and right 3 hours of current month start
+            // for the first reading with 'ref' as 'mbr',
+            String firstReadingOfCurrentMonthSqlAsMbr =
+                    "SELECT " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
+                    + " WHERE "
+                    + itemIdColName + " = '" + meterId
+                    + "' AND " + timeKey + " >= '" + monthStartDatetime.minusHours(3)
+                    + "' AND " + timeKey + " < '" + monthStartDatetime.plusHours(3)
+                    + "' AND " + " ref = 'mbr' "
+                    + " ORDER BY " + timeKey + " LIMIT 1";
+            List<Map<String, Object>> respStartSearchRange;
             try {
-                respFirstReadingOfCurrentMonth = oqgHelper.OqgR2(firstReadingOfCurrentMonthSql, true);
+                respStartSearchRange = oqgHelper.OqgR2(firstReadingOfCurrentMonthSqlAsMbr, true);
             } catch (Exception e) {
                 logger.info("oqgHelper error: " + e.getMessage());
                 return Collections.singletonMap("error", "oqgHelper error: " + e.getMessage());
             }
-            if (respFirstReadingOfCurrentMonth == null) {
+            if (respStartSearchRange == null) {
                 logger.info("oqgHelper error: resp is null");
                 return Collections.singletonMap("error", "oqgHelper error: resp is null");
             }
-            if (respFirstReadingOfCurrentMonth.isEmpty()) {
-                logger.info("no first reading of the month found for meter: " + meterId);
-                return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
-            }else{
-                // update the first reading of the month to mbr if it is not
-                String firstReadingOfCurrentMonthRef = (String) respFirstReadingOfCurrentMonth.getFirst().get("ref");
-                if(firstReadingOfCurrentMonthRef == null || !firstReadingOfCurrentMonthRef.equalsIgnoreCase("mbr")){
-                    String firstReadingOfCurrentMonthId = (String) respFirstReadingOfCurrentMonth.getFirst().get("id");
-                    String updateFirstReadingOfCurrentMonthSql =
-                            "UPDATE " + targetReadingTableName + " SET ref = 'mbr' WHERE " +
-                                    "id = '" + firstReadingOfCurrentMonthId + "'";
-                    try {
-                        oqgHelper.OqgIU(updateFirstReadingOfCurrentMonthSql);
-                        logger.info("updateFirstReadingOfCurrentMonthSql: " + updateFirstReadingOfCurrentMonthSql);
-                    } catch (Exception e) {
-                        logger.info("oqgHelper error: " + e.getMessage());
-                        return Collections.singletonMap("error", "oqgHelper error: " + e.getMessage());
-                    }
+            if (respStartSearchRange.size() > 1) {
+                logger.info("error: mbr count " + respStartSearchRange.size());
+                return Collections.singletonMap("error", "mbr count " + respStartSearchRange.size() + " for meter: " + meterId);
+            }
+            // if mbr is found, use it
+            if (respStartSearchRange.size() == 1) {
+                firstReadingTimestamp = (String) respStartSearchRange.getFirst().get(timeKey);
+                firstReadingVal = (String) respStartSearchRange.getFirst().get(valKey);
+            }
+            // if mbr near the beginning of the month is not found, use the first reading of the month
+            if (respStartSearchRange.isEmpty()) {
+                LocalDateTime beginOfMonth = monthStartDatetime.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
+                LocalDateTime endOfMonth = monthStartDatetime.withDayOfMonth(monthStartDatetime.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
+                String firstReadingOfCurrentMonthSql = "SELECT id, " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
+                        + " WHERE " +
+                        itemIdColName + " = '" + meterId + "' AND " +
+                        timeKey + " >= '" + beginOfMonth + "' AND " +
+                        timeKey + " < '" + /*beginOfMonth.plusHours(3)*/ endOfMonth + "' " +
+                        " ORDER BY " + timeKey + " LIMIT 1";
+                List<Map<String, Object>> respFirstReadingOfCurrentMonth;
+                try {
+                    respFirstReadingOfCurrentMonth = oqgHelper.OqgR2(firstReadingOfCurrentMonthSql, true);
+                } catch (Exception e) {
+                    logger.info("oqgHelper error: " + e.getMessage());
+                    return Collections.singletonMap("error", "oqgHelper error: " + e.getMessage());
                 }
-                firstReadingTimestamp = (String) respFirstReadingOfCurrentMonth.getFirst().get(timeKey);
-                firstReadingVal = (String) respFirstReadingOfCurrentMonth.getFirst().get(valKey);
+                if (respFirstReadingOfCurrentMonth == null) {
+                    logger.info("oqgHelper error: resp is null");
+                    return Collections.singletonMap("error", "oqgHelper error: resp is null");
+                }
+                if (respFirstReadingOfCurrentMonth.isEmpty()) {
+                    logger.info("no first reading of the month found for meter: " + meterId);
+                    return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
+                } else {
+                    // update the first reading of the month to mbr if it is not
+                    String firstReadingOfCurrentMonthRef = (String) respFirstReadingOfCurrentMonth.getFirst().get("ref");
+                    if (firstReadingOfCurrentMonthRef == null || !firstReadingOfCurrentMonthRef.equalsIgnoreCase("mbr")) {
+                        String firstReadingOfCurrentMonthId = (String) respFirstReadingOfCurrentMonth.getFirst().get("id");
+                        String updateFirstReadingOfCurrentMonthSql =
+                                "UPDATE " + targetReadingTableName + " SET ref = 'mbr' WHERE " +
+                                        "id = '" + firstReadingOfCurrentMonthId + "'";
+                        try {
+                            oqgHelper.OqgIU(updateFirstReadingOfCurrentMonthSql);
+                            logger.info("updateFirstReadingOfCurrentMonthSql: " + updateFirstReadingOfCurrentMonthSql);
+                        } catch (Exception e) {
+                            logger.info("oqgHelper error: " + e.getMessage());
+                            return Collections.singletonMap("error", "oqgHelper error: " + e.getMessage());
+                        }
+                    }
+                    firstReadingTimestamp = (String) respFirstReadingOfCurrentMonth.getFirst().get(timeKey);
+                    firstReadingVal = (String) respFirstReadingOfCurrentMonth.getFirst().get(valKey);
+                }
             }
         }
 

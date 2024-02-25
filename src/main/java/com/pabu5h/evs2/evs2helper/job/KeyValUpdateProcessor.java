@@ -41,8 +41,6 @@ public class KeyValUpdateProcessor {
     @Autowired
     private LocalHelper localHelper;
 
-//    private final Map<String, String> meterInfo = new ConcurrentHashMap<>();
-
     public Map<String, Object> getOpList(String tableName, String keyName, List<String> meterSns) {
         List<Map<String, Object>> result = new ArrayList<>();
         for (String meterSn : meterSns) {
@@ -62,6 +60,7 @@ public class KeyValUpdateProcessor {
         return Map.of("conc_list", result);
     }
 
+    // update single key/val pair for items from opList
     public Map<String, Object> doOpSingleKeyValUpdate(
             String opName, String scopeStr,
             Map<String, Object> request,
@@ -375,6 +374,7 @@ public class KeyValUpdateProcessor {
         }
     }
 
+    //update multiple key/val pairs for items from opList
     public Map<String, Object> doOpMultiKeyValUpdate(Map<String, Object> request,
                                                      List<Map<String, Object>> opList) {
 
