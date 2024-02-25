@@ -313,7 +313,7 @@ public class MeterUsageProcessor {
 
             // fields are in order for LinkedHashMap
             if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
-                usageSummary.put("lc_status", meterLcStatus);
+                usageSummary.put("lc_status", meterLcStatus.isEmpty()?"-":meterLcStatus);
             }
             usageSummary.put("commissioned_timestamp", commissionedTimestampStr);
 
