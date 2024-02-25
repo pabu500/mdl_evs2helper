@@ -144,12 +144,12 @@ public class MeterUsageProcessor {
             String meterLcStatus = meterMap.get("lc_status") == null ? "" : (String) meterMap.get("lc_status");
             String commissionedTimestampStr = meterMap.get("commissioned_timestamp") == null ? "" : (String) meterMap.get("commissioned_timestamp");
             LocalDateTime commissionedDatetime = DateTimeUtil.getLocalDateTime(commissionedTimestampStr);
-            Integer commissionedYear = null;
-            Integer commissionedMonth = null;
-            if(commissionedDatetime != null){
-                commissionedYear = commissionedDatetime.getYear();
-                commissionedMonth = commissionedDatetime.getMonthValue();
-            }
+//            Integer commissionedYear = null;
+//            Integer commissionedMonth = null;
+//            if(commissionedDatetime != null){
+//                commissionedYear = commissionedDatetime.getYear();
+//                commissionedMonth = commissionedDatetime.getMonthValue();
+//            }
 
             if (meterId == null || meterId.isEmpty()) {
                 logger.info("meterId is null or empty");
@@ -161,10 +161,6 @@ public class MeterUsageProcessor {
 //            }
 
             LinkedHashMap<String, Object> usageSummary = new LinkedHashMap<>();
-
-            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
-                usageSummary.put("lc_status", meterLcStatus);
-            }
 
             String[] idColList = itemIdColSel.split(",");
             String[] locColList = itemLocColSel.split(",");
@@ -179,9 +175,12 @@ public class MeterUsageProcessor {
                 usageSummary.put("meter_type", meterMap.get("meter_type"));
             }
 
-            if(commissionedDatetime != null){
-                usageSummary.put("commissioned_timestamp", commissionedTimestampStr);
+            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                usageSummary.put("lc_status", meterLcStatus);
             }
+//            if(commissionedDatetime != null){
+            usageSummary.put("commissioned_timestamp", commissionedTimestampStr);
+//            }
 
             if (isMonthly) {
                 Map<String, Object> resultMonthly =
