@@ -175,13 +175,6 @@ public class MeterUsageProcessor {
                 usageSummary.put("meter_type", meterMap.get("meter_type"));
             }
 
-            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
-                usageSummary.put("lc_status", meterLcStatus);
-            }
-//            if(commissionedDatetime != null){
-            usageSummary.put("commissioned_timestamp", commissionedTimestampStr);
-//            }
-
             if (isMonthly) {
                 Map<String, Object> resultMonthly =
                         findMonthlyReading(
@@ -317,6 +310,12 @@ public class MeterUsageProcessor {
             usageSummary.put("first_reading_val", firstReadingVal);
             usageSummary.put("last_reading_val", lastReadingVal);
             usageSummary.put("usage", usage);
+
+            // fields are in order for LinkedHashMap
+            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                usageSummary.put("lc_status", meterLcStatus);
+            }
+            usageSummary.put("commissioned_timestamp", commissionedTimestampStr);
 
             usageSummaryList.add(usageSummary);
 
