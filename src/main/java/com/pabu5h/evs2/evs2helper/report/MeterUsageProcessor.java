@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 public class MeterUsageProcessor {
     Logger logger = Logger.getLogger(MeterUsageProcessor.class.getName());
 
-
     @Autowired
     private OqgHelper oqgHelper;
     @Autowired
@@ -81,7 +80,7 @@ public class MeterUsageProcessor {
         int page = Integer.parseInt(request.getOrDefault("current_page", "1"));
         int offset = (page - 1) * limit;
         String getCount = request.get("get_count");
-        boolean getCountBool = true;
+        boolean getCountBool = !meterSelectSql.isEmpty();
         if(getCount != null && !getCount.isEmpty()){
             getCountBool = Boolean.parseBoolean(getCount);
         }
@@ -106,10 +105,10 @@ public class MeterUsageProcessor {
             sort.put("sort_order", sortOrder);
         }
 
-
         String meterSelectSql2 = meterSelectSql;
+        meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColName, "SELECT " + itemIdColSel);
         if(!meterSelectSql2.contains("commissioned_timestamp")) {
-            meterSelectSql2 += " , commissioned_timestamp";
+            meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColSel, "SELECT " + itemIdColSel + ", commissioned_timestamp");
         }
         meterSelectSql2 += " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
 
@@ -161,16 +160,39 @@ public class MeterUsageProcessor {
 //                continue;
 //            }
 
+            LinkedHashMap<String, Object> usageSummary = new LinkedHashMap<>();
+
+            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                usageSummary.put("lc_status", meterLcStatus);
+            }
+
+            String[] idColList = itemIdColSel.split(",");
+            String[] locColList = itemLocColSel.split(",");
+            for(String idCol : idColList){
+                usageSummary.put(idCol, meterMap.get(idCol));
+            }
+            for(String locCol : locColList){
+                usageSummary.put(locCol, meterMap.get(locCol));
+            }
+            usageSummary.put("site_tag", meterMap.get("site_tag"));
+            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                usageSummary.put("meter_type", meterMap.get("meter_type"));
+            }
+
+            if(commissionedDatetime != null){
+                usageSummary.put("commissioned_timestamp", commissionedTimestampStr);
+            }
+
             if (isMonthly) {
                 Map<String, Object> resultMonthly =
-                    findMonthlyReading(
-                        commissionedDatetime,
+                        findMonthlyReading(
+                                commissionedDatetime,
 //                        startDatetimeStr,
-                        endDatetimeStr,
-                        meterId,
-                        targetReadingTableName,
-                        itemIdColName,
-                        timeKey, valKey);
+                                endDatetimeStr,
+                                meterId,
+                                targetReadingTableName,
+                                itemIdColName,
+                                timeKey, valKey);
 
                 if (resultMonthly.containsKey("error")) {
                     logger.info("error: " + resultMonthly.get("error"));
@@ -181,7 +203,7 @@ public class MeterUsageProcessor {
 //                    return Collections.singletonMap("info", "info: " + resultMonthly.get("info"));
                     continue;
                 }
-                LinkedHashMap<String, Object> usageSummary = new LinkedHashMap<>();
+
 //                usageSummary.put(itemSnColName, meterSn);
 //                usageSummary.put(itemNameColName, meterName);
 
@@ -192,36 +214,20 @@ public class MeterUsageProcessor {
 //                }
 //                usageSummary.put("alt_name", meterAltName);
 
-                if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
-                    usageSummary.put("lc_status", meterLcStatus);
-                }
-
-                String[] idColList = itemIdColSel.split(",");
-                String[] locColList = itemLocColSel.split(",");
-                for(String idCol : idColList){
-                    usageSummary.put(idCol, meterMap.get(idCol));
-                }
-                for(String locCol : locColList){
-                    usageSummary.put(locCol, meterMap.get(locCol));
-                }
-                usageSummary.put("site_tag", meterMap.get("site_tag"));
-                if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
-                    usageSummary.put("meter_type", meterMap.get("meter_type"));
-                }
                 String firstReadingVal = (String) resultMonthly.get("first_reading_val");
                 String lastReadingVal = (String) resultMonthly.get("last_reading_val");
-                String firstReadingTime = (String) resultMonthly.get("first_reading_time");
-                String lastReadingTime = (String) resultMonthly.get("last_reading_time");
-                Double firstReadingValDouble = Double.parseDouble(firstReadingVal);
-                Double lastReadingValDouble = Double.parseDouble(lastReadingVal);
+                String firstReadingTime = ((String) resultMonthly.get("first_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("first_reading_time");
+                String lastReadingTime = ((String) resultMonthly.get("last_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("last_reading_time");
+                Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
+                Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
                 //round to 2 decimals
-                Double firstReadingValDouble2 = MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
-                Double lastReadingValDouble2 = MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
-                Double usageDouble = lastReadingValDouble2 - firstReadingValDouble2;
+                Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
+                Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
+                Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
 //                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-                firstReadingVal = String.format("%.2f", firstReadingValDouble2);
-                lastReadingVal = String.format("%.2f", lastReadingValDouble2);
-                String usage = String.format("%.2f", usageDouble);
+                firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
+                lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
+                String usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
 
                 usageSummary.put("first_reading_time", firstReadingTime);
                 usageSummary.put("last_reading_time", lastReadingTime);
@@ -230,6 +236,8 @@ public class MeterUsageProcessor {
                 usageSummary.put("usage", usage);
 //                usageSummary.put("first_reading_ref", resultMonthly.get("first_reading_ref"));
 //                usageSummary.put("last_reading_ref", resultMonthly.get("last_reading_ref"));
+                boolean useCommissionDatetime = resultMonthly.get("use_commissioned_datetime") != null && (boolean) resultMonthly.get("use_commissioned_datetime");
+                usageSummary.put("use_commissioned_datetime", useCommissionDatetime);
 
                 usageSummaryList.add(usageSummary);
 
@@ -279,40 +287,37 @@ public class MeterUsageProcessor {
                 lastReadingVal = (String) resp2.getFirst().get("last_reading_val");
                 firstReadingTime = (String) resp2.getFirst().get("first_reading_time");
                 lastReadingTime = (String) resp2.getFirst().get("last_reading_time");
-                Double firstReadingValDouble = Double.parseDouble(firstReadingVal);
-                Double lastReadingValDouble = Double.parseDouble(lastReadingVal);
-                Double firstReadingValDouble2 = MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
-                Double lastReadingValDouble2 = MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
-                Double usageDouble = lastReadingValDouble2 - firstReadingValDouble2;
+                Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
+                Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
+                //round to 2 decimals
+                Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
+                Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
+                Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
 //                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-                firstReadingVal = String.format("%.2f", firstReadingValDouble);
-                lastReadingVal = String.format("%.2f", lastReadingValDouble);
-                usage = String.format("%.2f", usageDouble);
+                firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
+                lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
+                usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
             }
-            LinkedHashMap<String, Object> usageSummary = new LinkedHashMap<>();
-
-            String[] idColList = itemIdColSel.split(",");
-            String[] locColList = itemLocColSel.split(",");
-            for(String idCol : idColList){
-                usageSummary.put(idCol, meterMap.get(idCol));
-            }
-            for(String locCol : locColList){
-                usageSummary.put(locCol, meterMap.get(locCol));
-            }
-
-            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
-                usageSummary.put("lc_status", meterLcStatus);
-            }
+//            LinkedHashMap<String, Object> usageSummary = new LinkedHashMap<>();
+//
+//            String[] idColList = itemIdColSel.split(",");
+//            String[] locColList = itemLocColSel.split(",");
+//            for(String idCol : idColList){
+//                usageSummary.put(idCol, meterMap.get(idCol));
+//            }
+//            for(String locCol : locColList){
+//                usageSummary.put(locCol, meterMap.get(locCol));
+//            }
+//
+//            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+//                usageSummary.put("lc_status", meterLcStatus);
+//            }
 
             usageSummary.put("first_reading_time", firstReadingTime);
             usageSummary.put("last_reading_time", lastReadingTime);
             usageSummary.put("first_reading_val", firstReadingVal);
             usageSummary.put("last_reading_val", lastReadingVal);
             usageSummary.put("usage", usage);
-
-            if(commissionedDatetime != null){
-                result.put("commissioned_timestamp", commissionedTimestampStr);
-            }
 
             usageSummaryList.add(usageSummary);
 
@@ -592,6 +597,7 @@ public class MeterUsageProcessor {
             commissionedYear = commissionedDatetime.getYear();
             commissionedMonth = commissionedDatetime.getMonthValue();
         }
+        boolean useCommissionedDatetime = false;
         if(commissionedYear > 0){
             if(commissionedYear > theYear || (commissionedYear == theYear && commissionedMonth > theMonth)){
                 // if commissionedDatetime is in the future, ignore the commissionedDatetime
@@ -600,13 +606,13 @@ public class MeterUsageProcessor {
             if(commissionedYear==theYear && commissionedMonth==theMonth){
                 //use the commissionedDatetime as the first reading of the month
                 String firstReadingOfCurrentMonthSqlAsCommissionedMonth =
-                    "SELECT " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
-                    + " WHERE "
-                    + itemIdColName + " = '" + meterId
-                    + "' AND " + timeKey + " >= '" + commissionedDatetime
-                    + "' AND " + timeKey + " < '" + monthEndDatetime
-//                        + "' AND " + " ref = 'mbr' "
-                    + " ORDER BY " + timeKey + " LIMIT 1";
+                        "SELECT " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
+                                + " WHERE "
+                                + itemIdColName + " = '" + meterId
+                                + "' AND " + timeKey + " >= '" + commissionedDatetime
+                                + "' AND " + timeKey + " < '" + monthEndDatetime + "' "
+//                        + AND " + " ref = 'mbr' "
+                                + " ORDER BY " + timeKey + " LIMIT 1";
                 List<Map<String, Object>> respCommissionedMonth;
                 try {
                     respCommissionedMonth = oqgHelper.OqgR2(firstReadingOfCurrentMonthSqlAsCommissionedMonth, true);
@@ -620,9 +626,13 @@ public class MeterUsageProcessor {
                 }
                 if (respCommissionedMonth.isEmpty()) {
                     logger.info("no first reading of the month found for meter: " + meterId);
-                    return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
+//                    return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
+//                    result.put("first_reading_time", "-");
+//                    result.put("first_reading_val", "-");
                 }
                 firstReadingTimestamp = (String) respCommissionedMonth.getFirst().get(timeKey);
+                firstReadingVal = (String) respCommissionedMonth.getFirst().get(valKey);
+                useCommissionedDatetime = true;
             }
         }
 
@@ -631,12 +641,12 @@ public class MeterUsageProcessor {
             // for the first reading with 'ref' as 'mbr',
             String firstReadingOfCurrentMonthSqlAsMbr =
                     "SELECT " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
-                    + " WHERE "
-                    + itemIdColName + " = '" + meterId
-                    + "' AND " + timeKey + " >= '" + monthStartDatetime.minusHours(3)
-                    + "' AND " + timeKey + " < '" + monthStartDatetime.plusHours(3)
-                    + "' AND " + " ref = 'mbr' "
-                    + " ORDER BY " + timeKey + " LIMIT 1";
+                            + " WHERE "
+                            + itemIdColName + " = '" + meterId
+                            + "' AND " + timeKey + " >= '" + monthStartDatetime.minusHours(3)
+                            + "' AND " + timeKey + " < '" + monthStartDatetime.plusHours(3)
+                            + "' AND " + " ref = 'mbr' "
+                            + " ORDER BY " + timeKey + " LIMIT 1";
             List<Map<String, Object>> respStartSearchRange;
             try {
                 respStartSearchRange = oqgHelper.OqgR2(firstReadingOfCurrentMonthSqlAsMbr, true);
@@ -680,7 +690,9 @@ public class MeterUsageProcessor {
                 }
                 if (respFirstReadingOfCurrentMonth.isEmpty()) {
                     logger.info("no first reading of the month found for meter: " + meterId);
-                    return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
+//                    return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
+//                    result.put("first_reading_time", "-");
+//                    result.put("first_reading_val", "-");
                 } else {
                     // update the first reading of the month to mbr if it is not
                     String firstReadingOfCurrentMonthRef = (String) respFirstReadingOfCurrentMonth.getFirst().get("ref");
@@ -755,7 +767,9 @@ public class MeterUsageProcessor {
             }
             if (respFirstReadingOfFollowingMonth.isEmpty()) {
                 logger.info("no first reading of the following month found");
-                return Collections.singletonMap("info", "no first reading of the following month found");
+//                return Collections.singletonMap("info", "no first reading of the following month found");
+//                lastReadingTimestamp = "-";
+//                lastReadingVal = "-";
             }else{
                 String respFirstReadingOfFollowingMonthRef = (String) respFirstReadingOfFollowingMonth.getFirst().get("ref");
                 if(respFirstReadingOfFollowingMonthRef == null || !respFirstReadingOfFollowingMonthRef.equalsIgnoreCase("mbr")) {
@@ -781,6 +795,8 @@ public class MeterUsageProcessor {
         result.put("first_reading_val", firstReadingVal);
         result.put("last_reading_time", lastReadingTimestamp);
         result.put("last_reading_val", lastReadingVal);
+        result.put("use_commissioned_datetime", useCommissionedDatetime);
+
         return result;
     }
 }
