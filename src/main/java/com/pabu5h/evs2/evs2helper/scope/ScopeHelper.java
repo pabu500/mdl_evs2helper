@@ -40,7 +40,7 @@ public class ScopeHelper {
             itemSnColName = "meter_sn";
             itemNameColName = "meter_id";
             itemIdColSel = "meter_id,meter_sn,panel_tag";
-            itemLocColSel = "penal_tag";
+            itemLocColSel = "panel_tag";
             timeKey = "dt";
             valKey = "a_imp";
 

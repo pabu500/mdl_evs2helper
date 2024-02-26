@@ -34,16 +34,18 @@ public class MeterUsageProcessor {
     public Map<String, Object> getMeterListUsageSummary(Map<String, String> request, List<Map<String, Object>> meterList) {
         logger.info("process getMeterListUsageSummary");
 
+        int testCount = Integer.parseInt(request.getOrDefault("test_count", "0"));
+
         String projectScope = request.get("project_scope");
         String siteScope = request.get("site_scope");
         String meterSelectSql = request.get("id_select_query") == null ? "" : request.get("id_select_query");
-        String startDatetimeStr = request.get("start_datetime");
-        String endDatetimeStr = request.get("end_datetime");
-        String itemIdTypeStr = request.get("item_id_type")==null?"":request.get("item_id_type");
-//        ItemIdTypeEnum itemIdType = itemIdTypeStr.isEmpty()? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
-        String isMonthlyStr = request.get("is_monthly");
-        int testCount = Integer.parseInt(request.getOrDefault("test_count", "0"));
 
+        String startDatetimeStr = request.get("from_timestamp")==null ? request.get("start_datetime") : request.get("from_timestamp");
+        String endDatetimeStr = request.get("to_timestamp")==null ? request.get("end_datetime") : request.get("to_timestamp");
+
+        String itemIdTypeStr = request.get("item_id_type")==null?"":request.get("item_id_type");
+
+        String isMonthlyStr = request.get("is_monthly");
         boolean isMonthly = false;
         if (isMonthlyStr != null && !isMonthlyStr.isEmpty()) {
             isMonthly = Boolean.parseBoolean(isMonthlyStr);
