@@ -71,7 +71,7 @@ public class ReportHelper {
 
         for(Map<String, Object> sheetInfo : multiSheetReportInfo) {
             String sheetName = (String) sheetInfo.get("sheet_name");
-            List<LinkedHashMap<String, Object>> reportSheet = (List<LinkedHashMap<String, Object>>) sheetInfo.get("report_sheet");
+            List<LinkedHashMap<String, Object>> reportSheet = (List<LinkedHashMap<String, Object>>) sheetInfo.get("report");
             LinkedHashMap<String, Integer> header = (LinkedHashMap<String, Integer>) sheetInfo.get("header");
             ExcelUtil.addSheet(workbook, sheetName, header, reportSheet);
         }
