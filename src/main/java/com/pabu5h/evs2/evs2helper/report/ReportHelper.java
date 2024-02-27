@@ -63,4 +63,29 @@ public class ReportHelper {
         result.put("full_report_name", fullReportName);
         return result;
     }
+
+    public Map<String, Object> genReportExcelMultiSheet(String reportName, List<Map<String, Object>> multiSheetReportInfo) {
+        logger.info("genReportExcelMultiSheet() called");
+
+        Workbook workbook = ExcelUtil.createWorkbookEmpty(null, null);
+
+        for(Map<String, Object> sheetInfo : multiSheetReportInfo) {
+            String sheetName = (String) sheetInfo.get("sheet_name");
+            List<LinkedHashMap<String, Object>> reportSheet = (List<LinkedHashMap<String, Object>>) sheetInfo.get("report_sheet");
+            LinkedHashMap<String, Integer> header = (LinkedHashMap<String, Integer>) sheetInfo.get("header");
+            ExcelUtil.addSheet(workbook, sheetName, header, reportSheet);
+        }
+
+        Map<String, Object> reportInfo = genReportInfo(reportName, "xlsx");
+        String fileLocation = (String) reportInfo.get("file_location");
+        String fullReportName = (String) reportInfo.get("full_report_name");
+
+        File file = new File(fileLocation);
+        ExcelUtil.saveWorkbook(workbook, fileLocation);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("file", file);
+        result.put("full_report_name", fullReportName);
+        return result;
+    }
 }
