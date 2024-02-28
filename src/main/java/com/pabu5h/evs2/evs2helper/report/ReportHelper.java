@@ -67,13 +67,13 @@ public class ReportHelper {
     public Map<String, Object> genReportExcelMultiSheet(String reportName, List<Map<String, Object>> multiSheetReportInfo) {
         logger.info("genReportExcelMultiSheet() called");
 
-        Workbook workbook = ExcelUtil.createWorkbookEmpty(null, null);
+        Workbook workbook = ExcelUtil.createWorkbookEmpty();
 
         for(Map<String, Object> sheetInfo : multiSheetReportInfo) {
             String sheetName = (String) sheetInfo.get("sheet_name");
             List<LinkedHashMap<String, Object>> reportSheet = (List<LinkedHashMap<String, Object>>) sheetInfo.get("report");
             LinkedHashMap<String, Integer> header = (LinkedHashMap<String, Integer>) sheetInfo.get("header");
-            ExcelUtil.addSheet(workbook, sheetName, header, reportSheet);
+            ExcelUtil.addSheet(workbook, sheetName, header, reportSheet, null, null);
             LinkedHashMap<String, Object> patch = (LinkedHashMap<String, Object>) sheetInfo.get("patch");
             if(patch != null) {
                 ExcelUtil.addPatch(workbook, sheetName, patch);
