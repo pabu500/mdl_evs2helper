@@ -459,16 +459,20 @@ public class MeterUsageProcessor {
                         continue;
                     }
 
-                    firstReadingTimeStr = (String) resultMonthly.get("first_reading_time");
-                    lastReadingTimeStr = (String) resultMonthly.get("last_reading_time");
                     firstReadingVal = (String) resultMonthly.get("first_reading_val");
                     lastReadingVal = (String) resultMonthly.get("last_reading_val");
-                    Double firstReadingValDouble = Double.parseDouble(firstReadingVal);
-                    Double lastReadingValDouble = Double.parseDouble(lastReadingVal);
-                    Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-                    firstReadingVal = String.format("%.2f", firstReadingValDouble);
-                    lastReadingVal = String.format("%.2f", lastReadingValDouble);
-                    usage = String.format("%.2f", usageDouble);
+                    firstReadingTimeStr = ((String) resultMonthly.get("first_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("first_reading_time");
+                    lastReadingTimeStr = ((String) resultMonthly.get("last_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("last_reading_time");
+                    Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
+                    Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
+                    //round to 2 decimals
+                    Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
+                    Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
+                    Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
+//                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+                    firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
+                    lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
+                    usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
 
                 }else {
                     //from endDatetimeStr, go back numberOfIntervals intervals
@@ -512,21 +516,40 @@ public class MeterUsageProcessor {
 //                    return Collections.singletonMap("info", "no meter found");
                         break;
                     }
-                    firstReadingTimeStr = (String) resp2.getFirst().get("first_reading_time");
-                    lastReadingTimeStr = (String) resp2.getFirst().get("last_reading_time");
+//                    firstReadingTimeStr = (String) resp2.getFirst().get("first_reading_time");
+//                    lastReadingTimeStr = (String) resp2.getFirst().get("last_reading_time");
+//                    firstReadingVal = (String) resp2.getFirst().get("first_reading_val");
+//                    lastReadingVal = (String) resp2.getFirst().get("last_reading_val");
+//                    Double firstReadingValDouble = Double.parseDouble(firstReadingVal);
+//                    Double lastReadingValDouble = Double.parseDouble(lastReadingVal);
+//                    Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+//                    firstReadingVal = String.format("%.2f", firstReadingValDouble);
+//                    lastReadingVal = String.format("%.2f", lastReadingValDouble);
+//                    usage = String.format("%.2f", usageDouble);
                     firstReadingVal = (String) resp2.getFirst().get("first_reading_val");
                     lastReadingVal = (String) resp2.getFirst().get("last_reading_val");
-                    Double firstReadingValDouble = Double.parseDouble(firstReadingVal);
-                    Double lastReadingValDouble = Double.parseDouble(lastReadingVal);
-                    Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-                    firstReadingVal = String.format("%.2f", firstReadingValDouble);
-                    lastReadingVal = String.format("%.2f", lastReadingValDouble);
-                    usage = String.format("%.2f", usageDouble);
+                    firstReadingTimeStr = (String) resp2.getFirst().get("first_reading_time");
+                    lastReadingTimeStr = (String) resp2.getFirst().get("last_reading_time");
+                    Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
+                    Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
+                    //round to 2 decimals
+                    Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
+                    Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
+                    Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
+//                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+                    firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
+                    lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
+                    usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
+
                 }
 
                 Map<String, Object> usageHistory = new HashMap<>();
 
                 String consolidatedTimeLabel = "";
+
+                if("-".equals(firstReadingTimeStr) || "-".equals(lastReadingTimeStr)){
+                    continue;
+                }
 
                 LocalDateTime firstReadingTime = DateTimeUtil.getLocalDateTime(firstReadingTimeStr);
                 LocalDateTime lastReadingTime = DateTimeUtil.getLocalDateTime(lastReadingTimeStr);
