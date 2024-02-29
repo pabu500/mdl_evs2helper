@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 public class SensorReadingParserTextMulti extends IotReadingParserText<SensorReadingMultiDto> {
     Logger logger = Logger.getLogger(SensorReadingParserTextMulti.class.getName());
 
-    SensorReadingParserTextMulti() {
+    public SensorReadingParserTextMulti() {
         setLookupTable();
     }
     void setLookupTable() {
