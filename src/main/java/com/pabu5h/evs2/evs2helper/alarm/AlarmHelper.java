@@ -97,7 +97,7 @@ public class AlarmHelper {
                     String email = (String) subItem.get("sub_email");
                     if(email == null || email.isBlank()){
                         String userTableName = "evs2_user";
-                        Long userId = MathUtil.ObjToLong(sub.get("user_id"));
+                        Long userId = MathUtil.ObjToLong(subItem.get("user_id"));
                         sql = "select email from " + userTableName + " where id = " + userId.toString();
                         List<Map<String, Object>> resp2;
                         try {
