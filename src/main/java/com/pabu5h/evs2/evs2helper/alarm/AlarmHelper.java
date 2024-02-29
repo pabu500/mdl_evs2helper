@@ -95,6 +95,23 @@ public class AlarmHelper {
                 if(resolveSend(subId, topicId, lastAlarmStreamUid, null)) {
                     String salutation = (String) subItem.get("sub_salutation");
                     String email = (String) subItem.get("sub_email");
+                    if(email == null || email.isBlank()){
+                        String userTableName = "evs2_user";
+                        Long userId = MathUtil.ObjToLong(sub.get("user_id"));
+                        sql = "select email from " + userTableName + " where id = " + userId.toString();
+                        List<Map<String, Object>> resp2;
+                        try {
+                            resp2 = oqgHelper.OqgR2(sql,true);
+                        } catch (Exception e) {
+                            logger.severe("Failed to query user table: " + e.getMessage());
+                            continue;
+                        }
+                        if(resp2.isEmpty()){
+                            logger.info("User not found for user id: " + userId);
+                            continue;
+                        }
+                        email = (String) resp2.getFirst().get("email");
+                    }
 
                     String scopeStr = topic.get("scope_str")==null?"":(String) topic.get("scope_str");
                     String siteTag = topic.get("site_tag")==null?"":(String) topic.get("site_tag");
