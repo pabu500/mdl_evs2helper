@@ -28,9 +28,17 @@ public class SensorReadingParserTextMulti extends IotReadingParserText<SensorRea
         String[] lines = cleanedMessage.split(";");
 
         //get id from first line id:SMRT_001
+        int fieldIndex = 0;
+        String type = "";
+        if(lines.length > 0){
+            String[] parts = lines[fieldIndex++].split(":");
+            if(parts.length > 1){
+                type = parts[1].trim();
+            }
+        }
         String itemId = "";
         if(lines.length > 0){
-            String[] parts = lines[0].split(":");
+            String[] parts = lines[fieldIndex++].split(":");
             if(parts.length > 1){
                 itemId = parts[1].trim();
             }
@@ -39,7 +47,7 @@ public class SensorReadingParserTextMulti extends IotReadingParserText<SensorRea
         //get dt from second line dt:2023-10-24T15:37:59
         LocalDateTime dt = null;
         if(lines.length > 1){
-            String timestampPart = lines[1].replace("dt:", "").trim();
+            String timestampPart = lines[fieldIndex++].replace("dt:", "").trim();
             try {
                 dt = LocalDateTime.parse(timestampPart);
             }catch (Exception e) {
@@ -49,7 +57,7 @@ public class SensorReadingParserTextMulti extends IotReadingParserText<SensorRea
         dto.setDt(dt);
 
         //get the rest of the lines
-        for(int i=2; i<lines.length; i++){
+        for(int i=fieldIndex; i<lines.length; i++){
             String[] parts = lines[i].split(",");
             if(parts.length < 3){
                 continue;
