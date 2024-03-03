@@ -73,9 +73,9 @@ public class AlarmHelper {
                 logger.warning("Error getting alarm_topic: " + topic.get("error"));
                 continue;
             }
-            Map<String, Object> sub = getAlarmSubs(topicId);
-            if(sub.containsKey("error")) {
-                logger.warning("Error getting alarm_sub: " + sub.get("error"));
+            Map<String, Object> subs = getAlarmSubs(topicId);
+            if(subs.containsKey("error")) {
+                logger.warning("Error getting alarm_sub: " + subs.get("error"));
                 continue;
             }
 
@@ -89,8 +89,8 @@ public class AlarmHelper {
             String lastAlarmMessage = (String) lastAlarmStreamItem.get("message");
             String lastAlarmStreamUid = (String) lastAlarmStreamItem.get("uid");
 
-            List<Map<String, Object>> subs = (List<Map<String, Object>>) sub.get("subs");
-            for(Map<String, Object> subItem : subs) {
+            List<Map<String, Object>> subList = (List<Map<String, Object>>) subs.get("subs");
+            for(Map<String, Object> subItem : subList) {
                 Long subId = MathUtil.ObjToLong(subItem.get("id"));
                 if(resolveSend(subId, topicId, lastAlarmStreamUid, null)) {
                     String salutation = (String) subItem.get("sub_salutation");
@@ -129,6 +129,7 @@ public class AlarmHelper {
                     }
                     if(!testMode) {
                         sendAlarmNotice(subId, salutation, email, subject, lastAlarmMessage, lastAlarmStreamUid, ackUrl);
+                        logger.info("Alarm: " + subject + " sent to: " + email);
                     }
                     noticeCount++;
                 }
@@ -323,7 +324,7 @@ public class AlarmHelper {
     }
 
     private Map<String, Object> getAlarmSubs(long topicId){
-        String sql = "select * from alarm_sub where alarm_topic_id = " + topicId;
+        String sql = "select * from alarm_sub where alarm_topic_id = " + topicId + " AND (is_active != false OR is_active IS NULL)";
         List<Map<String, Object>> resp;
         try {
             resp = oqgHelper.OqgR2(sql, true);
