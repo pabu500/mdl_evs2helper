@@ -166,7 +166,10 @@ public class BillProcessor {
             }
         }
         Map<String, Object> billResult = genBillRecord(tenantInfo, meterTypeRates, fromDate, toDate, isMonthly, genBy);
-
+        if(billResult.containsKey("error")){
+            logger.severe("Failed to generate bill record: " + billResult.get("error"));
+            return Collections.singletonMap("error", "Failed to generate bill record: " + billResult.get("error"));
+        }
         logger.info("Bill processed");
         return Collections.singletonMap("result", "Bill processed");
     }
