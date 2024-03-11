@@ -295,7 +295,7 @@ public class BillProcessor {
             }
         }
 
-        return Collections.singletonMap("info", "Bill generated");
+        return Collections.singletonMap("result", content.get("bill_name"));
     }
 
     public String genBillName(String tenantName, String fromTimestamp, String toTimestamp) {
