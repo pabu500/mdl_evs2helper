@@ -46,14 +46,14 @@ public class BillProcessor {
         int tenantCount = resp.size();
         int processedCount = 0;
         for (Map<String, Object> tenantInfo : resp) {
-            genSingleTenantBill((String) tenantInfo.get("tenant_name"), fromDate, toDate, isMonthly, null);
+            genSingleTenantBill((String) tenantInfo.get("tenant_name"), fromDate, toDate, isMonthly, null, null);
             processedCount++;
             logger.info(processedCount + " / " + tenantCount + " tenants processed");
         }
         return Collections.singletonMap("info", "All tenant bills processed");
     }
 
-    public Map<String, Object> genSingleTenantBill(String tenantName, String fromDate, String toDate, Boolean isMonthly, Map<String, Object> tpRateInfo) {
+    public Map<String, Object> genSingleTenantBill(String tenantName, String fromDate, String toDate, Boolean isMonthly, Map<String, Object> tpRateInfo, String genBy) {
         logger.info("Processing bill");
 
         Map<String, Object> tenantInfoResult = queryHelper.getItemInfo(tenantName, ItemIdTypeEnum.NAME, ItemTypeEnum.TENANT);
@@ -107,8 +107,23 @@ public class BillProcessor {
         for(Map<String, Object> meterGroupUsage : tenantUsageSummary){
             String meterTypeTag = (String) meterGroupUsage.get("meter_type");
             Map<String, Object> tariffResult;
-            if(tpRateInfo !=null && tpRateInfo.containsKey(meterTypeTag)) {
-                tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
+//            if(tpRateInfo !=null && tpRateInfo.containsKey(meterTypeTag)) {
+//                tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
+//            }else{
+//                tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
+//            }
+            if(tpRateInfo !=null) {
+            //custom billing
+                if(genBy == null) {
+                    logger.severe("genBy is null");
+                    return Collections.singletonMap("error", "genBy is null");
+                }
+                if(tpRateInfo.containsKey(meterTypeTag)) {
+                     tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
+                }else {
+                    logger.info("No tariff supplied for meterTypeTag: " + meterTypeTag);
+                    continue;
+                }
             }else{
                 tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
             }
@@ -150,15 +165,15 @@ public class BillProcessor {
                 return Collections.singletonMap("error", "Inconsistent usage data found for tenant: " + tenantName);
             }
         }
-        Map<String, Object> billResult = genBillRecord(tenantInfo, meterTypeRates, fromDate, toDate, isMonthly);
+        Map<String, Object> billResult = genBillRecord(tenantInfo, meterTypeRates, fromDate, toDate, isMonthly, genBy);
 
         logger.info("Bill processed");
-        return Collections.singletonMap("info", "Bill processed");
+        return Collections.singletonMap("result", "Bill processed");
     }
 
     public Map<String, Object> genBillRecord(Map<String, Object> tenantInfo,
                                              Map<String, Object> meterTypeRates,
-                                             String fromTimestamp, String toTimestamp, Boolean isMonthly) {
+                                             String fromTimestamp, String toTimestamp, Boolean isMonthly, String genBy) {
         logger.info("Generating bill");
         if(meterTypeRates.isEmpty()){
             logger.warning("No meterTypeRates found");
@@ -193,6 +208,14 @@ public class BillProcessor {
         content.put("from_timestamp", fromTimestamp);
         content.put("to_timestamp", toTimestamp);
         content.put("tenant_id", tenantIndex);
+
+        if(genBy != null){
+            content.put("gen_type", "manual");
+            content.put("gen_by", genBy);
+        }else{
+            content.put("gen_type", "auto");
+        }
+
         for (Map.Entry<String, Object> entry : meterTypeRates.entrySet()) {
             Map<String, Object> meterTypeRate = (Map<String, Object>) entry.getValue();
             Long tariffPackageRateId = MathUtil.ObjToLong(meterTypeRate.get("id"));
