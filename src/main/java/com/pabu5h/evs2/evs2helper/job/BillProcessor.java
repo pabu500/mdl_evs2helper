@@ -46,7 +46,7 @@ public class BillProcessor {
         int tenantCount = resp.size();
         int processedCount = 0;
         for (Map<String, Object> tenantInfo : resp) {
-            genSingleTenantBill((String) tenantInfo.get("tenant_name"), fromDate, toDate, isMonthly);
+            genSingleTenantBill((String) tenantInfo.get("tenant_name"), fromDate, toDate, isMonthly, null);
             processedCount++;
             logger.info(processedCount + " / " + tenantCount + " tenants processed");
         }
@@ -107,7 +107,7 @@ public class BillProcessor {
         for(Map<String, Object> meterGroupUsage : tenantUsageSummary){
             String meterTypeTag = (String) meterGroupUsage.get("meter_type");
             Map<String, Object> tariffResult;
-            if(tpRateInfo.containsKey(meterTypeTag)) {
+            if(tpRateInfo !=null && tpRateInfo.containsKey(meterTypeTag)) {
                 tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
             }else{
                 tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
