@@ -53,7 +53,7 @@ public class BillProcessor {
         return Collections.singletonMap("info", "All tenant bills processed");
     }
 
-    public Map<String, Object> genSingleTenantBill(String tenantName, String fromDate, String toDate, Boolean isMonthly) {
+    public Map<String, Object> genSingleTenantBill(String tenantName, String fromDate, String toDate, Boolean isMonthly, Map<String, Object> tpRateInfo) {
         logger.info("Processing bill");
 
         Map<String, Object> tenantInfoResult = queryHelper.getItemInfo(tenantName, ItemIdTypeEnum.NAME, ItemTypeEnum.TENANT);
@@ -106,7 +106,12 @@ public class BillProcessor {
         boolean incompleteUsageData = false;
         for(Map<String, Object> meterGroupUsage : tenantUsageSummary){
             String meterTypeTag = (String) meterGroupUsage.get("meter_type");
-            Map<String, Object> tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
+            Map<String, Object> tariffResult;
+            if(tpRateInfo.containsKey(meterTypeTag)) {
+                tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
+            }else{
+                tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
+            }
             if(tariffResult.containsKey("error")){
                 logger.severe("Failed to find tariff for meterTypeTag: " + meterTypeTag);
                 return Collections.singletonMap("error", "Failed to find tariff for meterTypeTag: " + meterTypeTag);
