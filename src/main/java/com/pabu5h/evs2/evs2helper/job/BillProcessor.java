@@ -371,7 +371,7 @@ public class BillProcessor {
             }
         }
 
-        return Collections.singletonMap("result", content.get("bill_name"));
+        return Collections.singletonMap("result", content.get("name"));
     }
 
     public String genBillName(String tenantName, String fromTimestamp, String toTimestamp) {
