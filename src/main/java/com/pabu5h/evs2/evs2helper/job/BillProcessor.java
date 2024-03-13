@@ -46,14 +46,20 @@ public class BillProcessor {
         int tenantCount = resp.size();
         int processedCount = 0;
         for (Map<String, Object> tenantInfo : resp) {
-            genSingleTenantBill((String) tenantInfo.get("tenant_name"), fromDate, toDate, isMonthly, null, null);
+            genSingleTenantBillingRec((String) tenantInfo.get("tenant_name"),
+                                      fromDate, toDate, isMonthly, null, null, null, null);
             processedCount++;
             logger.info(processedCount + " / " + tenantCount + " tenants processed");
         }
         return Collections.singletonMap("info", "All tenant bills processed");
     }
 
-    public Map<String, Object> genSingleTenantBill(String tenantName, String fromDate, String toDate, Boolean isMonthly, Map<String, Object> tpRateInfo, String genBy) {
+    public Map<String, Object> genSingleTenantBillingRec(String tenantName,
+                                                         String fromDate, String toDate, Boolean isMonthly,
+                                                         Map<String, Object> tpRateInfo,
+                                                         Map<String, Object> manualItemInfo,
+                                                         Map<String, Object> lineItemInfo,
+                                                         String genBy) {
         logger.info("Processing bill");
 
         Map<String, Object> tenantInfoResult = queryHelper.getItemInfo(tenantName, ItemIdTypeEnum.NAME, ItemTypeEnum.TENANT);
@@ -102,6 +108,7 @@ public class BillProcessor {
         double totalW = 0D;
         double totalB = 0D;
         double totalN = 0D;
+        double totalG = 0D;
         Map<String, Object> meterTypeRates = new HashMap<>();
         boolean incompleteUsageData = false;
         for(Map<String, Object> meterGroupUsage : tenantUsageSummary){
@@ -158,6 +165,9 @@ public class BillProcessor {
                     case "N":
                         totalN += usageShare;
                         break;
+                    case "G":
+                        totalG += usageShare;
+                        break;
                 }
             }
             if(incompleteUsageData){
@@ -165,23 +175,75 @@ public class BillProcessor {
                 return Collections.singletonMap("error", "Inconsistent usage data found for tenant: " + tenantName);
             }
         }
-        Map<String, Object> billResult = genBillRecord(tenantInfo, meterTypeRates, fromDate, toDate, isMonthly, genBy);
+        //manual usage items
+//        if(manualItemInfo!=null){
+//            for (Map.Entry<String, Object> entry : manualItemInfo.entrySet()) {
+//                String meterTypeTag = entry.getKey();
+//                Double usage = MathUtil.ObjToDouble(entry.getValue());
+//                Map<String, Object> tariffResult;
+//                if(tpRateInfo !=null) {
+//                    //custom billing
+//                    if(genBy == null) {
+//                        logger.severe("genBy is null");
+//                        return Collections.singletonMap("error", "genBy is null");
+//                    }
+//                    if(tpRateInfo.containsKey(meterTypeTag)) {
+//                        tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
+//                    }else {
+//                        logger.info("No tariff supplied for meterTypeTag: " + meterTypeTag);
+//                        continue;
+//                    }
+//                }else{
+//                    tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
+//                }
+//                if(tariffResult.containsKey("error")){
+//                    logger.severe("Failed to find tariff for meterTypeTag: " + meterTypeTag);
+//                    return Collections.singletonMap("error", "Failed to find tariff for meterTypeTag: " + meterTypeTag);
+//                }
+//                meterTypeRates.put(meterTypeTag, tariffResult);
+//                switch (meterTypeTag){
+//                    case "E":
+//                        totalE += usage;
+//                        break;
+//                    case "W":
+//                        totalW += usage;
+//                        break;
+//                    case "B":
+//                        totalB += usage;
+//                        break;
+//                    case "N":
+//                        totalN += usage;
+//                        break;
+//                    case "G":
+//                        totalG += usage;
+//                        break;
+//                }
+//            }
+//        }
+        Map<String, Object> billResult =
+                genBillingRecord(tenantInfo, meterTypeRates,
+                        fromDate, toDate, isMonthly,
+                        manualItemInfo,
+                        lineItemInfo,
+                        genBy);
         if(billResult.containsKey("error")){
             logger.severe("Failed to generate bill record: " + billResult.get("error"));
             return Collections.singletonMap("error", "Failed to generate bill record: " + billResult.get("error"));
         }
-        logger.info("Bill processed");
-        return Collections.singletonMap("result", "Bill processed");
+        logger.info("Bill processed for tenant: " + tenantName + " bill_name" + billResult.get("result"));
+        return Collections.singletonMap("result", billResult.get("result"));
     }
 
-    public Map<String, Object> genBillRecord(Map<String, Object> tenantInfo,
-                                             Map<String, Object> meterTypeRates,
-                                             String fromTimestamp, String toTimestamp, Boolean isMonthly, String genBy) {
+    public Map<String, Object> genBillingRecord(Map<String, Object> tenantInfo,
+                                                Map<String, Object> meterTypeRates,
+                                                String fromTimestamp, String toTimestamp, Boolean isMonthly,
+                                                Map<String, Object> manualItemInfo,
+                                                Map<String, Object> lineItemInfo,
+                                                String genBy) {
         logger.info("Generating bill");
         if(meterTypeRates.isEmpty()){
             logger.warning("No meterTypeRates found");
             return Collections.singletonMap("error", "No meterTypeRates found");
-
         }
 //        String fromTimestamp = (String) tariffPackageInfo.get("from_timestamp");
 //        String toTimestamp = (String) tariffPackageInfo.get("to_timestamp");
@@ -211,6 +273,20 @@ public class BillProcessor {
         content.put("from_timestamp", fromTimestamp);
         content.put("to_timestamp", toTimestamp);
         content.put("tenant_id", tenantIndex);
+
+        if(manualItemInfo!=null){
+            for (Map.Entry<String, Object> entry : manualItemInfo.entrySet()) {
+                String meterTypeTag = entry.getKey();
+                Double usage = MathUtil.ObjToDouble(entry.getValue());
+                content.put("manual_usage_"+meterTypeTag.toLowerCase(), usage);
+            }
+        }
+        if(lineItemInfo!=null){
+            if(lineItemInfo.containsKey("line_item_label_1")){
+                content.put("line_item_label_1", lineItemInfo.get("line_item_label_1"));
+                content.put("line_item_amount_1", lineItemInfo.get("line_item_amount_1"));
+            }
+        }
 
         if(genBy != null){
             content.put("gen_type", "manual");
