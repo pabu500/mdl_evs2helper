@@ -278,7 +278,7 @@ public class BillProcessor {
             for (Map.Entry<String, Object> entry : manualItemInfo.entrySet()) {
                 String meterTypeTag = entry.getKey();
                 Double usage = MathUtil.ObjToDouble(entry.getValue());
-                content.put("manual_usage_"+meterTypeTag.toLowerCase(), usage);
+                content.put(meterTypeTag.toLowerCase(), usage);
             }
         }
         if(lineItemInfo!=null){
