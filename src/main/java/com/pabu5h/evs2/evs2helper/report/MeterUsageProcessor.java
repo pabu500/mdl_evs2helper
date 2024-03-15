@@ -356,11 +356,17 @@ public class MeterUsageProcessor {
         }
         ItemIdTypeEnum itemIdTypeEnum = ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
 
-        String meterGroupIndex = request.get("group_index");
+        String meterGroupName = request.get("group_name");
         Map<String, Object> percentMap = new HashMap<>();
-        if(meterGroupIndex!=null){
+        if(meterGroupName!=null){
+            Map<String, Object> result = queryHelper.getTableField(
+                    "meter_group", "id", "name", meterGroupName);
+            String meterGroupIndexStr = (String) result.get("id");
+            if(meterGroupIndexStr == null || meterGroupIndexStr.isEmpty()){
+                return Collections.singletonMap("error", "Invalid request");
+            }
             //get meter percentage from meter group
-            String sql = "SELECT meter_id, percentage FROM meter_group_meter_iwow WHERE meter_group_id = '" + meterGroupIndex + "'";
+            String sql = "SELECT meter_id, percentage FROM meter_group_meter_iwow WHERE meter_group_id = '" + meterGroupIndexStr + "'";
             List<Map<String, Object>> resp;
             try {
                 resp = oqgHelper.OqgR2(sql, true);
