@@ -356,6 +356,11 @@ public class MeterUsageProcessor {
         }
         ItemIdTypeEnum itemIdTypeEnum = ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
 
+        String meterGroupName = request.get("group_id");
+        if(meterGroupName!=null){
+            //get meter percentage from meter group
+        }
+
         Map<String, Object> itemConfig = scopeHelper.getItemTypeConfig(projectScope, itemIdTypeStr);
         String targetReadingTableName = (String) itemConfig.get("targetReadingTableName");
         String targetTableName = (String) itemConfig.get("targetTableName");
