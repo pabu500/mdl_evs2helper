@@ -356,9 +356,32 @@ public class MeterUsageProcessor {
         }
         ItemIdTypeEnum itemIdTypeEnum = ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
 
-        String meterGroupName = request.get("group_id");
-        if(meterGroupName!=null){
+        String meterGroupIndex = request.get("group_index");
+        Map<String, Object> percentMap = new HashMap<>();
+        if(meterGroupIndex!=null){
             //get meter percentage from meter group
+            String sql = "SELECT meter_id, percentage FROM meter_group_meter_iwow WHERE meter_group_id = '" + meterGroupIndex + "'";
+            List<Map<String, Object>> resp;
+            try {
+                resp = oqgHelper.OqgR2(sql, true);
+            } catch (Exception e) {
+                logger.info("oqgHelper error: " + e.getMessage());
+                return Collections.singletonMap("error", "oqgHelper error: " + e.getMessage());
+            }
+            if (resp == null) {
+                logger.info("oqgHelper error: resp is null");
+                return Collections.singletonMap("error", "oqgHelper error: resp is null");
+            }
+            if (resp.isEmpty()) {
+                logger.info("no meter found");
+                return Collections.singletonMap("info", "no meter found");
+            }
+            List<Map<String, Object>> meterList = resp;
+            for(Map<String, Object> meterMap : meterList){
+                String meterId = (String) meterMap.get("meter_id");
+                String percentage = (String) meterMap.get("percentage");
+                percentMap.put(meterId, percentage);
+            }
         }
 
         Map<String, Object> itemConfig = scopeHelper.getItemTypeConfig(projectScope, itemIdTypeStr);
@@ -423,6 +446,8 @@ public class MeterUsageProcessor {
                 logger.info("meterId is null or empty");
                 continue;
             }
+
+            Double percentage = percentMap.get(meterId) == null ? 100.0 : Double.parseDouble((String) percentMap.get(meterId));
 
             //targetInterval: "month", "week", "day"
             //get the first and last reading of the interval for the past numberOfIntervals intervals
@@ -545,7 +570,6 @@ public class MeterUsageProcessor {
                     firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
                     lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
                     usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
-
                 }
 
                 Map<String, Object> usageHistory = new HashMap<>();
@@ -585,7 +609,8 @@ public class MeterUsageProcessor {
                     "meter_id", meterId,
                     "meter_id_type", itemIdTypeStr,
                     "interval", targetInterval,
-                    "meter_usage_history", meterConsumptionHistoryList
+                    "meter_usage_history", meterConsumptionHistoryList,
+                    "percentage", percentage
             ));
         }
         return Collections.singletonMap("meter_list_consolidated_usage_history", meterListConsumptionHistory);
