@@ -530,7 +530,7 @@ public class KeyValUpdateProcessor {
                         if (key.equals("tenant_name")){
                             continue;
                         }
-                        if(key.equals("tenant_label") && (val == null || val.toString().isBlank())){
+                        if(key.equals("tenant_label") && (val == null /*|| val.toString().isBlank()*/)){
                             continue;
                         }
                         if(key.equals("type")){
