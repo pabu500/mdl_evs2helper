@@ -14,7 +14,7 @@ public class ScopeHelper {
     Logger logger = Logger.getLogger(ScopeHelper.class.getName());
 
     public Map<String, Object> getItemTypeConfig(String projectScope, String itemIdTypeStr){
-        ItemIdTypeEnum itemIdType = itemIdTypeStr.isEmpty()? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
+        ItemIdTypeEnum itemIdType = (itemIdTypeStr == null || itemIdTypeStr.isEmpty()) ? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
         String targetTableName = "meter";
         String targetReadingTableName = "meter_reading";
         String targetGroupTableName = "meter_group";
