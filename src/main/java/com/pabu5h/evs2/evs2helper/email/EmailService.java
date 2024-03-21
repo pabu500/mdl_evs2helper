@@ -9,6 +9,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 
@@ -83,6 +86,31 @@ public class EmailService {
 
             // Add attachment
             helper.addAttachment(attachmentName, attachedFile);
+
+            try {
+                mailSender.send(mimeMessage);
+            }catch (Exception e){
+                logger.info("mailSender error: " + e.getMessage());
+            }
+        }catch (Exception e){
+            logger.info("mailSender error: " + e.getMessage());
+        }
+    }
+    public void sendEmailWithAttachmentIssMulti(String fromAddress, String senderName, String to, String subject, String text, List<Map<String, Object>> files, boolean isHtml) {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setFrom(senderName+ " <"+fromAddress+">");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(text, isHtml);
+
+            // Add attachment
+            for(Map<String, Object> file : files){
+                String attachmentName = (String) file.get("name");
+                InputStreamSource attachedFile = (InputStreamSource) file.get("content");
+                helper.addAttachment(attachmentName, attachedFile);
+            }
 
             try {
                 mailSender.send(mimeMessage);
