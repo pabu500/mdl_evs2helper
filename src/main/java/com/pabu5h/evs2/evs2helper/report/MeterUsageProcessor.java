@@ -429,7 +429,7 @@ public class MeterUsageProcessor {
                 }
             }
         }else if(itemTypeEnum == ItemTypeEnum.METER_IWOW){
-            if (itemIdTypeEnum != ItemIdTypeEnum.NAME && itemIdTypeEnum != ItemIdTypeEnum.SN) {
+            if (itemIdTypeEnum != ItemIdTypeEnum.NAME && itemIdTypeEnum != ItemIdTypeEnum.SN && itemIdTypeEnum != ItemIdTypeEnum.ID) {
                 meterIdList2.clear();
                 for (String meterId : meterIdList) {
                     String meterIdColName = "";
@@ -438,9 +438,9 @@ public class MeterUsageProcessor {
                     }
                     Map<String, Object> result = queryHelper.getTableField(
                             "meter_iwow", "item_sn", meterIdColName, meterId);
-                    String meter_id = (String) result.get("item_sn");
-                    if (meter_id != null && !meter_id.isEmpty()) {
-                        meterIdList2.add(meter_id);
+                    String meterIdStr = (String) result.get("item_sn");
+                    if (meterIdStr != null && !meterIdStr.isEmpty()) {
+                        meterIdList2.add(meterIdStr);
                     }
                 }
             }
@@ -453,7 +453,18 @@ public class MeterUsageProcessor {
                 continue;
             }
 
-            Double percentage = percentMap.get(meterId) == null ? 100.0 : Double.parseDouble((String) percentMap.get(meterId));
+            String meterIndex = meterId;
+            if(itemIdTypeEnum != ItemIdTypeEnum.ID){
+                Map<String, Object> result = queryHelper.getTableField(
+                        targetTableName, "id", itemIdColName, meterId);
+                String meterIdStr = (String) result.get("id");
+                if (meterIdStr == null || meterIdStr.isEmpty()) {
+                    logger.info("meter_id is null or empty");
+                    continue;
+                }
+                meterIndex = meterIdStr;
+            }
+            Double percentage = percentMap.get(meterIndex) == null ? 100.0 : Double.parseDouble((String) percentMap.get(meterIndex));
 
             //targetInterval: "month", "week", "day"
             //get the first and last reading of the interval for the past numberOfIntervals intervals
