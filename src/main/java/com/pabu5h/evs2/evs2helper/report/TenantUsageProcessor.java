@@ -60,6 +60,8 @@ public class TenantUsageProcessor {
         if(meterTypeEnum == null){
             return Collections.singletonMap("error", "Invalid request");
         }
+        String getTrendingSnapshot = request.getOrDefault("get_trending_snapshot", "false");
+        boolean getTrendingSnapshotBool = Boolean.parseBoolean(getTrendingSnapshot);
 
         Map<String, Object> itemConfig = scopeHelper.getItemTypeConfig(projectScope, itemIdTypeStr);
         String targetTableName = (String) itemConfig.get("targetTableName");
@@ -199,19 +201,75 @@ public class TenantUsageProcessor {
                     meterUsage.put("percentage", percentageDouble);
                 }
 
-                groupUsageList.add(Map.of(
-                    "meter_group_name", groupName,
-                    "meter_group_label", label,
-                    "meter_type", meterType,
-                    "meter_group_usage_summary", usageResult
-                ));
-
+                Map<String, Object> groupUsage = new HashMap<>();
+                groupUsage.put("meter_group_name", groupName);
+                groupUsage.put("meter_group_label", label);
+                groupUsage.put("meter_type", meterType);
+                groupUsage.put("meter_group_usage_summary", usageResult);
+                if (getTrendingSnapshotBool) {
+                    List<String> meterIdList = new ArrayList<>();
+                    for (Map<String, Object> meter : meterList) {
+                        meterIdList.add((String) meter.get(itemNameColName));
+                    }
+                    Map<String, Object> trendingSnapshot = getMeterGroupTrendingSnapshot(
+                            projectScope, siteScope,
+                            meterTypeStr,
+                            itemIdTypeStr,
+                            //join meter id list
+                            String.join(",", meterIdList),
+                            groupName,
+                            startDatetimeStr, endDatetimeStr,
+                            isMonthly
+                    );
+                    if (trendingSnapshot.containsKey("error")) {
+                        logger.severe("Error getting trending snapshot: " + trendingSnapshot.get("error"));
+                    }else {
+                        groupUsage.put("meter_group_trending_snapshot", trendingSnapshot);
+                    }
+                }
+                groupUsageList.add(groupUsage);
             }
             tenantResult.put("tenant_usage_summary", groupUsageList);
             tenantUsageList.add(tenantResult);
         }
 
         return Collections.singletonMap("tenant_list_usage_summary", tenantUsageList);
+    }
+
+    private Map<String, Object> getMeterGroupTrendingSnapshot(String projectScope, String siteScope,
+                                                              String meterTypeStr,
+                                                              String itemIdTypeStr,
+                                                              String meterList,
+                                                              String meterGroupId,
+                                                              String startDatetimeStr, String endDatetimeStr,
+                                                              boolean isMonthly
+    ) {
+        try {
+            Map<String, String> consolidatedUsageHistoryRequest = new HashMap<>();
+            consolidatedUsageHistoryRequest.put("target_interval", "month");
+            consolidatedUsageHistoryRequest.put("num_of_intervals", "6");
+            consolidatedUsageHistoryRequest.put("project_scope", projectScope);
+            consolidatedUsageHistoryRequest.put("site_scope", siteScope);
+            consolidatedUsageHistoryRequest.put("item_type", meterTypeStr);
+            consolidatedUsageHistoryRequest.put("group_name", meterGroupId);
+            consolidatedUsageHistoryRequest.put("item_id_type", itemIdTypeStr);
+            consolidatedUsageHistoryRequest.put("item_id_list", meterList);
+            consolidatedUsageHistoryRequest.put("start_datetime", startDatetimeStr);
+            consolidatedUsageHistoryRequest.put("end_datetime", endDatetimeStr);
+            consolidatedUsageHistoryRequest.put("is_monthly", String.valueOf(isMonthly));
+            consolidatedUsageHistoryRequest.put("sort_by", "kwh_timestamp");
+            consolidatedUsageHistoryRequest.put("sort_order", "desc");
+            consolidatedUsageHistoryRequest.put("max_rows_per_page", "1");
+            consolidatedUsageHistoryRequest.put("current_page", "1");
+
+            Map<String, Object> trendingResult =
+                    meterUsageProcessor.getMeterConsolidatedUsageHistory(consolidatedUsageHistoryRequest);
+
+            return trendingResult;
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+            return Map.of("error", e.getMessage());
+        }
     }
 
 }
