@@ -629,6 +629,8 @@ public class MeterUsageProcessor {
             String targetReadingTableName,
             String itemIdColName,
             String timeKey, String valKey) {
+        logger.info("process findMonthlyReading");
+        LocalDateTime searchingStart = localHelper.getLocalNow();
 
         LocalDateTime monthEndDatetimeDay = DateTimeUtil.getLocalDateTime(monthEndDatetimeStr);
         LocalDateTime monthEndDatetime =  monthEndDatetimeDay
@@ -683,7 +685,7 @@ public class MeterUsageProcessor {
                     return Collections.singletonMap("error", "oqgHelper error: resp is null");
                 }
                 if (respCommissionedMonth.isEmpty()) {
-                    logger.info("no first reading of the month found for meter: " + meterId);
+                    logger.info("no commission month reading found for meter: " + meterId);
 //                    return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
 //                    result.put("first_reading_time", "-");
 //                    result.put("first_reading_val", "-");
@@ -854,6 +856,9 @@ public class MeterUsageProcessor {
         result.put("last_reading_time", lastReadingTimestamp);
         result.put("last_reading_val", lastReadingVal);
         result.put("use_commissioned_datetime", useCommissionedDatetime);
+
+        LocalDateTime searchingEnd = localHelper.getLocalNow();
+        logger.info("findMonthlyReading duration: " + Duration.between(searchingStart, searchingEnd).toSeconds() + " seconds");
 
         return result;
     }
