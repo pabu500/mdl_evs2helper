@@ -247,7 +247,7 @@ public class TenantUsageProcessor {
         try {
             Map<String, String> consolidatedUsageHistoryRequest = new HashMap<>();
             consolidatedUsageHistoryRequest.put("target_interval", "month");
-            consolidatedUsageHistoryRequest.put("num_of_intervals", "6");
+            consolidatedUsageHistoryRequest.put("num_of_intervals", "3");
             consolidatedUsageHistoryRequest.put("project_scope", projectScope);
             consolidatedUsageHistoryRequest.put("site_scope", siteScope);
             consolidatedUsageHistoryRequest.put("item_type", meterTypeStr);
