@@ -429,7 +429,7 @@ public class MeterUsageProcessor {
                 }
             }
         }else if(itemTypeEnum == ItemTypeEnum.METER_IWOW){
-            if (itemIdTypeEnum != ItemIdTypeEnum.NAME && itemIdTypeEnum != ItemIdTypeEnum.SN && itemIdTypeEnum != ItemIdTypeEnum.ID) {
+            if (itemIdTypeEnum != ItemIdTypeEnum.NAME && itemIdTypeEnum != ItemIdTypeEnum.SN ) {
                 meterIdList2.clear();
                 for (String meterId : meterIdList) {
                     String meterIdColName = "";
