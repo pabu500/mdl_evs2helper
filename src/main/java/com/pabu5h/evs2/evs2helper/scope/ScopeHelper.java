@@ -106,6 +106,8 @@ public class ScopeHelper {
         result.put("panelTagColName", panelTagColName);
         result.put("itemIdColSel", itemIdColSel);
         result.put("itemLocColSel", itemLocColSel);
+        result.put("itemLocBuildingColName", itemLocBuildingColName);
+        result.put("itemLocBlockColName", itemLocBlockColName);
         result.put("timeKey", timeKey);
         result.put("valKey", valKey);
         result.put("validator", validator);
