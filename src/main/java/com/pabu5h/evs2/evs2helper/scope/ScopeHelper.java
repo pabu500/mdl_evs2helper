@@ -30,6 +30,8 @@ public class ScopeHelper {
         String panelTagColName = "panel_tag";
         String itemIdColSel = "meter_sn,meter_displayname";
         String itemLocColSel = "mms_building,mms_block,mms_level,mms_unit";
+        String itemLocBuildingColName = "mms_building";
+        String itemLocBlockColName = "mms_block";
         ItemTypeEnum itemType = ItemTypeEnum.METER;
         Function<String, String> validator = null;
         if (projectScope.toLowerCase().contains("ems_smrt")) {
@@ -64,6 +66,8 @@ public class ScopeHelper {
             itemAltNameColName = "alt_name";
             itemIdColSel = "item_sn,item_name,alt_name";
             itemLocColSel = "loc_building,loc_level";
+            itemLocBuildingColName = "loc_building";
+            itemLocBlockColName = "";
             timeKey = "dt";
             valKey = "val";
             if(itemIdType == null){
