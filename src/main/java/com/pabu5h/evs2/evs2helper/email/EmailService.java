@@ -75,7 +75,10 @@ public class EmailService {
             logger.info("mailSender error: " + e.getMessage());
         }
     }
-    public void sendEmailWithAttachmentIss(String fromAddress, String senderName, String to, String subject, String text, String attachmentName, InputStreamSource attachedFile, boolean isHtml) {
+    public void sendEmailWithAttachmentIss(String fromAddress, String senderName, String to,
+                                           String subject, String text,
+                                           String attachmentName, InputStreamSource attachedFile,
+                                           boolean isHtml) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -96,7 +99,10 @@ public class EmailService {
             logger.info("mailSender error: " + e.getMessage());
         }
     }
-    public void sendEmailWithAttachmentIssMulti(String fromAddress, String senderName, String to, String subject, String text, List<Map<String, Object>> files, boolean isHtml) {
+    public void sendEmailWithAttachmentIssMulti(String fromAddress, String senderName, String to, String replayTo,
+                                                String subject, String text,
+                                                List<Map<String, Object>> files,
+                                                boolean isHtml) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -104,6 +110,7 @@ public class EmailService {
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(text, isHtml);
+            helper.setReplyTo(replayTo);
 
             // Add attachment
             for(Map<String, Object> file : files){
