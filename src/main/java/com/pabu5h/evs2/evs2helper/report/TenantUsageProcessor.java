@@ -129,111 +129,235 @@ public class TenantUsageProcessor {
 
         List<Map<String, Object>> tenantUsageList = new ArrayList<>();
         for (Map<String, Object> tenantMap : resp) {
-            Map<String, Object> requestTenant = new HashMap<>();
-            requestTenant.put("scope_str", projectScope);
-            requestTenant.put("item_id_type", "name");
-            requestTenant.put("item_index", tenantMap.get("id"));
-            requestTenant.put("get_full_info", "true");
-            requestTenant.put("item_type", itemTypeEnum.name());
-            requestTenant.put("target_group_target_table_name", targetGroupTargetTableName);
-            requestTenant.put("tenant_target_group_table_name", tenantTargetGroupTableName);
-            requestTenant.put("meter_type", meterTypeEnum.name());
+//            Map<String, Object> requestTenant = new HashMap<>();
+//            requestTenant.put("scope_str", projectScope);
+//            requestTenant.put("item_id_type", "name");
+//            requestTenant.put("item_index", tenantMap.get("id"));
+//            requestTenant.put("get_full_info", "true");
+//            requestTenant.put("item_type", itemTypeEnum.name());
+//            requestTenant.put("target_group_target_table_name", targetGroupTargetTableName);
+//            requestTenant.put("tenant_target_group_table_name", tenantTargetGroupTableName);
+//            requestTenant.put("meter_type", meterTypeEnum.name());
+//
+//            Map<String, Object> tenantMeters = queryHelper.getTenantMeterGroups(requestTenant);
+//
+//            Map<String, Object> tenantResult = new HashMap<>();
+//
+//            tenantResult.put("id", tenantMap.get("id"));
+//            tenantResult.put("tenant_name", tenantMap.get("tenant_name"));
+//            tenantResult.put("tenant_label", tenantMap.get("tenant_label"));
+//
+//            //list of meter groups
+//            List<Map<String, Object>> meterGroups = (List<Map<String, Object>>) tenantMeters.get("group_full_info");
+//
+//            List<Map<String, Object>> groupUsageList = new ArrayList<>();
+//            for (Map<String, Object> meterGroup : meterGroups) {
+//                String meterType = (String) meterGroup.get("meter_type");
+//                String groupName = (String) meterGroup.get("group_name");
+//                String label = (String) meterGroup.get("group_label");
+//                List<Map<String, Object>> meterList = (List<Map<String, Object>>) meterGroup.get("group_meter_list");
+//                Map<String, String> requestMeterListUsage = new HashMap<>();
+//                requestMeterListUsage.put("project_scope", projectScope);
+//                requestMeterListUsage.put("site_scope", siteScope);
+//                requestMeterListUsage.put("item_type", itemTypeEnum.name());
+//                requestMeterListUsage.put("item_id_list", meterList.toString());
+//                requestMeterListUsage.put("item_id_type", ItemIdTypeEnum.ID.name());
+//                requestMeterListUsage.put("start_datetime", startDatetimeStr);
+//                requestMeterListUsage.put("end_datetime", endDatetimeStr);
+//                requestMeterListUsage.put("is_monthly", String.valueOf(isMonthly));
+//                requestMeterListUsage.put("sort_by", "meter_sn");
+//                requestMeterListUsage.put("sort_order", "asc");
+//                requestMeterListUsage.put("max_rows_per_page", "1000");
+//                requestMeterListUsage.put("current_page", "1");
+//
+//                Map<String, Object> usageResult = meterUsageProcessor.getMeterListUsageSummary(requestMeterListUsage, meterList);
+//
+//                // handle percentage
+//                List<Map<String, Object>> meterListUsageSummary = (List<Map<String, Object>>) usageResult.get("meter_list_usage_summary");
+//                if (meterListUsageSummary == null) {
+//                    logger.info("no meter usage found");
+//                    continue;
+//                }
+//                for(Map<String, Object> meterUsage : meterListUsageSummary) {
+//                    //find percentage from meter list
+//                    String meterId = (String) meterUsage.get(itemNameColName);
+//                    Object percentage = meterList.stream()
+//                            .filter(m -> m.get(itemNameColName).equals(meterId))
+//                            .findFirst()
+//                            .map(m -> m.get("percentage"))
+//                            .orElse(null);
+//
+//                    double percentageDouble = 100D;
+//                    if(percentage == null) {
+//                        logger.info("no matching meter found");
+//                    }else{
+//                        try {
+////                            percentageDouble = Double.parseDouble((String) percentage);
+//                            percentageDouble = (Double) percentage;
+//                        } catch (NumberFormatException e) {
+//                            logger.info("percentage is not a number");
+//                        }
+//                    }
+//                    meterUsage.put("percentage", percentageDouble);
+//                }
+//
+//                Map<String, Object> groupUsage = new HashMap<>();
+//                groupUsage.put("meter_group_name", groupName);
+//                groupUsage.put("meter_group_label", label);
+//                groupUsage.put("meter_type", meterType);
+//                groupUsage.put("meter_group_usage_summary", usageResult);
+//                if (getTrendingSnapshotBool) {
+//                    List<String> meterIdList = new ArrayList<>();
+//                    for (Map<String, Object> meter : meterList) {
+//                        meterIdList.add((String) meter.get(itemNameColName));
+//                    }
+//                    Map<String, Object> trendingSnapshot = getMeterGroupTrendingSnapshot(
+//                            projectScope, siteScope,
+//                            meterTypeStr,
+//                            itemIdTypeStr,
+//                            //join meter id list
+//                            String.join(",", meterIdList),
+//                            groupName,
+//                            startDatetimeStr, endDatetimeStr,
+//                            isMonthly
+//                    );
+//                    if (trendingSnapshot.containsKey("error")) {
+//                        logger.severe("Error getting trending snapshot: " + trendingSnapshot.get("error"));
+//                    }else {
+//                        groupUsage.put("meter_group_trending_snapshot", trendingSnapshot);
+//                    }
+//                }
+//                groupUsageList.add(groupUsage);
+//            }
+//            tenantResult.put("tenant_usage_summary", groupUsageList);
 
-            Map<String, Object> tenantMeters = queryHelper.getTenantMeterGroups(requestTenant);
+            Map<String, Object> tenantResult = compileTenantsUsage(
+                    tenantMap,
+                    projectScope, siteScope,
+                    startDatetimeStr, endDatetimeStr,
+                    isMonthly,
+                    itemTypeEnum, meterTypeEnum, itemIdType,
+                    targetGroupTargetTableName, tenantTargetGroupTableName, itemNameColName,
+                    getTrendingSnapshotBool);
 
-            Map<String, Object> tenantResult = new HashMap<>();
+//            Map<String, Object> subTenantUsageList = getSubTenantsUsage();
 
-            tenantResult.put("id", tenantMap.get("id"));
-            tenantResult.put("tenant_name", tenantMap.get("tenant_name"));
-            tenantResult.put("tenant_label", tenantMap.get("tenant_label"));
-
-            //list of meter groups
-            List<Map<String, Object>> meterGroups = (List<Map<String, Object>>) tenantMeters.get("group_full_info");
-
-            List<Map<String, Object>> groupUsageList = new ArrayList<>();
-            for (Map<String, Object> meterGroup : meterGroups) {
-                String meterType = (String) meterGroup.get("meter_type");
-                String groupName = (String) meterGroup.get("group_name");
-                String label = (String) meterGroup.get("group_label");
-                List<Map<String, Object>> meterList = (List<Map<String, Object>>) meterGroup.get("group_meter_list");
-                Map<String, String> requestMeterListUsage = new HashMap<>();
-                requestMeterListUsage.put("project_scope", projectScope);
-                requestMeterListUsage.put("site_scope", siteScope);
-                requestMeterListUsage.put("item_type", itemTypeEnum.name());
-                requestMeterListUsage.put("item_id_list", meterList.toString());
-                requestMeterListUsage.put("item_id_type", ItemIdTypeEnum.ID.name());
-                requestMeterListUsage.put("start_datetime", startDatetimeStr);
-                requestMeterListUsage.put("end_datetime", endDatetimeStr);
-                requestMeterListUsage.put("is_monthly", String.valueOf(isMonthly));
-                requestMeterListUsage.put("sort_by", "meter_sn");
-                requestMeterListUsage.put("sort_order", "asc");
-                requestMeterListUsage.put("max_rows_per_page", "1000");
-                requestMeterListUsage.put("current_page", "1");
-
-                Map<String, Object> usageResult = meterUsageProcessor.getMeterListUsageSummary(requestMeterListUsage, meterList);
-
-                // handle percentage
-                List<Map<String, Object>> meterListUsageSummary = (List<Map<String, Object>>) usageResult.get("meter_list_usage_summary");
-                if (meterListUsageSummary == null) {
-                    logger.info("no meter usage found");
-                    continue;
-                }
-                for(Map<String, Object> meterUsage : meterListUsageSummary) {
-                    //find percentage from meter list
-                    String meterId = (String) meterUsage.get(itemNameColName);
-                    Object percentage = meterList.stream()
-                            .filter(m -> m.get(itemNameColName).equals(meterId))
-                            .findFirst()
-                            .map(m -> m.get("percentage"))
-                            .orElse(null);
-
-                    double percentageDouble = 100D;
-                    if(percentage == null) {
-                        logger.info("no matching meter found");
-                    }else{
-                        try {
-//                            percentageDouble = Double.parseDouble((String) percentage);
-                            percentageDouble = (Double) percentage;
-                        } catch (NumberFormatException e) {
-                            logger.info("percentage is not a number");
-                        }
-                    }
-                    meterUsage.put("percentage", percentageDouble);
-                }
-
-                Map<String, Object> groupUsage = new HashMap<>();
-                groupUsage.put("meter_group_name", groupName);
-                groupUsage.put("meter_group_label", label);
-                groupUsage.put("meter_type", meterType);
-                groupUsage.put("meter_group_usage_summary", usageResult);
-                if (getTrendingSnapshotBool) {
-                    List<String> meterIdList = new ArrayList<>();
-                    for (Map<String, Object> meter : meterList) {
-                        meterIdList.add((String) meter.get(itemNameColName));
-                    }
-                    Map<String, Object> trendingSnapshot = getMeterGroupTrendingSnapshot(
-                            projectScope, siteScope,
-                            meterTypeStr,
-                            itemIdTypeStr,
-                            //join meter id list
-                            String.join(",", meterIdList),
-                            groupName,
-                            startDatetimeStr, endDatetimeStr,
-                            isMonthly
-                    );
-                    if (trendingSnapshot.containsKey("error")) {
-                        logger.severe("Error getting trending snapshot: " + trendingSnapshot.get("error"));
-                    }else {
-                        groupUsage.put("meter_group_trending_snapshot", trendingSnapshot);
-                    }
-                }
-                groupUsageList.add(groupUsage);
-            }
-            tenantResult.put("tenant_usage_summary", groupUsageList);
             tenantUsageList.add(tenantResult);
         }
 
         return Collections.singletonMap("tenant_list_usage_summary", tenantUsageList);
+    }
+
+    private Map<String, Object> compileTenantsUsage(Map<String, Object> tenantMap,
+                                                    String projectScope, String siteScope,
+                                                    String startDatetimeStr, String endDatetimeStr,
+                                                    boolean isMonthly,
+                                                    ItemTypeEnum itemTypeEnum, ItemTypeEnum meterTypeEnum, ItemIdTypeEnum itemIdTypeEnum,
+                                                    String targetGroupTargetTableName, String tenantTargetGroupTableName,
+                                                    String itemNameColName,
+                                                    boolean getTrendingSnapshotBool) {
+        Map<String, Object> requestTenant = new HashMap<>();
+        requestTenant.put("scope_str", projectScope);
+        requestTenant.put("item_id_type", "name");
+        requestTenant.put("item_index", tenantMap.get("id"));
+        requestTenant.put("get_full_info", "true");
+        requestTenant.put("item_type", itemTypeEnum.name());
+        requestTenant.put("target_group_target_table_name", targetGroupTargetTableName);
+        requestTenant.put("tenant_target_group_table_name", tenantTargetGroupTableName);
+        requestTenant.put("meter_type", meterTypeEnum.name());
+
+        Map<String, Object> tenantMeters = queryHelper.getTenantMeterGroups(requestTenant);
+
+        Map<String, Object> tenantResult = new HashMap<>();
+
+        tenantResult.put("id", tenantMap.get("id"));
+        tenantResult.put("tenant_name", tenantMap.get("tenant_name"));
+        tenantResult.put("tenant_label", tenantMap.get("tenant_label"));
+
+        //list of meter groups
+        List<Map<String, Object>> meterGroups = (List<Map<String, Object>>) tenantMeters.get("group_full_info");
+
+        List<Map<String, Object>> groupUsageList = new ArrayList<>();
+        for (Map<String, Object> meterGroup : meterGroups) {
+            String meterType = (String) meterGroup.get("meter_type");
+            String groupName = (String) meterGroup.get("group_name");
+            String label = (String) meterGroup.get("group_label");
+            List<Map<String, Object>> meterList = (List<Map<String, Object>>) meterGroup.get("group_meter_list");
+            Map<String, String> requestMeterListUsage = new HashMap<>();
+            requestMeterListUsage.put("project_scope", projectScope);
+            requestMeterListUsage.put("site_scope", siteScope);
+            requestMeterListUsage.put("item_type", itemTypeEnum.name());
+            requestMeterListUsage.put("item_id_list", meterList.toString());
+            requestMeterListUsage.put("item_id_type", ItemIdTypeEnum.ID.name());
+            requestMeterListUsage.put("start_datetime", startDatetimeStr);
+            requestMeterListUsage.put("end_datetime", endDatetimeStr);
+            requestMeterListUsage.put("is_monthly", String.valueOf(isMonthly));
+            requestMeterListUsage.put("sort_by", "meter_sn");
+            requestMeterListUsage.put("sort_order", "asc");
+            requestMeterListUsage.put("max_rows_per_page", "1000");
+            requestMeterListUsage.put("current_page", "1");
+
+            Map<String, Object> usageResult = meterUsageProcessor.getMeterListUsageSummary(requestMeterListUsage, meterList);
+
+            // handle percentage
+            List<Map<String, Object>> meterListUsageSummary = (List<Map<String, Object>>) usageResult.get("meter_list_usage_summary");
+            if (meterListUsageSummary == null) {
+                logger.info("no meter usage found");
+                continue;
+            }
+            for(Map<String, Object> meterUsage : meterListUsageSummary) {
+                //find percentage from meter list
+                String meterId = (String) meterUsage.get(itemNameColName);
+                Object percentage = meterList.stream()
+                        .filter(m -> m.get(itemNameColName).equals(meterId))
+                        .findFirst()
+                        .map(m -> m.get("percentage"))
+                        .orElse(null);
+
+                double percentageDouble = 100D;
+                if(percentage == null) {
+                    logger.info("no matching meter found");
+                }else{
+                    try {
+//                            percentageDouble = Double.parseDouble((String) percentage);
+                        percentageDouble = (Double) percentage;
+                    } catch (NumberFormatException e) {
+                        logger.info("percentage is not a number");
+                    }
+                }
+                meterUsage.put("percentage", percentageDouble);
+            }
+
+            Map<String, Object> groupUsage = new HashMap<>();
+            groupUsage.put("meter_group_name", groupName);
+            groupUsage.put("meter_group_label", label);
+            groupUsage.put("meter_type", meterType);
+            groupUsage.put("meter_group_usage_summary", usageResult);
+            if (getTrendingSnapshotBool) {
+                List<String> meterIdList = new ArrayList<>();
+                for (Map<String, Object> meter : meterList) {
+                    meterIdList.add((String) meter.get(itemNameColName));
+                }
+                Map<String, Object> trendingSnapshot = getMeterGroupTrendingSnapshot(
+                        projectScope, siteScope,
+                        meterTypeEnum.name(),
+                        itemIdTypeEnum.name(),
+                        //join meter id list
+                        String.join(",", meterIdList),
+                        groupName,
+                        startDatetimeStr, endDatetimeStr,
+                        isMonthly
+                );
+                if (trendingSnapshot.containsKey("error")) {
+                    logger.severe("Error getting trending snapshot: " + trendingSnapshot.get("error"));
+                }else {
+                    groupUsage.put("meter_group_trending_snapshot", trendingSnapshot);
+                }
+            }
+            groupUsageList.add(groupUsage);
+        }
+        tenantResult.put("tenant_usage_summary", groupUsageList);
+        return tenantResult;
     }
 
     private Map<String, Object> getMeterGroupTrendingSnapshot(String projectScope, String siteScope,
@@ -242,8 +366,7 @@ public class TenantUsageProcessor {
                                                               String meterList,
                                                               String meterGroupId,
                                                               String startDatetimeStr, String endDatetimeStr,
-                                                              boolean isMonthly
-    ) {
+                                                              boolean isMonthly) {
         try {
             Map<String, String> consolidatedUsageHistoryRequest = new HashMap<>();
             consolidatedUsageHistoryRequest.put("target_interval", "month");
@@ -269,6 +392,25 @@ public class TenantUsageProcessor {
         } catch (Exception e) {
             logger.severe(e.getMessage());
             return Map.of("error", e.getMessage());
+        }
+    }
+
+    private Map<String, Object> getSubTenantsUsage(Map<String, String> request) {
+        String tenantId = request.get("tenant_id");
+        String sql = "select * from tenant where main_tenant_id = " + tenantId;
+        List<Map<String, Object>> resp;
+        try {
+            resp = oqgHelper.OqgR2(sql, true);
+
+            List<Map<String, Object>> tenantUsageList = new ArrayList<>();
+            for (Map<String, Object> tenantMap : resp) {
+
+
+            }
+            return Collections.singletonMap("sub_tenant_list_usage_summary", tenantUsageList);
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+            return Collections.singletonMap("error", e.getMessage());
         }
     }
 
