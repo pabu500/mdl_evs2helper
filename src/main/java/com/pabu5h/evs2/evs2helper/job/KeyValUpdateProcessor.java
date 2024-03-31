@@ -565,7 +565,7 @@ public class KeyValUpdateProcessor {
                                         newTenantName = tenantName.replace("-v-", "-rd-");
                                     }
                                 }
-                                case "cw_nus_v" -> {
+                                case "cw_nus_virtual" -> {
                                     if (tenantName.contains("-int-")) {
                                         newTenantName = tenantName.replace("-int-", "-v-");
                                     } else if (tenantName.contains("-ext-")) {
