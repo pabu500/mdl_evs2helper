@@ -36,12 +36,15 @@ public class EmailService {
             logger.info("mailSender error: " + e.getMessage());
         }
     }
-    public void sendMimeEmail(String fromAddress, String senderName, String to, String subject, String text, boolean isHtml) {
+    public void sendMimeEmail(String fromAddress, String senderName, String to, String replayTo,
+                              String subject, String text,
+                              boolean isHtml) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
         try {
             message.setFrom(senderName+ " <"+fromAddress+">");
             message.setTo(to);
+            message.setReplyTo(replayTo);
             message.setSubject(subject);
             message.setText(text, isHtml);
 

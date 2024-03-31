@@ -158,7 +158,8 @@ public class AlarmHelper {
 
         content = content.replace("[[URL]]", ackURL);
         try {
-            emailService.sendMimeEmail(fromAddress, senderName, email, subject, content, true);
+            emailService.sendMimeEmail(fromAddress, senderName, email, fromAddress,
+                                       subject, content, true);
         }catch (Exception e) {
             logger.info("send email error: " + e.getMessage());
         }
