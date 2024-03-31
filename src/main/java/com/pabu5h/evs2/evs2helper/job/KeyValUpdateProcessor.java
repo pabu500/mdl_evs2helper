@@ -537,10 +537,43 @@ public class KeyValUpdateProcessor {
                             String typeVal = (String) val;
                             String tenantName = (String) item.get("tenant_name");
                             String newTenantName = tenantName;
-                            if(typeVal.equals("cw_nus_external") && tenantName.contains("-int-")){
-                                newTenantName = tenantName.replace("-int-", "-ext-");
-                            }else if(typeVal.equals("cw_nus_internal") && tenantName.contains("-ext-")){
-                                newTenantName = tenantName.replace("-ext-", "-int-");
+                            switch (typeVal) {
+                                case "cw_nus_external" -> {
+                                    if (tenantName.contains("-int-")) {
+                                        newTenantName = tenantName.replace("-int-", "-ext-");
+                                    } else if (tenantName.contains("-rd-")) {
+                                        newTenantName = tenantName.replace("-rd-", "-ext-");
+                                    } else if (tenantName.contains("-v-")) {
+                                        newTenantName = tenantName.replace("-v-", "-ext-");
+                                    }
+                                }
+                                case "cw_nus_internal" -> {
+                                    if (tenantName.contains("-ext-")) {
+                                        newTenantName = tenantName.replace("-ext-", "-int-");
+                                    } else if (tenantName.contains("-rd-")) {
+                                        newTenantName = tenantName.replace("-rd-", "-int-");
+                                    } else if (tenantName.contains("-v-")) {
+                                        newTenantName = tenantName.replace("-v-", "-int-");
+                                    }
+                                }
+                                case "cw_nus_rd" -> {
+                                    if (tenantName.contains("-int-")) {
+                                        newTenantName = tenantName.replace("-int-", "-rd-");
+                                    } else if (tenantName.contains("-ext-")) {
+                                        newTenantName = tenantName.replace("-ext-", "-rd-");
+                                    } else if (tenantName.contains("-v-")) {
+                                        newTenantName = tenantName.replace("-v-", "-rd-");
+                                    }
+                                }
+                                case "cw_nus_v" -> {
+                                    if (tenantName.contains("-int-")) {
+                                        newTenantName = tenantName.replace("-int-", "-v-");
+                                    } else if (tenantName.contains("-ext-")) {
+                                        newTenantName = tenantName.replace("-ext-", "-v-");
+                                    } else if (tenantName.contains("-rd-")) {
+                                        newTenantName = tenantName.replace("-rd-", "-v-");
+                                    }
+                                }
                             }
                             content.put("tenant_name", newTenantName);
                         }
