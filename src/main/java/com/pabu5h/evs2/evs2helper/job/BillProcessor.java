@@ -35,7 +35,7 @@ public class BillProcessor {
     public Map<String, Object> genAllTenantBills(String fromDate, String toDate, Boolean isMonthly) {
         logger.info("Processing all tenant bills");
 
-        String tenantInfoQuery = "select tenant_name from tenant";
+        String tenantInfoQuery = "select tenant_name, tenant_label from tenant";
         List<Map<String, Object>> resp;
         try {
             resp = oqgHelper.OqgR2(tenantInfoQuery, true);
@@ -45,12 +45,18 @@ public class BillProcessor {
         }
         int tenantCount = resp.size();
         int processedCount = 0;
-        List<Map<String, Object>> billResult = new ArrayList<>();
+        List<LinkedHashMap<String, Object>> billResult = new ArrayList<>();
         for (Map<String, Object> tenantInfo : resp) {
+            LinkedHashMap<String, Object> result2 = new LinkedHashMap<>();
+            result2.put("tenant_name", tenantInfo.get("tenant_name"));
+            result2.put("tenant_label", tenantInfo.get("tenant_label"));
+
             Map<String, Object> result =
             genSingleTenantBillingRec((String) tenantInfo.get("tenant_name"),
                                       fromDate, toDate, isMonthly, null, null, null, null);
-            billResult.add(result);
+            result2.put("result", result);
+            billResult.add(result2);
+
             processedCount++;
             logger.info(processedCount + " / " + tenantCount + " tenants processed");
         }
