@@ -45,13 +45,16 @@ public class BillProcessor {
         }
         int tenantCount = resp.size();
         int processedCount = 0;
+        List<Map<String, Object>> billResult = new ArrayList<>();
         for (Map<String, Object> tenantInfo : resp) {
+            Map<String, Object> result =
             genSingleTenantBillingRec((String) tenantInfo.get("tenant_name"),
                                       fromDate, toDate, isMonthly, null, null, null, null);
+            billResult.add(result);
             processedCount++;
             logger.info(processedCount + " / " + tenantCount + " tenants processed");
         }
-        return Collections.singletonMap("info", "All tenant bills processed");
+        return Collections.singletonMap("result", billResult);
     }
 
     public Map<String, Object> genSingleTenantBillingRec(String tenantName,
