@@ -4,6 +4,7 @@ import com.pabu5h.evs2.dto.ItemIdTypeEnum;
 import com.pabu5h.evs2.dto.ItemTypeEnum;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -12,6 +13,26 @@ import java.util.logging.Logger;
 @Service
 public class ScopeHelper {
     Logger logger = Logger.getLogger(ScopeHelper.class.getName());
+
+    public Map<String, String> getRequestScope(Map<String, Object> request){
+        String projectScope = (String) request.get("project_scope");
+        String siteScope = (String) request.get("site_scope");
+        Map<String, String> scope = new HashMap<>();
+        if(siteScope != null && (!siteScope.isEmpty())){
+            //site_scope for app, site_tag for db
+            scope.put("site_tag", siteScope.toLowerCase());
+        }else if(projectScope != null && (!projectScope.isEmpty())){
+            //project_scope for app, scope_str for db
+            scope.put("scope_str", projectScope.toLowerCase());
+
+            if(projectScope.equalsIgnoreCase("sg_all")){
+                scope = null;
+            }
+        }else{
+            return Collections.singletonMap("error", "Invalid scope");
+        }
+        return scope;
+    }
 
     public Map<String, Object> getItemTypeConfig(String projectScope, String itemIdTypeStr){
         ItemIdTypeEnum itemIdType = (itemIdTypeStr == null || itemIdTypeStr.isEmpty()) ? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
