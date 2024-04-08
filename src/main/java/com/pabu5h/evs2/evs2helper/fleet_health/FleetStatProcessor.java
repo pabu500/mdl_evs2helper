@@ -120,7 +120,9 @@ public class FleetStatProcessor {
             siteStat.put("site_tag", siteTag);
 
             String sqlAll = "select count(*) as count from " + targetTableName
-                    + " where site_tag = '" + siteTag + "'" + additionalConstraint;
+                    + " where site_tag = '" + siteTag + "'"
+                    + lcStatusConstraint
+                    + additionalConstraint;
 
             List<Map<String, Object>> respAll;
             try {
