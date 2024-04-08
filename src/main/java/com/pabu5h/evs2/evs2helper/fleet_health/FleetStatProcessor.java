@@ -43,7 +43,7 @@ public class FleetStatProcessor {
         String itemLocBuildingColName = (String) scope.get("itemLocBuildingColName");
         String itemLocBlockColName = (String) scope.get("itemLocBlockColName");
 
-        String lcStatusConstraint = " and (lc_status != 'dc' || lc_status is null) ";
+        String lcStatusConstraint = " and (lc_status != 'dc' OR lc_status is null) ";
 
         String additionalConstraint = " and " + itemLocBuildingColName + " is not null "; //and mms_building not like '%NUS %' and mms_building not like '%NTU %'";
         if(projectScope.toLowerCase().contains("ems_cw_nus")){
@@ -338,7 +338,7 @@ public class FleetStatProcessor {
             balHealthFilter = "";
         }
 
-        String lcStatusConstraint = " and lc_status != 'dc' ";
+        String lcStatusConstraint = " and (lc_status != 'dc' OR lc_status is null) ";
 
         Map<String, Object> report = new HashMap<>();
 
