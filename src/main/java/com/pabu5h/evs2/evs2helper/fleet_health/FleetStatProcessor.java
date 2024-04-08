@@ -43,6 +43,8 @@ public class FleetStatProcessor {
         String itemLocBuildingColName = (String) scope.get("itemLocBuildingColName");
         String itemLocBlockColName = (String) scope.get("itemLocBlockColName");
 
+        String lcStatusConstraint = " and lc_status != 'dc' ";
+
         String additionalConstraint = " and " + itemLocBuildingColName + " is not null "; //and mms_building not like '%NUS %' and mms_building not like '%NTU %'";
         if(projectScope.toLowerCase().contains("ems_cw_nus")){
             additionalConstraint = "";
@@ -70,6 +72,7 @@ public class FleetStatProcessor {
                     projectScope, selectedSiteTag,
                     targetTableName,
                     itemLocBuildingColName, itemLocBlockColName,
+                    lcStatusConstraint,
                     additionalConstraint,
                     lastReadingHealthFilter, balHealthFilter
             );
@@ -82,6 +85,7 @@ public class FleetStatProcessor {
                     projectScope, siteTags,
                     targetTableName,
                     itemLocBuildingColName, itemLocBlockColName,
+                    lcStatusConstraint,
                     additionalConstraint,
                     lastReadingHealthFilter, balHealthFilter
             );
@@ -98,6 +102,7 @@ public class FleetStatProcessor {
             String projectScope, List<String> siteTags,
             String targetTableName,
             String itemLocBuildingColName, String itemLocBlockColName,
+            String lcStatusConstraint,
             String additionalConstraint,
             String lastReadingHealthFilter, String balHealthFilter){
 
@@ -129,6 +134,7 @@ public class FleetStatProcessor {
             String sqlLRT = "select count(*) as count from " + targetTableName
                     + " where site_tag = '" + siteTag + "'"
                     + " and " + lastReadingHealthFilter
+                    + lcStatusConstraint
                     + additionalConstraint;
             List<Map<String, Object>> respLRT;
             try {
@@ -146,7 +152,8 @@ public class FleetStatProcessor {
                 String sqlBal = "select count(*) as count from " + targetTableName
                         + " where site_tag = '" + siteTag + "'"
                         + " and " + balHealthFilter
-                        + " and meter_sn in (select meter_sn from cpc_policy)"
+                        + " and meter_sn in (select meter_sn from cpc_policy) "
+                        + lcStatusConstraint
                         + additionalConstraint;
                 List<Map<String, Object>> respBal;
                 try {
@@ -166,6 +173,7 @@ public class FleetStatProcessor {
             String projectScope, String selectedSiteTag,
             String targetTableName,
             String itemLocBuildingColName, String itemLocBlockColName,
+            String lcStatusConstraint,
             String additionalConstraint,
             String lastReadingHealthFilter, String balHealthFilter) {
 
@@ -244,6 +252,7 @@ public class FleetStatProcessor {
                         + " where site_tag = '" + selectedSiteTag + "'"
                         + " and " + itemLocBuildingColName + " = '" + buildingNameSql + "'"
                         + blockSel
+                        + lcStatusConstraint
                         + additionalConstraint;
                 List<Map<String, Object>> respAll;
                 try {
@@ -259,6 +268,7 @@ public class FleetStatProcessor {
                         + " and " + itemLocBuildingColName + " = '" + buildingNameSql + "'"
                         + blockSel
                         + " and " + lastReadingHealthFilter
+                        + lcStatusConstraint
                         + additionalConstraint;
                 List<Map<String, Object>> respLRT;
                 try {
@@ -278,6 +288,7 @@ public class FleetStatProcessor {
                             + " and " + itemLocBuildingColName + " = '" + buildingNameSql + "'"
                             + blockSel
                             + " and " + balHealthFilter
+                            + lcStatusConstraint
                             + additionalConstraint;
                     List<Map<String, Object>> respBal;
                     try {
@@ -325,12 +336,15 @@ public class FleetStatProcessor {
             balHealthFilter = "";
         }
 
+        String lcStatusConstraint = " and lc_status != 'dc' ";
+
         Map<String, Object> report = new HashMap<>();
 
         String sqlReading = "select last_reading_timestamp, " + itemIdColSel +","+ itemLocColSel + " from " + targetTableName
                 + " where " + itemLocBuildingColName + " = '" + buildingNameSqlSafe + "'"
                 + blockSel
                 + " and " + lastReadingHealthFilter
+                + lcStatusConstraint
                 + " order by last_reading_timestamp desc";
         List<Map<String, Object>> respReading;
         try {
@@ -348,6 +362,7 @@ public class FleetStatProcessor {
                     + " where "+ itemLocBuildingColName + " = '" + buildingNameSqlSafe + "'"
                     + blockSel
                     + " and " + balHealthFilter
+                    + lcStatusConstraint
                     + " and meter_sn in (select meter_sn from cpc_policy)"
                     + " order by last_credit_bal asc";
             List<Map<String, Object>> respBal;
@@ -359,7 +374,6 @@ public class FleetStatProcessor {
             }
             report.put("credit_bal_range", respBal);
         }
-
         return Map.of("result", report);
     }
 }
