@@ -1,5 +1,6 @@
 package com.pabu5h.evs2.evs2helper.email;
 
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamSource;
@@ -36,17 +37,19 @@ public class EmailService {
             logger.info("mailSender error: " + e.getMessage());
         }
     }
+    // " to " can be a list of email addresses separated by comma
+    // e.g. "email1@domain, email2@domain"
     public void sendMimeEmail(String fromAddress, String senderName, String to, String replayTo,
                               String subject, String text,
                               boolean isHtml) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         try {
-            message.setFrom(senderName+ " <"+fromAddress+">");
-            message.setTo(to);
-            message.setReplyTo(replayTo);
-            message.setSubject(subject);
-            message.setText(text, isHtml);
+            helper.setFrom(senderName+ " <"+fromAddress+">");
+            helper.setTo(InternetAddress.parse(to));
+            helper.setReplyTo(replayTo);
+            helper.setSubject(subject);
+            helper.setText(text, isHtml);
 
             try {
                 mailSender.send(mimeMessage);
