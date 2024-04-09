@@ -28,7 +28,9 @@ public class EmailService {
     public void sendSimpleEmail(String from, String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
-        message.setTo(to);
+        String[] toList = to.split(",");
+        message.setTo(toList);
+//        message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
         try {
