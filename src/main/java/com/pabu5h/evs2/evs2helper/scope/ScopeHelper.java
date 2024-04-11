@@ -220,6 +220,7 @@ public class ScopeHelper {
         Map<String, Object> result = new HashMap<>();
         result.put("itemTypeEnum", itemType.toString());
         result.put("itemReadingTableName", itemReadingTableName);
+        result.put("itemUsageTableName", itemUsageTableName);
         result.put("itemTableName", itemTableName);
         result.put("itemGroupTableName", itemGroupTableName);
         result.put("itemGroupTargetTableName", itemGroupTargetTableName);
@@ -236,6 +237,7 @@ public class ScopeHelper {
         result.put("itemLocBlockColName", itemLocBlockColName);
         result.put("timeKey", timeKey);
         result.put("valKey", valKey);
+        result.put("valDiffKey", valDiffKey);
         result.put("validator", validator);
 
         return result;
