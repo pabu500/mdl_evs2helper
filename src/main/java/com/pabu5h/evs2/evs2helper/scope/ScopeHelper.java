@@ -135,6 +135,111 @@ public class ScopeHelper {
 
         return result;
     }
+    public Map<String, Object> getItemTypeConfig2(String projectScope, String itemIdTypeStr){
+        ItemIdTypeEnum itemIdType = (itemIdTypeStr == null || itemIdTypeStr.isEmpty()) ? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
+        String itemTableName = "meter";
+        String itemReadingTableName = "meter_reading";
+        String itemUsageTableName = "meter_tariff";
+        String itemGroupTableName = "meter_group";
+        String itemGroupTargetTableName = "meter_group_meter";
+        String tenantTableName = "tenant";
+        String tenantTargetGroupTableName = "tenant_meter_group";
+        String itemIdColName = "meter_sn";
+        String itemSnColName = "meter_sn";
+        String itemNameColName = "meter_displayname";
+        String timeKey = "kwh_timestamp";
+        String valKey = "kwh_total";
+        String valDiffKey = "kwh_diff";
+        String itemAltNameColName = "alt_name";
+        String panelTagColName = "panel_tag";
+        String itemIdColSel = "meter_sn,meter_displayname";
+        String itemLocColSel = "mms_building,mms_block,mms_level,mms_unit";
+        String itemLocBuildingColName = "mms_building";
+        String itemLocBlockColName = "mms_block";
+        ItemTypeEnum itemType = ItemTypeEnum.METER;
+        Function<String, String> validator = null;
+        if (projectScope.toLowerCase().contains("ems_smrt")) {
+            itemType = ItemTypeEnum.METER_3P;
+            itemReadingTableName = "meter_reading_3p";
+            itemTableName = "meter_3p";
+            itemIdColName = "meter_id";
+            itemSnColName = "meter_sn";
+            itemNameColName = "meter_id";
+            itemIdColSel = "meter_id,meter_sn,panel_tag";
+            itemLocColSel = "panel_tag";
+            timeKey = "dt";
+            valKey = "a_imp";
+
+            if(itemIdType == null){
+                itemIdType = ItemIdTypeEnum.NAME;
+            }
+            if (itemIdType == ItemIdTypeEnum.NAME) {
+                itemIdColName = "meter_id";
+            }
+        } else if (projectScope.toLowerCase().contains("ems_cw_nus")) {
+            itemType = ItemTypeEnum.METER_IWOW;
+            itemReadingTableName = "meter_reading_iwow";
+            itemUsageTableName = "meter_reading_iwow";
+            itemTableName = "meter_iwow";
+            itemGroupTableName = "meter_group";
+            itemGroupTargetTableName = "meter_group_meter_iwow";
+            tenantTableName = "tenant";
+            tenantTargetGroupTableName = "tenant_meter_group_iwow";
+            itemIdColName = "item_name";
+            itemSnColName = "item_sn";
+            itemNameColName = "item_name";
+            itemAltNameColName = "alt_name";
+            itemIdColSel = "item_sn,item_name,alt_name";
+            itemLocColSel = "loc_building,loc_level";
+            itemLocBuildingColName = "loc_building";
+            itemLocBlockColName = "";
+            timeKey = "dt";
+            valKey = "val";
+            valDiffKey = "val_diff";
+            if(itemIdType == null){
+                itemIdType = ItemIdTypeEnum.NAME;
+            }
+
+            if (itemIdType == ItemIdTypeEnum.NAME) {
+                itemIdColName = "item_name";
+            }
+        } else {
+            if(itemIdType == null){
+                itemIdType = ItemIdTypeEnum.SN;
+            }
+
+            if (itemIdType == ItemIdTypeEnum.NAME) {
+                itemIdColName = "meter_displayname";
+                validator = this::validateNameMms;
+            }else if (itemIdType == ItemIdTypeEnum.SN) {
+                itemIdColName = "meter_sn";
+                validator = this::validateSnMms;
+            }
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("itemTypeEnum", itemType.toString());
+        result.put("itemReadingTableName", itemReadingTableName);
+        result.put("itemTableName", itemTableName);
+        result.put("itemGroupTableName", itemGroupTableName);
+        result.put("itemGroupTargetTableName", itemGroupTargetTableName);
+        result.put("tenantTableName", tenantTableName);
+        result.put("tenantTargetGroupTableName", tenantTargetGroupTableName);
+        result.put("itemIdColName", itemIdColName);
+        result.put("itemSnColName", itemSnColName);
+        result.put("itemNameColName", itemNameColName);
+        result.put("itemAltNameColName", itemAltNameColName);
+        result.put("panelTagColName", panelTagColName);
+        result.put("itemIdColSel", itemIdColSel);
+        result.put("itemLocColSel", itemLocColSel);
+        result.put("itemLocBuildingColName", itemLocBuildingColName);
+        result.put("itemLocBlockColName", itemLocBlockColName);
+        result.put("timeKey", timeKey);
+        result.put("valKey", valKey);
+        result.put("validator", validator);
+
+        return result;
+    }
 
     public String validateNameMms(String input) {
         if(input == null || input.isBlank()) {
