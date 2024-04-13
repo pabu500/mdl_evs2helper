@@ -1,6 +1,6 @@
 package org.pabuff.evs2helper.cache;
 
-import com.pabu5h.evs2.dto.MeterInfoDto;
+import org.pabuff.dto.MeterInfoDto;
 import lombok.Getter;
 import lombok.Setter;
 

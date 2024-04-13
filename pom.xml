@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.pabuff</groupId>
 	<artifactId>evs2helper</artifactId>
-	<version>3.27.1</version>
+	<version>3.27.2</version>
 	<name>evs2helper</name>
 	<description>EVS2 Helper Module</description>
 
@@ -32,10 +32,10 @@
 	</properties>
 
 	<repositories>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
+<!--		<repository>-->
+<!--			<id>jitpack.io</id>-->
+<!--			<url>https://jitpack.io</url>-->
+<!--		</repository>-->
 		<repository>
 			<id>central</id>
 			<name>Maven Central</name>
@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>org.pabuff</groupId>
 			<artifactId>evs2dto</artifactId>
-			<version>1.26.0</version>
+			<version>1.26.1</version>
 		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>com.github.evs2bu500</groupId>-->
@@ -71,7 +71,7 @@
 		<dependency>
 			<groupId>org.pabuff</groupId>
 			<artifactId>oqghelper</artifactId>
-			<version>3.30.0</version>
+			<version>3.30.2</version>
 		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>com.github.evs2bu500</groupId>-->

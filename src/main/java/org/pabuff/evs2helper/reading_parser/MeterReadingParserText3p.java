@@ -1,6 +1,6 @@
 package org.pabuff.evs2helper.reading_parser;
 
-import com.pabu5h.evs2.dto.MeterReading3pDto;
+import org.pabuff.dto.MeterReading3pDto;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

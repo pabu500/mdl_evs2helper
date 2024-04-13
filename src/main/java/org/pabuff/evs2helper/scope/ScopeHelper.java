@@ -1,7 +1,7 @@
 package org.pabuff.evs2helper.scope;
 
-import com.pabu5h.evs2.dto.ItemIdTypeEnum;
-import com.pabu5h.evs2.dto.ItemTypeEnum;
+import org.pabuff.dto.ItemIdTypeEnum;
+import org.pabuff.dto.ItemTypeEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

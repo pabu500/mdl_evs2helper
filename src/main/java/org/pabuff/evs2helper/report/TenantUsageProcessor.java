@@ -1,7 +1,7 @@
 package org.pabuff.evs2helper.report;
 
-import com.pabu5h.evs2.dto.ItemIdTypeEnum;
-import com.pabu5h.evs2.dto.ItemTypeEnum;
+import org.pabuff.dto.ItemIdTypeEnum;
+import org.pabuff.dto.ItemTypeEnum;
 import org.pabuff.evs2helper.locale.LocalHelper;
 import org.pabuff.evs2helper.scope.ScopeHelper;
 import org.pabuff.oqghelper.OqgHelper;

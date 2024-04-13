@@ -1,6 +1,6 @@
 package org.pabuff.evs2helper;
 
-import com.pabu5h.evs2.dto.TransactionLogDto;
+import org.pabuff.dto.TransactionLogDto;
 import org.pabuff.evs2helper.locale.LocalHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

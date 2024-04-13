@@ -1,6 +1,6 @@
 package org.pabuff.evs2helper.reading_parser;
 
-import com.pabu5h.evs2.dto.SensorReadingMultiDto;
+import org.pabuff.dto.SensorReadingMultiDto;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

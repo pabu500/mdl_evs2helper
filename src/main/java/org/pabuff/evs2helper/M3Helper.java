@@ -1,6 +1,6 @@
 package org.pabuff.evs2helper;
 
-import com.pabu5h.evs2.dto.*;
+import org.pabuff.dto.*;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

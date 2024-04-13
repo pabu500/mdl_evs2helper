@@ -1,7 +1,7 @@
 package org.pabuff.evs2helper.job;
 
-import com.pabu5h.evs2.dto.ItemIdTypeEnum;
-import com.pabu5h.evs2.dto.ItemTypeEnum;
+import org.pabuff.dto.ItemIdTypeEnum;
+import org.pabuff.dto.ItemTypeEnum;
 import org.pabuff.evs2helper.cache.DataAgent;
 import org.pabuff.evs2helper.email.SystemNotifier;
 import org.pabuff.evs2helper.event.OpResultEvent;
@@ -11,7 +11,7 @@ import org.pabuff.evs2helper.report.ReportHelper;
 import org.pabuff.evs2helper.scope.ScopeHelper;
 import org.pabuff.oqghelper.OqgHelper;
 import org.pabuff.oqghelper.QueryHelper;
-import com.xt.utils.SqlUtil;
+import org.pabuff.utils.SqlUtil;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

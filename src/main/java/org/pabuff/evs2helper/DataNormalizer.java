@@ -1,10 +1,10 @@
 package org.pabuff.evs2helper;
 
-import com.pabu5h.evs2.dto.*;
+import org.pabuff.dto.*;
 import org.pabuff.oqghelper.QueryHelper;
-import com.xt.utils.DateTimeUtil;
-import com.xt.utils.MathUtil;
-import com.xt.utils.XtStat;
+import org.pabuff.utils.DateTimeUtil;
+import org.pabuff.utils.MathUtil;
+import org.pabuff.utils.XtStat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

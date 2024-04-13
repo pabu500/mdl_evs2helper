@@ -1,7 +1,7 @@
 package org.pabuff.evs2helper.cache;
 
-import com.pabu5h.evs2.dto.MeterInfoDto;
 
+import org.pabuff.dto.MeterInfoDto;
 import org.pabuff.evs2helper.OwlHelper;
 import org.pabuff.oqghelper.QueryHelper;
 import org.springframework.beans.factory.annotation.Autowired;

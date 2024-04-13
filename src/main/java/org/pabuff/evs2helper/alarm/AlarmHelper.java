@@ -3,7 +3,7 @@ package org.pabuff.evs2helper.alarm;
 import org.pabuff.evs2helper.email.EmailService;
 import org.pabuff.evs2helper.locale.LocalHelper;
 import org.pabuff.oqghelper.OqgHelper;
-import com.xt.utils.MathUtil;
+import org.pabuff.utils.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

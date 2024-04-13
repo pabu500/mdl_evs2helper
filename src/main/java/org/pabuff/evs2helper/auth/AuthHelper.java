@@ -1,6 +1,6 @@
 package org.pabuff.evs2helper.auth;
 
-import com.pabu5h.evs2.dto.SvcClaimDto;
+import org.pabuff.dto.SvcClaimDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
