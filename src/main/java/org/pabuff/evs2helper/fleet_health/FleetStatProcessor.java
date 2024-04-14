@@ -1,5 +1,6 @@
 package org.pabuff.evs2helper.fleet_health;
 
+import org.pabuff.dto.FleetHealthEnum;
 import org.pabuff.evs2helper.locale.LocalHelper;
 import org.pabuff.evs2helper.scope.ScopeHelper;
 import org.pabuff.oqghelper.OqgHelper;
@@ -61,12 +62,14 @@ public class FleetStatProcessor {
             balHealthFilter = "";
         }
 
-//        String healthFilter = lastReadingHealthFilter + " or " + balHealthFilter;
-//        if(projectScope.toLowerCase().contains("ems_cw_nus")){
-//            healthFilter = lastReadingHealthFilter;
-//        }
+        double valDiffTooLarge = 20000;
+        double valDiffTooSmall = -1;
+        String valDiffHealthFilter = " (last_val_diff > " + valDiffTooLarge + " or last_val_diff < " + valDiffTooSmall + ")";
+        if(!projectScope.toLowerCase().contains("ems_cw_nus")){
+            valDiffHealthFilter = "";
+        }
 
-        List<Map<String, Object>> siteStats = new ArrayList<>();
+        List<Map<String, Object>> siteStats;
         if(isSingleSite){
             Map<String, Object> result = getSingleSiteStat(
                     projectScope, selectedSiteTag,
@@ -74,7 +77,7 @@ public class FleetStatProcessor {
                     itemLocBuildingColName, itemLocBlockColName,
                     lcStatusConstraint,
                     additionalConstraint,
-                    lastReadingHealthFilter, balHealthFilter
+                    lastReadingHealthFilter, balHealthFilter, valDiffHealthFilter
             );
             if(result.containsKey("error")){
                 return result;
@@ -87,7 +90,7 @@ public class FleetStatProcessor {
                     itemLocBuildingColName, itemLocBlockColName,
                     lcStatusConstraint,
                     additionalConstraint,
-                    lastReadingHealthFilter, balHealthFilter
+                    lastReadingHealthFilter, balHealthFilter, valDiffHealthFilter
             );
             if(result.containsKey("error")){
                 return result;
@@ -104,7 +107,7 @@ public class FleetStatProcessor {
             String itemLocBuildingColName, String itemLocBlockColName,
             String lcStatusConstraint,
             String additionalConstraint,
-            String lastReadingHealthFilter, String balHealthFilter){
+            String lastReadingHealthFilter, String balHealthFilter, String valDiffHealthFilter){
 
         List<Map<String, Object>> siteStats = new ArrayList<>();
         for (String siteTag : siteTags) {
@@ -166,6 +169,23 @@ public class FleetStatProcessor {
                 }
                 siteStat.put("credit_bal_range", respBal.getFirst().get("count"));
             }
+
+            boolean checkValDiffHealth = !valDiffHealthFilter.isEmpty();
+            if (checkValDiffHealth) {
+                String sqlValDiff = "select count(*) as count from " + targetTableName
+                        + " where site_tag = '" + siteTag + "'"
+                        + " and " + valDiffHealthFilter
+                        + additionalConstraint;
+                List<Map<String, Object>> respValDiff;
+                try {
+                    respValDiff = oqgHelper.OqgR2(sqlValDiff, true);
+                } catch (Exception e) {
+                    logger.severe(e.getMessage());
+                    return Map.of("error", e.getMessage());
+                }
+                siteStat.put(FleetHealthEnum.VALUE_OUT_OF_RANGE.toString().toLowerCase(), respValDiff.getFirst().get("count"));
+            }
+
             siteStats.add(siteStat);
         }
         return Map.of("result", siteStats);
@@ -177,7 +197,7 @@ public class FleetStatProcessor {
             String itemLocBuildingColName, String itemLocBlockColName,
             String lcStatusConstraint,
             String additionalConstraint,
-            String lastReadingHealthFilter, String balHealthFilter) {
+            String lastReadingHealthFilter, String balHealthFilter, String valDiffHealthFilter) {
 
         List<Map<String, Object>> siteStats = new ArrayList<>();
         selectedSiteTag = selectedSiteTag.toLowerCase();
@@ -301,6 +321,25 @@ public class FleetStatProcessor {
                     }
                     siteStat.put("credit_bal_range", respBal.getFirst().get("count"));
                 }
+
+                boolean checkValDiffHealth = !valDiffHealthFilter.isEmpty();
+                if (checkValDiffHealth) {
+                    String sqlValDiff = "select count(*) as count from " + targetTableName
+                            + " where site_tag = '" + selectedSiteTag + "'"
+                            + " and " + itemLocBuildingColName + " = '" + buildingNameSql + "'"
+                            + blockSel
+                            + " and " + valDiffHealthFilter
+                            + additionalConstraint;
+                    List<Map<String, Object>> respValDiff;
+                    try {
+                        respValDiff = oqgHelper.OqgR2(sqlValDiff, true);
+                    } catch (Exception e) {
+                        logger.severe(e.getMessage());
+                        return Map.of("error", e.getMessage());
+                    }
+                    siteStat.put(FleetHealthEnum.VALUE_OUT_OF_RANGE.toString().toLowerCase(), respValDiff.getFirst().get("count"));
+                }
+
                 siteStats.add(siteStat);
             }
         }
@@ -376,6 +415,25 @@ public class FleetStatProcessor {
             }
             report.put("credit_bal_range", respBal);
         }
+
+        boolean checkValDiffHealth = !balHealthFilter.isEmpty();
+        if (checkValDiffHealth) {
+            String sqlValDiff = "select last_val_diff, last_reading_timestamp, "
+                    + itemIdColSel +","+ itemLocColSel + " from " + targetTableName
+                    + " where "+ itemLocBuildingColName + " = '" + buildingNameSqlSafe + "'"
+                    + blockSel
+                    + " and " + balHealthFilter
+                    + " order by last_val_diff asc";
+            List<Map<String, Object>> respValDiff;
+            try {
+                respValDiff = oqgHelper.OqgR2(sqlValDiff, true);
+            } catch (Exception e) {
+                logger.severe(e.getMessage());
+                return Map.of("error", e.getMessage());
+            }
+            report.put(FleetHealthEnum.VALUE_OUT_OF_RANGE.toString().toLowerCase(), respValDiff);
+        }
+
         return Map.of("result", report);
     }
 }
