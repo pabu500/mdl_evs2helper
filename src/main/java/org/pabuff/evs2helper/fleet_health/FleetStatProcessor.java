@@ -148,7 +148,7 @@ public class FleetStatProcessor {
                 logger.severe(e.getMessage());
                 return Map.of("error", e.getMessage());
             }
-            siteStat.put("last_reading_too_long", respLRT.getFirst().get("count"));
+            siteStat.put(FleetHealthEnum.LAST_READING_TOO_OLD.name().toLowerCase(), respLRT.getFirst().get("count"));
 
             boolean checkBalHealth = !balHealthFilter.isEmpty()
                     && !siteTag.toLowerCase().contains("pgpr");
@@ -167,7 +167,7 @@ public class FleetStatProcessor {
                     logger.severe(e.getMessage());
                     return Map.of("error", e.getMessage());
                 }
-                siteStat.put("credit_bal_range", respBal.getFirst().get("count"));
+                siteStat.put(FleetHealthEnum.CREDIT_BALANCE_OUT_OF_RANGE.name().toLowerCase(), respBal.getFirst().get("count"));
             }
 
             boolean checkValDiffHealth = !valDiffHealthFilter.isEmpty();
@@ -299,7 +299,7 @@ public class FleetStatProcessor {
                     logger.severe(e.getMessage());
                     return Map.of("error", e.getMessage());
                 }
-                siteStat.put("last_reading_too_long", respLRT.getFirst().get("count"));
+                siteStat.put(FleetHealthEnum.LAST_READING_TOO_OLD.name().toLowerCase(), respLRT.getFirst().get("count"));
 
                 boolean checkBalHealth = !balHealthFilter.isEmpty()
                         && !selectedSiteTag.toLowerCase().contains("pgpr");
@@ -319,7 +319,7 @@ public class FleetStatProcessor {
                         logger.severe(e.getMessage());
                         return Map.of("error", e.getMessage());
                     }
-                    siteStat.put("credit_bal_range", respBal.getFirst().get("count"));
+                    siteStat.put(FleetHealthEnum.CREDIT_BALANCE_OUT_OF_RANGE.name().toLowerCase(), respBal.getFirst().get("count"));
                 }
 
                 boolean checkValDiffHealth = !valDiffHealthFilter.isEmpty();
@@ -394,7 +394,7 @@ public class FleetStatProcessor {
             logger.severe(e.getMessage());
             return Map.of("error", e.getMessage());
         }
-        report.put("last_reading_too_long", respReading);
+        report.put(FleetHealthEnum.LAST_READING_TOO_OLD.toString().toLowerCase(), respReading);
 
         boolean checkBalHealth = !balHealthFilter.isEmpty();
         if (checkBalHealth) {
@@ -413,7 +413,7 @@ public class FleetStatProcessor {
                 logger.severe(e.getMessage());
                 return Map.of("error", e.getMessage());
             }
-            report.put("credit_bal_range", respBal);
+            report.put(FleetHealthEnum.CREDIT_BALANCE_OUT_OF_RANGE.name().toLowerCase(), respBal);
         }
 
         boolean checkValDiffHealth = !balHealthFilter.isEmpty();
