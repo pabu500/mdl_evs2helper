@@ -78,11 +78,15 @@ public class AuthHelper {
 
     public String genToken(Map<String, String> claims) {
         Instant now = Instant.now();
-        return Jwts.builder()
-            .setIssuedAt(Date.from(now))
-            .setClaims(claims)
-            .signWith(rsaKeyProperties.privateKey())
-            .compact();
+//        return Jwts.builder()
+//            .setIssuedAt(Date.from(now))
+//            .setClaims(claims)
+//            .signWith(rsaKeyProperties.privateKey())
+//            .compact();
+        return Jwts.builder().issuedAt(Date.from(now)).claims(claims)
+                .signWith(rsaKeyProperties.privateKey())
+                .compact();
+
     }
 
     public Map<String, Object> extractClaims(String token) {
