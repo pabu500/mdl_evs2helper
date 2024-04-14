@@ -150,6 +150,7 @@ public class ScopeHelper {
         String timeKey = "kwh_timestamp";
         String valKey = "kwh_total";
         String valDiffKey = "kwh_diff";
+        String valDiffTimeKey = "tariff_timestamp";
         String itemAltNameColName = "alt_name";
         String panelTagColName = "panel_tag";
         String itemIdColSel = "meter_sn,meter_displayname";
@@ -196,6 +197,7 @@ public class ScopeHelper {
             timeKey = "dt";
             valKey = "val";
             valDiffKey = "val_diff";
+            valDiffTimeKey = "dt";
             if(itemIdType == null){
                 itemIdType = ItemIdTypeEnum.NAME;
             }
@@ -238,6 +240,7 @@ public class ScopeHelper {
         result.put("timeKey", timeKey);
         result.put("valKey", valKey);
         result.put("valDiffKey", valDiffKey);
+        result.put("valDiffTimeKey", valDiffTimeKey);
         result.put("validator", validator);
 
         return result;
