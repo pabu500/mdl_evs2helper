@@ -98,11 +98,11 @@ public class AuthHelper {
     }
 
     private Claims extractAllClaims(String jwtToken){
-        JwtParser jwtParser = Jwts.parserBuilder()
-                .setSigningKey(rsaKeyProperties.publicKey())
-                .build();
+//        JwtParser jwtParser = Jwts.parserBuilder().setSigningKey(rsaKeyProperties.publicKey()).build();
+        JwtParser jwtParser = Jwts.parser().verifyWith(rsaKeyProperties.publicKey()).build();
         try {
-            return jwtParser.parseClaimsJws(jwtToken).getBody();
+//            return jwtParser.parseClaimsJws(jwtToken).getBody();
+            return jwtParser.parseSignedClaims(jwtToken).getPayload();
         } catch (ExpiredJwtException e) {
             logger.info("ExpiredJwtException: " + e.getMessage());
             return e.getClaims();
