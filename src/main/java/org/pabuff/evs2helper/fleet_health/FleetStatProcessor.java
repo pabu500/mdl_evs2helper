@@ -377,6 +377,13 @@ public class FleetStatProcessor {
             balHealthFilter = "";
         }
 
+        double valDiffTooLarge = 20000;
+        double valDiffTooSmall = -1;
+        String valDiffHealthFilter = " (last_val_diff > " + valDiffTooLarge + " or last_val_diff < " + valDiffTooSmall + ")";
+        if(!projectScope.toLowerCase().contains("ems_cw_nus")){
+            valDiffHealthFilter = "";
+        }
+
         String lcStatusConstraint = " and (lc_status != 'dc' OR lc_status is null) ";
 
         Map<String, Object> report = new HashMap<>();
@@ -416,13 +423,13 @@ public class FleetStatProcessor {
             report.put(FleetHealthEnum.CREDIT_BALANCE_OUT_OF_RANGE.name().toLowerCase(), respBal);
         }
 
-        boolean checkValDiffHealth = !balHealthFilter.isEmpty();
+        boolean checkValDiffHealth = !valDiffHealthFilter.isEmpty();
         if (checkValDiffHealth) {
             String sqlValDiff = "select last_val_diff, last_reading_timestamp, "
                     + itemIdColSel +","+ itemLocColSel + " from " + targetTableName
                     + " where "+ itemLocBuildingColName + " = '" + buildingNameSqlSafe + "'"
                     + blockSel
-                    + " and " + balHealthFilter
+                    + " and " + valDiffHealthFilter
                     + " order by last_val_diff asc";
             List<Map<String, Object>> respValDiff;
             try {
