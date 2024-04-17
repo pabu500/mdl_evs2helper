@@ -524,8 +524,7 @@ public class KeyValUpdateProcessor {
                         if (key.equals("item_name")){
                             continue;
                         }
-                        content.put("updated_timestamp", localNowStr);
-
+//                        content.put("updated_timestamp", localNowStr);
                     }else if(meterTypeEnum == ItemTypeEnum.TENANT){
                         if (key.equals("tenant_name")){
                             continue;
@@ -578,7 +577,7 @@ public class KeyValUpdateProcessor {
                             content.put("tenant_name", newTenantName);
                         }
                     }else if(meterTypeEnum == ItemTypeEnum.JOB_TYPE_SUB){
-                        content.put("updated_timestamp", localNowStr);
+//                        content.put("updated_timestamp", localNowStr);
                     }else if(opName.equals("replacement")) {
                         if (key.equals(itemNameKey)) {
                             continue;
@@ -599,6 +598,7 @@ public class KeyValUpdateProcessor {
                         content.put("commissioned_timestamp", localNowStr);
                     }
                 }
+
                 if(content.isEmpty()){
                     logger.info("Error while doing " + opName + " op for item: " + itemSn);
                     item.put("error", Map.of("status", "No content to update"));
@@ -607,6 +607,10 @@ public class KeyValUpdateProcessor {
                     item.put("checked", false);
                     continue;
                 }
+
+                //all item tables should have updated_timestamp column
+                content.put("updated_timestamp", localNowStr);
+
                 Map<String, String> sqlResult = SqlUtil.makeUpdateSql(
                                                 Map.of(
                                                 "table", itemTableName,
