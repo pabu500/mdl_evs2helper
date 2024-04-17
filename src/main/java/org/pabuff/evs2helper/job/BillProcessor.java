@@ -251,8 +251,8 @@ public class BillProcessor {
                                                 String genBy) {
         logger.info("Generating bill");
         if(meterTypeRates.isEmpty()){
-            logger.warning("No meterTypeRates found");
-            return Collections.singletonMap("error", "No meterTypeRates found");
+            logger.warning("Missing meter type rate");
+            return Collections.singletonMap("error", "Missing meter type rate");
         }
 //        String fromTimestamp = (String) tariffPackageInfo.get("from_timestamp");
 //        String toTimestamp = (String) tariffPackageInfo.get("to_timestamp");
