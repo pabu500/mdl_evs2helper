@@ -240,7 +240,7 @@ public class BillProcessor {
             return Collections.singletonMap("error", "Failed to generate bill record: " + billResult.get("error"));
         }
         logger.info("Bill processed for tenant: " + tenantName + " bill_name" + billResult.get("result"));
-        return Collections.singletonMap("result", billResult.get("result"));
+        return billResult;
     }
 
     public Map<String, Object> genBillingRecord(Map<String, Object> tenantInfo,
