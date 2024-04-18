@@ -138,7 +138,9 @@ public class BillProcessor {
                      tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
                 }else {
                     logger.info("No tariff supplied for meterTypeTag: " + meterTypeTag);
-                    continue;
+//                    continue;
+                    // fail fast
+                    return Collections.singletonMap("error", "No tariff supplied for meterTypeTag: " + meterTypeTag);
                 }
             }else{
                 tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
