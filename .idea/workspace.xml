@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc">
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/job/BillProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/job/BillProcessor.java" afterDir="false" />
-    </list>
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -249,16 +247,5 @@
     <MESSAGE value="FleetHealth update" />
     <MESSAGE value="misc" />
     <option name="LAST_COMMIT_MESSAGE" value="misc" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/job/BillProcessor.java</url>
-          <line>231</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

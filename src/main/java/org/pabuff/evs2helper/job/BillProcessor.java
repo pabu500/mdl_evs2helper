@@ -382,9 +382,9 @@ public class BillProcessor {
 
         String respStr = (String) content.get("name");
         if(billExists){
-            respStr = "Existing Bill updated: " + billRecs.getFirst().get("name");
+            respStr = (String) billRecs.getFirst().get("name");
         }
-        return Collections.singletonMap("result", respStr);
+        return Map.of("result", respStr, "is_new", !billExists);
     }
 
     public String genBillName(String tenantName, String fromTimestamp, String toTimestamp) {
