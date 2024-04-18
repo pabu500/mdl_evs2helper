@@ -380,7 +380,11 @@ public class BillProcessor {
             }
         }
 
-        return Collections.singletonMap("result", content.get("name"));
+        String respStr = (String) content.get("name");
+        if(billExists){
+            respStr = "Existing Bill updated: " + billRecs.getFirst().get("name");
+        }
+        return Collections.singletonMap("result", respStr);
     }
 
     public String genBillName(String tenantName, String fromTimestamp, String toTimestamp) {
