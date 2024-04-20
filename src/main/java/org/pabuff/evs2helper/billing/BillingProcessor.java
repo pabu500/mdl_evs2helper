@@ -53,7 +53,7 @@ public class BillingProcessor {
 
             Map<String, Object> result =
             genSingleTenantBill((String) tenantInfo.get("tenant_name"),
-                                      fromDate, toDate, isMonthly, null, null, null, null, null);
+                                      fromDate, toDate, isMonthly, null, null, null, null);
             result2.put("result", result);
             billResult.add(result2);
 
@@ -68,7 +68,7 @@ public class BillingProcessor {
     public Map<String, Object> genSingleTenantBill(String tenantName,
                                                    String fromDate, String toDate, Boolean isMonthly,
                                                    Map<String, Object> tpRateInfo,
-                                                   Map<String, Object> autoUsageInfo,
+//                                                   Map<String, Object> autoUsageInfo,
                                                    Map<String, Object> manualItemInfo,
                                                    Map<String, Object> lineItemInfo,
                                                    String genBy) {
