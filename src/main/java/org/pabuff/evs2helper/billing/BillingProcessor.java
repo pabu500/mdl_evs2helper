@@ -346,6 +346,14 @@ public class BillingProcessor {
 
         if(billExists){
             logger.info("Bill already exists");
+
+            //check lc_status
+            String lcStatus = (String) billRecs.getFirst().get("lc_status");
+            if("released".equals(lcStatus)){
+                logger.severe("Bill already released");
+                return Collections.singletonMap("error", "Bill already released");
+            }
+
             String billUpdateSql = null;
             try {
                 String localNowStr = localHelper.getLocalNowStr();
