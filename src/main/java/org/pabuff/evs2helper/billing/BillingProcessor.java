@@ -30,7 +30,7 @@ public class BillingProcessor {
     @Autowired
     private TenantUsageProcessor tenantUsageProcessor;
 
-    final String billingRecTable = "billing_record_cw";
+    final String billingRecTable = "billing_rec_cw";
 
     public Map<String, Object> genAllTenantBills(String fromDate, String toDate, Boolean isMonthly) {
         logger.info("Processing all tenant bills");
