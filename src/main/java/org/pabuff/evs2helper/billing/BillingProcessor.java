@@ -283,9 +283,9 @@ public class BillingProcessor {
 
         if(autoItemInfo!=null){
             for (Map.Entry<String, Object> entry : autoItemInfo.entrySet()) {
-                String meterTypeTag = entry.getKey();
+                String usageType = entry.getKey();
                 Double usage = MathUtil.ObjToDouble(entry.getValue());
-                content.put("billed_auto_usage_"+meterTypeTag.toLowerCase(), usage);
+                content.put(usageType.toLowerCase(), usage);
             }
         }
         if(manualItemInfo!=null){
