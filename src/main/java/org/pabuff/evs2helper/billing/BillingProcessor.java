@@ -116,11 +116,11 @@ public class BillingProcessor {
         List<Map<String, Object>> tenantListUsageSummary = (List<Map<String, Object>>) tenantResult.get("tenant_list_usage_summary");
         List<Map<String, Object>> tenantUsageSummary = (List<Map<String, Object>>) tenantListUsageSummary.getFirst().get("tenant_usage_summary");
 
-        double totalAutoUsageE = 0D;
-        double totalAutoUsageW = 0D;
-        double totalAutoUsageB = 0D;
-        double totalAutoUsageN = 0D;
-        double totalAutoUsageG = 0D;
+        Double totalAutoUsageE = null;
+        Double totalAutoUsageW = null;
+        Double totalAutoUsageB = null;
+        Double totalAutoUsageN = null;
+        Double totalAutoUsageG = null;
         Map<String, Object> meterTypeRates = new HashMap<>();
         boolean incompleteUsageData = false;
         for(Map<String, Object> meterGroupUsage : tenantUsageSummary){
@@ -168,18 +168,33 @@ public class BillingProcessor {
                 double usageShare = usage * percentage/100;
                 switch (meterTypeTag){
                     case "E":
+                        if(totalAutoUsageE == null){
+                            totalAutoUsageE = 0.0;
+                        }
                         totalAutoUsageE += usageShare;
                         break;
                     case "W":
+                        if(totalAutoUsageW == null){
+                            totalAutoUsageW = 0.0;
+                        }
                         totalAutoUsageW += usageShare;
                         break;
                     case "B":
+                        if(totalAutoUsageB == null){
+                            totalAutoUsageB = 0.0;
+                        }
                         totalAutoUsageB += usageShare;
                         break;
                     case "N":
+                        if(totalAutoUsageN == null){
+                            totalAutoUsageN = 0.0;
+                        }
                         totalAutoUsageN += usageShare;
                         break;
                     case "G":
+                        if(totalAutoUsageG == null){
+                            totalAutoUsageG = 0.0;
+                        }
                         totalAutoUsageG += usageShare;
                         break;
                 }
@@ -363,9 +378,9 @@ public class BillingProcessor {
                 Long billRecIndex = MathUtil.ObjToLong(billRecIndexStr);
                 Map<String, String> sqlResult = SqlUtil.makeUpdateSql(
                         Map.of("table", billingRecTable,
-                                "target_key", "id",
-                                "target_value", billRecIndex,
-                                "content", content)
+                               "target_key", "id",
+                               "target_value", billRecIndex,
+                               "content", content)
                 );
                 billUpdateSql = sqlResult.get("sql");
             }catch (Exception e){
