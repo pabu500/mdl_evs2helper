@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="bill processor update">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="fleet health update">
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/DataNormalizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/DataNormalizer.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -309,7 +307,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713708236358</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="fleet health update">
+      <option name="closed" value="true" />
+      <created>1714189276532</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1714189276532</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -322,6 +328,7 @@
     <MESSAGE value="FleetHealth update" />
     <MESSAGE value="misc" />
     <MESSAGE value="bill processor update" />
-    <option name="LAST_COMMIT_MESSAGE" value="bill processor update" />
+    <MESSAGE value="fleet health update" />
+    <option name="LAST_COMMIT_MESSAGE" value="fleet health update" />
   </component>
 </project>
