@@ -591,6 +591,9 @@ public class DataNormalizer {
         Map<String, List<Double>> totalsMap = new HashMap<>();
         Map<String, List<Double>> diffsMap = new HashMap<>();
         for(String part : parts) {
+            if(iotHistoryNormalized.stream().map(IotHistoryRowDto2::getReadings).map(m -> m.get(part)).anyMatch(Objects::isNull)){
+                continue;
+            }
             List<Double> partTotals = iotHistoryNormalized.stream().map(IotHistoryRowDto2::getReadings).map(m -> m.get(part)).map(m -> MathUtil.ObjToDouble(m.get("rt"))).collect(Collectors.toList());
             totalsMap.put(part, partTotals);
             List<Double> partDiffs = iotHistoryNormalized.stream().map(IotHistoryRowDto2::getReadings).map(m -> m.get(part)).map(m -> MathUtil.ObjToDouble(m.get("rd"))).collect(Collectors.toList());
