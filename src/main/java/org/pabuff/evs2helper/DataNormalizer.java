@@ -186,11 +186,10 @@ public class DataNormalizer {
             return normalizeMultiPartReading2(HistoryType.meter_reading_iwow,
                     normalization, normalizeField, deviceID,
                     "dt", resp, errorThreshold, config);
-//                    Map.of("clearRepeatedReadingOnly", false,
-//                           "allowConsolidation", allowConsolidation,
-//                           "genMeta", genMeta,
-//                           "getStatOnly", getStatOnly
-//                    ));
+        }else if(normalizationTarget.equals(HistoryType.fleet_health.toString())){
+            return normalizeMultiPartReading2(HistoryType.fleet_health,
+                    normalization, normalizeField, deviceID,
+                    "poll_timestamp", resp, errorThreshold, config);
         }
         return null;
     }
