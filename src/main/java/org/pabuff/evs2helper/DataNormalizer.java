@@ -609,6 +609,9 @@ public class DataNormalizer {
         LocalDateTime end = iotHistoryNormalized.getFirst().getDt();
         LocalDateTime start = iotHistoryNormalized.getLast().getDt();
         for (String part : parts) {
+            if(totalsMap.get(part)==null || diffsMap.get(part)==null) {
+                continue;
+            }
             long duration = Duration.between(start, end).toMillis();
             List<Double> partReading = totalsMap.get(part);
             XtStat stat = MathUtil.findStat(partReading);
