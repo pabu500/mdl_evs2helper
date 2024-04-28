@@ -52,8 +52,8 @@ public class BillingProcessor {
             result2.put("tenant_label", tenantInfo.get("tenant_label"));
 
             Map<String, Object> result =
-            genSingleTenantBill((String) tenantInfo.get("tenant_name"),
-                                      fromDate, toDate, isMonthly, null, null, null, null);
+                    genSingleTenantBill((String) tenantInfo.get("tenant_name"),
+                            fromDate, toDate, isMonthly, null, null, null, null);
             result2.put("result", result);
             billResult.add(result2);
 
@@ -63,8 +63,8 @@ public class BillingProcessor {
         return Collections.singletonMap("result", billResult);
     }
 
-    // from billing record
     // generate bill with auto usage calculation
+    // then record billed usage and rate
     public Map<String, Object> genSingleTenantBill(String tenantName,
                                                    String fromDate, String toDate, Boolean isMonthly,
                                                    Map<String, Object> tpRateInfo,
@@ -100,14 +100,14 @@ public class BillingProcessor {
         String idSelQuery = "SELECT tenant_name FROM tenant WHERE tenant_name = '" + tenantName + "'";
 
         Map<String, String> tenantRequest = Map.of("is_monthly", isMonthly.toString(),
-                                                   "project_scope", "ems_cw_nus",
-                                                   "site_scope", "",
-                                                   "id_select_query", idSelQuery,
-                                                   "start_datetime", fromDate,
-                                                   "end_datetime", toDate,
-                                                   "item_type", ItemTypeEnum.TENANT.name(),
-                                                   "meter_type", ItemTypeEnum.METER_IWOW.name(),
-                                                   "item_id_type", ItemIdTypeEnum.NAME.name());
+                "project_scope", "ems_cw_nus",
+                "site_scope", "",
+                "id_select_query", idSelQuery,
+                "start_datetime", fromDate,
+                "end_datetime", toDate,
+                "item_type", ItemTypeEnum.TENANT.name(),
+                "meter_type", ItemTypeEnum.METER_IWOW.name(),
+                "item_id_type", ItemIdTypeEnum.NAME.name());
 //        if("dgzjc-int-240103-369".equals(tenantName)){
 //            logger.info("dgzjc-int-240103-369");
 //        }
@@ -115,6 +115,7 @@ public class BillingProcessor {
         Map<String, Object> tenantResult = tenantUsageProcessor.getListUsageSummary(tenantRequest);
         List<Map<String, Object>> tenantListUsageSummary = (List<Map<String, Object>>) tenantResult.get("tenant_list_usage_summary");
         List<Map<String, Object>> tenantUsageSummary = (List<Map<String, Object>>) tenantListUsageSummary.getFirst().get("tenant_usage_summary");
+        List<Map<String, Object>> subTenantListUsageSummary = (List<Map<String, Object>>) tenantListUsageSummary.getFirst().get("sub_tenant_list_usage_summary");
 
         Double totalAutoUsageE = null;
         Double totalAutoUsageW = null;
@@ -138,7 +139,7 @@ public class BillingProcessor {
                     return Collections.singletonMap("error", "genBy is null");
                 }
                 if(tpRateInfo.containsKey(meterTypeTag)) {
-                     tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
+                    tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
                 }else {
                     logger.info("No tariff supplied for meterTypeTag: " + meterTypeTag);
 //                    continue;
@@ -156,7 +157,7 @@ public class BillingProcessor {
 
             Map<String, Object> meterGroupUsageSummary = (Map<String, Object>) meterGroupUsage.get("meter_group_usage_summary");
             List<Map<String, Object>> meterListUsage = (List<Map<String, Object>>) meterGroupUsageSummary.get("meter_list_usage_summary");
-            
+
             for(Map<String, Object> meterUsageSummary : meterListUsage){
                 Object usageObj = meterUsageSummary.get("usage");
                 if("-".equals(usageObj.toString())){
@@ -212,12 +213,79 @@ public class BillingProcessor {
         autoUsage.put("billed_auto_usage_n", totalAutoUsageN);
         autoUsage.put("billed_auto_usage_g", totalAutoUsageG);
 
+        //sub tenant usage
+        Double totalSubTenantUsageE = null;
+        Double totalSubTenantUsageW = null;
+        Double totalSubTenantUsageB = null;
+        Double totalSubTenantUsageN = null;
+        Double totalSubTenantUsageG = null;
+
+        for(Map<String, Object> subTenantUsage : subTenantListUsageSummary) {
+            String subTenantName = (String) subTenantUsage.get("tenant_name");
+            List<Map<String, Object>> subTenantUsageSummary = (List<Map<String, Object>>) subTenantUsage.get("tenant_usage_summary");
+            for (Map<String, Object> meterGroupUsage : subTenantUsageSummary) {
+                String meterTypeTag = (String) meterGroupUsage.get("meter_type");
+
+                Map<String, Object> meterGroupUsageSummary = (Map<String, Object>) meterGroupUsage.get("meter_group_usage_summary");
+                List<Map<String, Object>> meterListUsage = (List<Map<String, Object>>) meterGroupUsageSummary.get("meter_list_usage_summary");
+
+                for (Map<String, Object> meterUsageSummary : meterListUsage) {
+                    Object usageObj = meterUsageSummary.get("usage");
+                    if ("-".equals(usageObj.toString())) {
+                        incompleteUsageData = true;
+                        break;
+                    }
+                    Double usage = MathUtil.ObjToDouble(usageObj);
+                    Double percentage = MathUtil.ObjToDouble(meterUsageSummary.get("percentage"));
+                    double usageShare = usage * percentage / 100;
+                    switch (meterTypeTag) {
+                        case "E":
+                            if (totalSubTenantUsageE == null) {
+                                totalSubTenantUsageE = 0.0;
+                            }
+                            totalSubTenantUsageE += usageShare;
+                            break;
+                        case "W":
+                            if (totalSubTenantUsageW == null) {
+                                totalSubTenantUsageW = 0.0;
+                            }
+                            totalSubTenantUsageW += usageShare;
+                            break;
+                        case "B":
+                            if (totalSubTenantUsageB == null) {
+                                totalSubTenantUsageB = 0.0;
+                            }
+                            totalSubTenantUsageB += usageShare;
+                            break;
+                        case "N":
+                            if (totalSubTenantUsageN == null) {
+                                totalSubTenantUsageN = 0.0;
+                            }
+                            totalSubTenantUsageN += usageShare;
+                            break;
+                        case "G":
+                            if (totalSubTenantUsageG == null) {
+                                totalSubTenantUsageG = 0.0;
+                            }
+                            totalSubTenantUsageG += usageShare;
+                            break;
+                    }
+                }
+            }
+        }
+        Map<String, Object> subTenantUsage = new HashMap<>();
+        subTenantUsage.put("billed_sub_tenant_usage_e", totalSubTenantUsageE);
+        subTenantUsage.put("billed_sub_tenant_usage_w", totalSubTenantUsageW);
+        subTenantUsage.put("billed_sub_tenant_usage_b", totalSubTenantUsageB);
+        subTenantUsage.put("billed_sub_tenant_usage_n", totalSubTenantUsageN);
+        subTenantUsage.put("billed_sub_tenant_usage_g", totalSubTenantUsageG);
+
         Map<String, Object> billResult = genBillingRecord(tenantInfo, meterTypeRates,
-                        fromDate, toDate, isMonthly,
-                        autoUsage,
-                        manualItemInfo,
-                        lineItemInfo,
-                        genBy);
+                fromDate, toDate, isMonthly,
+                autoUsage, subTenantUsage,
+                manualItemInfo,
+                lineItemInfo,
+                genBy);
         if(billResult.containsKey("error")){
             logger.severe("Failed to generate bill record: " + billResult.get("error"));
             return Collections.singletonMap("error", "Failed to generate bill record: " + billResult.get("error"));
@@ -273,12 +341,12 @@ public class BillingProcessor {
     // generate billing record
     // billing record contains info on tenant, period, tp, manual usage, line item, but without auto usage calculation
     private Map<String, Object> genBillingRecord(Map<String, Object> tenantInfo,
-                                                Map<String, Object> meterTypeRates,
-                                                String fromTimestamp, String toTimestamp, Boolean isMonthly,
-                                                Map<String, Object> autoItemInfo,
-                                                Map<String, Object> manualItemInfo,
-                                                Map<String, Object> lineItemInfo,
-                                                String genBy) {
+                                                 Map<String, Object> meterTypeRates,
+                                                 String fromTimestamp, String toTimestamp, Boolean isMonthly,
+                                                 Map<String, Object> autoItemInfo, Map<String, Object> subTenantUsage,
+                                                 Map<String, Object> manualItemInfo,
+                                                 Map<String, Object> lineItemInfo,
+                                                 String genBy) {
         logger.info("Generating bill");
         if(meterTypeRates.isEmpty()){
             logger.warning("Missing meter type rate");
@@ -298,6 +366,13 @@ public class BillingProcessor {
 
         if(autoItemInfo!=null){
             for (Map.Entry<String, Object> entry : autoItemInfo.entrySet()) {
+                String usageType = entry.getKey();
+                Double usage = MathUtil.ObjToDouble(entry.getValue());
+                content.put(usageType.toLowerCase(), usage);
+            }
+        }
+        if(subTenantUsage!=null){
+            for (Map.Entry<String, Object> entry : subTenantUsage.entrySet()) {
                 String usageType = entry.getKey();
                 Double usage = MathUtil.ObjToDouble(entry.getValue());
                 content.put(usageType.toLowerCase(), usage);
@@ -378,9 +453,9 @@ public class BillingProcessor {
                 Long billRecIndex = MathUtil.ObjToLong(billRecIndexStr);
                 Map<String, String> sqlResult = SqlUtil.makeUpdateSql(
                         Map.of("table", billingRecTable,
-                               "target_key", "id",
-                               "target_value", billRecIndex,
-                               "content", content)
+                                "target_key", "id",
+                                "target_value", billRecIndex,
+                                "content", content)
                 );
                 billUpdateSql = sqlResult.get("sql");
             }catch (Exception e){
