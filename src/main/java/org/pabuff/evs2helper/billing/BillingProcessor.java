@@ -115,8 +115,10 @@ public class BillingProcessor {
         Map<String, Object> tenantResult = tenantUsageProcessor.getListUsageSummary(tenantRequest);
         List<Map<String, Object>> tenantListUsageSummary = (List<Map<String, Object>>) tenantResult.get("tenant_list_usage_summary");
         List<Map<String, Object>> tenantUsageSummary = (List<Map<String, Object>>) tenantListUsageSummary.getFirst().get("tenant_usage_summary");
-        List<Map<String, Object>> subTenantListUsageSummary = (List<Map<String, Object>>) tenantListUsageSummary.getFirst().get("sub_tenant_list_usage_summary");
-
+        List<Map<String, Object>> subTenantListUsageSummary = new ArrayList<>();
+        if(tenantListUsageSummary.getFirst().get("sub_tenant_list_usage_summary") != null) {
+            subTenantListUsageSummary = (List<Map<String, Object>>) tenantListUsageSummary.getFirst().get("sub_tenant_list_usage_summary");
+        }
         Double totalAutoUsageE = null;
         Double totalAutoUsageW = null;
         Double totalAutoUsageB = null;
