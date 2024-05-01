@@ -343,7 +343,8 @@ public class BillingProcessor {
     private Map<String, Object> genBillingRecord(Map<String, Object> tenantInfo,
                                                  Map<String, Object> meterTypeRates,
                                                  String fromTimestamp, String toTimestamp, Boolean isMonthly,
-                                                 Map<String, Object> autoItemInfo, Map<String, Object> subTenantUsage,
+                                                 Map<String, Object> autoItemInfo,
+                                                 Map<String, Object> subTenantUsage,
                                                  Map<String, Object> manualItemInfo,
                                                  Map<String, Object> lineItemInfo,
                                                  String genBy) {
@@ -391,6 +392,8 @@ public class BillingProcessor {
                 content.put("line_item_amount_1", lineItemInfo.get("line_item_amount_1"));
             }
         }
+
+        Map<String, Object> netUsage = getNetUsage(autoItemInfo, subTenantUsage, manualItemInfo);
 
         if(genBy != null){
             content.put("gen_type", "manual");
@@ -495,7 +498,106 @@ public class BillingProcessor {
         if(billExists){
             respStr = (String) billRecs.getFirst().get("name");
         }
-        return Map.of("result", respStr, "is_new", !billExists);
+        return Map.of("result", respStr, "is_new", !billExists, "net_usage", netUsage);
+    }
+
+    private Map<String, Object> getNetUsage(Map<String, Object> autoItemInfo, Map<String, Object> subTenantUsage, Map<String, Object> manualItemInfo) {
+
+        Double netUsageE = null;
+        Double netUsageW = null;
+        Double netUsageB = null;
+        Double netUsageN = null;
+        Double netUsageG = null;
+
+        if(autoItemInfo!=null){
+            if(autoItemInfo.get("billed_auto_usage_e") != null){
+                netUsageE = MathUtil.ObjToDouble(autoItemInfo.get("billed_auto_usage_e"));
+            }
+            if(autoItemInfo.get("billed_auto_usage_w") != null){
+                netUsageW = MathUtil.ObjToDouble(autoItemInfo.get("billed_auto_usage_w"));
+            }
+            if(autoItemInfo.get("billed_auto_usage_b") != null){
+                netUsageB = MathUtil.ObjToDouble(autoItemInfo.get("billed_auto_usage_b"));
+            }
+            if(autoItemInfo.get("billed_auto_usage_n") != null){
+                netUsageN = MathUtil.ObjToDouble(autoItemInfo.get("billed_auto_usage_n"));
+            }
+            if(autoItemInfo.get("billed_auto_usage_g") != null){
+                netUsageG = MathUtil.ObjToDouble(autoItemInfo.get("billed_auto_usage_g"));
+            }
+        }
+        if(subTenantUsage!=null){
+            if(subTenantUsage.get("billed_sub_tenant_usage_e") != null){
+                if(netUsageE == null){
+                    netUsageE = 0.0;
+                }
+                netUsageE += MathUtil.ObjToDouble(subTenantUsage.get("billed_sub_tenant_usage_e"));
+            }
+            if(subTenantUsage.get("billed_sub_tenant_usage_w") != null){
+                if(netUsageW == null){
+                    netUsageW = 0.0;
+                }
+                netUsageW += MathUtil.ObjToDouble(subTenantUsage.get("billed_sub_tenant_usage_w"));
+            }
+            if(subTenantUsage.get("billed_sub_tenant_usage_b") != null){
+                if(netUsageB == null){
+                    netUsageB = 0.0;
+                }
+                netUsageB += MathUtil.ObjToDouble(subTenantUsage.get("billed_sub_tenant_usage_b"));
+            }
+            if(subTenantUsage.get("billed_sub_tenant_usage_n") != null){
+                if(netUsageN == null){
+                    netUsageN = 0.0;
+                }
+                netUsageN += MathUtil.ObjToDouble(subTenantUsage.get("billed_sub_tenant_usage_n"));
+            }
+            if(subTenantUsage.get("billed_sub_tenant_usage_g") != null){
+                if(netUsageG == null){
+                    netUsageG = 0.0;
+                }
+                netUsageG += MathUtil.ObjToDouble(subTenantUsage.get("billed_sub_tenant_usage_g"));
+            }
+        }
+        if(manualItemInfo!=null){
+            if(manualItemInfo.get("E") != null){
+                if(netUsageE == null){
+                    netUsageE = 0.0;
+                }
+                netUsageE += MathUtil.ObjToDouble(manualItemInfo.get("E"));
+            }
+            if(manualItemInfo.get("W") != null){
+                if(netUsageW == null){
+                    netUsageW = 0.0;
+                }
+                netUsageW += MathUtil.ObjToDouble(manualItemInfo.get("W"));
+            }
+            if(manualItemInfo.get("B") != null){
+                if(netUsageB == null){
+                    netUsageB = 0.0;
+                }
+                netUsageB += MathUtil.ObjToDouble(manualItemInfo.get("B"));
+            }
+            if(manualItemInfo.get("N") != null){
+                if(netUsageN == null){
+                    netUsageN = 0.0;
+                }
+                netUsageN += MathUtil.ObjToDouble(manualItemInfo.get("N"));
+            }
+            if(manualItemInfo.get("G") != null){
+                if(netUsageG == null){
+                    netUsageG = 0.0;
+                }
+                netUsageG += MathUtil.ObjToDouble(manualItemInfo.get("G"));
+            }
+        }
+        Map<String, Object> netUsage = new HashMap<>();
+        netUsage.put("net_usage_e", netUsageE);
+        netUsage.put("net_usage_w", netUsageW);
+        netUsage.put("net_usage_b", netUsageB);
+        netUsage.put("net_usage_n", netUsageN);
+        netUsage.put("net_usage_g", netUsageG);
+
+        return netUsage;
     }
 
     public String genBillingRecordName(String tenantName, String fromTimestamp, String toTimestamp) {
