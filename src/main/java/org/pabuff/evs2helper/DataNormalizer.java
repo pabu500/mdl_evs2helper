@@ -449,8 +449,19 @@ public class DataNormalizer {
         boolean clearRepeatedReadingsOnly = config.get("clearRepeatedReadingsOnly") != null && (Boolean) config.get("clearRepeatedReadingsOnly");
         boolean detectRestartEvent = config.get("detectRestartEvent") != null && (Boolean) config.get("detectRestartEvent");
         boolean forceAlignTimeRange = config.get("forceAlignTimeRange") != null && (Boolean) config.get("forceAlignTimeRange");
+        boolean intervalClean = config.get("intervalClean") != null && (Boolean) config.get("intervalClean");
 
-        Map<String, Object> intervalCleanResult = cleanInterval(rawDataRows, timeField, clearRepeatedReadingsOnly, detectRestartEvent);
+        Map<String, Object> intervalCleanResult = new HashMap<>();
+        if(intervalClean) {
+            intervalCleanResult = cleanInterval(rawDataRows, timeField, clearRepeatedReadingsOnly, detectRestartEvent);
+        }else{
+            intervalCleanResult = Map.of(
+                    "cleaned_data", rawDataRows,
+                    "dominant_interval", 1L,
+                    "max_interval", 1D,
+                    "outlier_count", 0L
+            );
+        }
         List<Map<String, Object>> intervalCleanedDataRows = (List<Map<String, Object>>) intervalCleanResult.get("cleaned_data");
         long dominantIntervalMinute = (long) intervalCleanResult.get("dominant_interval");
         double maxInterval = (double) intervalCleanResult.get("max_interval");
