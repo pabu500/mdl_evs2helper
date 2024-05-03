@@ -449,7 +449,14 @@ public class DataNormalizer {
         boolean clearRepeatedReadingsOnly = config.get("clearRepeatedReadingsOnly") != null && (Boolean) config.get("clearRepeatedReadingsOnly");
         boolean detectRestartEvent = config.get("detectRestartEvent") != null && (Boolean) config.get("detectRestartEvent");
         boolean forceAlignTimeRange = config.get("forceAlignTimeRange") != null && (Boolean) config.get("forceAlignTimeRange");
-        boolean intervalClean = config.get("intervalClean") != null && (Boolean) config.get("intervalClean");
+        boolean intervalClean = true;
+        if(config.get("intervalClean") != null) {
+            intervalClean = (Boolean) config.get("intervalClean");
+        }
+        boolean normalizeNegative = true;
+        if(config.get("normalizeNegative") != null) {
+            normalizeNegative = (Boolean) config.get("normalizeNegative");
+        }
 
         Map<String, Object> intervalCleanResult = new HashMap<>();
         if(intervalClean) {
@@ -564,8 +571,11 @@ public class DataNormalizer {
         long totalNegCount = 0;
         if (normalization.contains("none")) {
         } else {
-            totalNegCount = normalizeNegativeReading(iotHistory);
-            logger.info("offset " + totalNegCount + " negative rows");
+            if(normalizeNegative) {
+                totalNegCount = normalizeNegativeReading(iotHistory);
+                logger.info("offset " + totalNegCount + " negative rows");
+            }else {
+            }
         }
 
         // insert estimated rows
