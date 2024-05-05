@@ -409,13 +409,14 @@ public class BillingProcessor {
             Long tariffPackageRateId = MathUtil.ObjToLong(meterTypeRate.get("id"));
             content.put("tariff_package_rate_id_"+entry.getKey().toLowerCase(), tariffPackageRateId);
             //get billed rates
-            Map<String, Object> tpResult = queryHelper.getTableField("tariff_package_rate", "rate", "id", (String) meterTypeRate.get("id"));
+            Map<String, Object> tpResult = queryHelper.getTableField("tariff_package_rate", "rate, gst", "id", (String) meterTypeRate.get("id"));
             if(tpResult.containsKey("error")){
                 logger.severe("Failed to get tp rate: " + tpResult.get("error"));
                 return Collections.singletonMap("error", "Failed to get tp rate: " + tpResult.get("error"));
             }
             Double tpRate = MathUtil.ObjToDouble(tpResult.get("rate"));
             content.put("billed_rate_"+entry.getKey().toLowerCase(), tpRate);
+            content.put("billed_gst", MathUtil.ObjToDouble(tpResult.get("gst")));
         }
 
         boolean billExists = false;
