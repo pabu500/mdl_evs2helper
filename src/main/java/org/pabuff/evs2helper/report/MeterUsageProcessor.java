@@ -358,7 +358,7 @@ public class MeterUsageProcessor {
 
         String meterGroupName = request.get("group_name");
         Map<String, Object> percentMap = new HashMap<>();
-        if(meterGroupName!=null){
+        if(meterGroupName!=null && !meterGroupName.isEmpty()){
             Map<String, Object> result = queryHelper.getTableField(
                     "meter_group", "id", "name", meterGroupName);
             String meterGroupIndexStr = (String) result.get("id");
