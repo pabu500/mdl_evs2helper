@@ -112,6 +112,7 @@ public class MeterUsageProcessor {
         if(!meterSelectSql2.contains("commissioned_timestamp")) {
             meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColSel, "SELECT " + itemIdColSel + ", commissioned_timestamp");
         }
+        meterSelectSql2 += ", " + itemLocColSel;
         meterSelectSql2 += " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
 
         List<Map<String, Object>> selectedMeterList;
