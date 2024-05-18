@@ -1,4 +1,4 @@
-package org.pabuff.evs2helper.report;
+package org.pabuff.evs2helper.meter_usage;
 
 import org.pabuff.dto.ItemIdTypeEnum;
 import org.pabuff.dto.ItemTypeEnum;

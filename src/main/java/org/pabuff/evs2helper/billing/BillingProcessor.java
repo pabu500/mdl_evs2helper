@@ -3,7 +3,7 @@ package org.pabuff.evs2helper.billing;
 import org.pabuff.dto.ItemIdTypeEnum;
 import org.pabuff.dto.ItemTypeEnum;
 import org.pabuff.evs2helper.locale.LocalHelper;
-import org.pabuff.evs2helper.report.TenantUsageProcessor;
+import org.pabuff.evs2helper.tenant.TenantUsageProcessor;
 import org.pabuff.oqghelper.OqgHelper;
 import org.pabuff.oqghelper.QueryHelper;
 import org.pabuff.utils.DateTimeUtil;

@@ -1,8 +1,10 @@
-package org.pabuff.evs2helper.report;
+package org.pabuff.evs2helper.tenant;
 
 import org.pabuff.dto.ItemIdTypeEnum;
 import org.pabuff.dto.ItemTypeEnum;
 import org.pabuff.evs2helper.locale.LocalHelper;
+import org.pabuff.evs2helper.meter_group.MeterGroupUsageProcessor;
+import org.pabuff.evs2helper.meter_usage.MeterUsageProcessor;
 import org.pabuff.evs2helper.scope.ScopeHelper;
 import org.pabuff.oqghelper.OqgHelper;
 import org.pabuff.oqghelper.QueryHelper;
@@ -27,6 +29,8 @@ public class TenantUsageProcessor {
     @Autowired
 //    private MeterUsageProcessorLocal meterUsageProcessor;
     private MeterUsageProcessor meterUsageProcessor;
+    @Autowired
+    private MeterGroupUsageProcessor meterGroupUsageProcessor;
 
     public Map<String, Object> getListUsageSummary(Map<String, String> request) {
         logger.info("process getListUsageSummary");
@@ -248,7 +252,7 @@ public class TenantUsageProcessor {
                 for (Map<String, Object> meter : meterList) {
                     meterIdList.add((String) meter.get(itemNameColName));
                 }
-                Map<String, Object> trendingSnapshot = getMeterGroupTrendingSnapshot(
+                Map<String, Object> trendingSnapshot = meterGroupUsageProcessor.getMeterGroupTrendingSnapshot(
                         projectScope, siteScope,
                         meterTypeEnum.name(),
                         itemIdTypeEnum.name(),
@@ -268,41 +272,6 @@ public class TenantUsageProcessor {
         }
         tenantResult.put("tenant_usage_summary", groupUsageList);
         return tenantResult;
-    }
-
-    private Map<String, Object> getMeterGroupTrendingSnapshot(String projectScope, String siteScope,
-                                                              String meterTypeStr,
-                                                              String itemIdTypeStr,
-                                                              String meterList,
-                                                              String meterGroupId,
-                                                              String startDatetimeStr, String endDatetimeStr,
-                                                              boolean isMonthly) {
-        try {
-            Map<String, String> consolidatedUsageHistoryRequest = new HashMap<>();
-            consolidatedUsageHistoryRequest.put("target_interval", "month");
-            consolidatedUsageHistoryRequest.put("num_of_intervals", "3");
-            consolidatedUsageHistoryRequest.put("project_scope", projectScope);
-            consolidatedUsageHistoryRequest.put("site_scope", siteScope);
-            consolidatedUsageHistoryRequest.put("item_type", meterTypeStr);
-            consolidatedUsageHistoryRequest.put("group_name", meterGroupId);
-            consolidatedUsageHistoryRequest.put("item_id_type", itemIdTypeStr);
-            consolidatedUsageHistoryRequest.put("item_id_list", meterList);
-            consolidatedUsageHistoryRequest.put("start_datetime", startDatetimeStr);
-            consolidatedUsageHistoryRequest.put("end_datetime", endDatetimeStr);
-            consolidatedUsageHistoryRequest.put("is_monthly", String.valueOf(isMonthly));
-            consolidatedUsageHistoryRequest.put("sort_by", "kwh_timestamp");
-            consolidatedUsageHistoryRequest.put("sort_order", "desc");
-            consolidatedUsageHistoryRequest.put("max_rows_per_page", "1");
-            consolidatedUsageHistoryRequest.put("current_page", "1");
-
-            Map<String, Object> trendingResult =
-                    meterUsageProcessor.getMeterConsolidatedUsageHistory(consolidatedUsageHistoryRequest);
-
-            return trendingResult;
-        } catch (Exception e) {
-            logger.severe(e.getMessage());
-            return Map.of("error", e.getMessage());
-        }
     }
 
     private Map<String, Object> getSubTenantsUsage(String tenantId,
