@@ -194,6 +194,7 @@ public class TenantUsageProcessor {
         List<Map<String, Object>> groupUsageList = new ArrayList<>();
         for (Map<String, Object> meterGroup : meterGroups) {
             String meterType = (String) meterGroup.get("meter_type");
+            String groupId = (String) meterGroup.get("meter_group_id");
             String groupName = (String) meterGroup.get("group_name");
             String label = (String) meterGroup.get("group_label");
             List<Map<String, Object>> meterList = (List<Map<String, Object>>) meterGroup.get("group_meter_list");
@@ -243,10 +244,12 @@ public class TenantUsageProcessor {
             }
 
             Map<String, Object> groupUsage = new HashMap<>();
+            groupUsage.put("meter_group_id", groupId);
             groupUsage.put("meter_group_name", groupName);
             groupUsage.put("meter_group_label", label);
             groupUsage.put("meter_type", meterType);
             groupUsage.put("meter_group_usage_summary", usageResult);
+
             if (getTrendingSnapshotBool) {
                 List<String> meterIdList = new ArrayList<>();
                 for (Map<String, Object> meter : meterList) {
