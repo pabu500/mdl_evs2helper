@@ -31,6 +31,7 @@ public class BillingProcessor {
     private TenantUsageProcessor tenantUsageProcessor;
 
     final String billingRecTable = "billing_rec_cw";
+    final String billingRecMeterGroup = "billing_rec_meter_group_cw";
 
     public Map<String, Object> genAllTenantBills(String fromDate, String toDate, Boolean isMonthly) {
         logger.info("Processing all tenant bills");
@@ -126,8 +127,14 @@ public class BillingProcessor {
         Double totalAutoUsageG = null;
         Map<String, Object> meterTypeRates = new HashMap<>();
         boolean incompleteUsageData = false;
+
+        List<String> tenantMeterGroupIdList = new ArrayList<>();
         for(Map<String, Object> meterGroupUsage : tenantUsageSummary){
             String meterTypeTag = (String) meterGroupUsage.get("meter_type");
+
+            String meterGroupId = (String) meterGroupUsage.get("meter_group_id");
+            tenantMeterGroupIdList.add(meterGroupId);
+
             Map<String, Object> tariffResult;
 //            if(tpRateInfo !=null && tpRateInfo.containsKey(meterTypeTag)) {
 //                tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
@@ -282,7 +289,10 @@ public class BillingProcessor {
         subTenantUsage.put("billed_sub_tenant_usage_n", totalSubTenantUsageN);
         subTenantUsage.put("billed_sub_tenant_usage_g", totalSubTenantUsageG);
 
-        Map<String, Object> billResult = genBillingRecord(tenantInfo, meterTypeRates,
+        Map<String, Object> billResult = genBillingRecord(
+                tenantInfo,
+                tenantMeterGroupIdList,
+                meterTypeRates,
                 fromDate, toDate, isMonthly,
                 autoUsage, subTenantUsage,
                 manualItemInfo,
@@ -292,7 +302,7 @@ public class BillingProcessor {
             logger.severe("Failed to generate bill record: " + billResult.get("error"));
             return Collections.singletonMap("error", "Failed to generate bill record: " + billResult.get("error"));
         }
-        logger.info("Bill processed for tenant: " + tenantName + " bill_name" + billResult.get("result"));
+        logger.info("Bill processed for tenant: " + tenantName + " bill_name: " + billResult.get("result"));
         return billResult;
     }
 
@@ -343,6 +353,7 @@ public class BillingProcessor {
     // generate billing record
     // billing record contains info on tenant, period, tp, manual usage, line item, but without auto usage calculation
     private Map<String, Object> genBillingRecord(Map<String, Object> tenantInfo,
+                                                 List<String> meterGroupIdList,
                                                  Map<String, Object> meterTypeRates,
                                                  String fromTimestamp, String toTimestamp, Boolean isMonthly,
                                                  Map<String, Object> autoItemInfo,
@@ -440,6 +451,9 @@ public class BillingProcessor {
             billExists = true;
         }
 
+        //always gen new bill
+        billExists = false;
+
         if(billExists){
             logger.info("Bill already exists");
 
@@ -494,6 +508,31 @@ public class BillingProcessor {
             } catch (Exception e) {
                 logger.severe("Failed to insert bill: " + e.getMessage());
                 return Collections.singletonMap("error", "Failed to insert bill: " + e.getMessage());
+            }
+
+            //get bill index
+            String sql = "SELECT id FROM " + billingRecTable + " WHERE name = '" + billName + "'";
+            try {
+                billRecs = oqgHelper.OqgR2(sql, true);
+            } catch (Exception e) {
+                logger.severe("Failed to query bill: " + e.getMessage());
+                return Collections.singletonMap("error", "Failed to query bill: " + e.getMessage());
+            }
+            if(billRecs.size()!=1){
+                logger.severe("Failed to get bill index");
+                return Collections.singletonMap("error", "Failed to get bill index");
+            }
+            String billIndexStr = (String) billRecs.getFirst().get("id");
+            //insert bill meter group
+            for(String meterGroupId : meterGroupIdList){
+                try {
+                    String billMeterGroupInsertSql = "INSERT INTO " + billingRecMeterGroup + " (billing_rec_id, meter_group_id) "
+                            + "VALUES (" + billIndexStr + ", " + meterGroupId + ")";
+                    oqgHelper.OqgIU(billMeterGroupInsertSql);
+                }catch (Exception e){
+                    logger.severe("Failed to insert bill meter group: " + e.getMessage());
+                    return Collections.singletonMap("error", "Failed to insert bill meter group: " + e.getMessage());
+                }
             }
         }
 

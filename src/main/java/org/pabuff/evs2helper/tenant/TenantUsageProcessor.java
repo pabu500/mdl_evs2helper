@@ -111,7 +111,7 @@ public class TenantUsageProcessor {
             sort.put("sort_order", sortOrder);
         }
 
-        String fromSql = "SELECT id, " + itemIdColName + ", tenant_label, location_tag " +
+        String fromSql = "SELECT id, " + itemIdColName + ", tenant_label, location_tag, alt_name, type " +
                 meterSelectSql.substring(meterSelectSql.indexOf(" FROM"));
 
         String meterSelectSql2 = fromSql + " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
@@ -127,8 +127,8 @@ public class TenantUsageProcessor {
             return Collections.singletonMap("error", "oqgHelper error: resp is null");
         }
         if (resp.isEmpty()) {
-            logger.info("no meter found");
-            return Collections.singletonMap("info", "no meter found");
+            logger.info("no tenant found");
+            return Collections.singletonMap("info", "no tenant found");
         }
 
         List<Map<String, Object>> tenantUsageList = new ArrayList<>();
@@ -194,7 +194,7 @@ public class TenantUsageProcessor {
         List<Map<String, Object>> groupUsageList = new ArrayList<>();
         for (Map<String, Object> meterGroup : meterGroups) {
             String meterType = (String) meterGroup.get("meter_type");
-            String groupId = (String) meterGroup.get("meter_group_id");
+            String groupId = (String) meterGroup.get("group_id");
             String groupName = (String) meterGroup.get("group_name");
             String label = (String) meterGroup.get("group_label");
             List<Map<String, Object>> meterList = (List<Map<String, Object>>) meterGroup.get("group_meter_list");
@@ -249,7 +249,6 @@ public class TenantUsageProcessor {
             groupUsage.put("meter_group_label", label);
             groupUsage.put("meter_type", meterType);
             groupUsage.put("meter_group_usage_summary", usageResult);
-
             if (getTrendingSnapshotBool) {
                 List<String> meterIdList = new ArrayList<>();
                 for (Map<String, Object> meter : meterList) {
