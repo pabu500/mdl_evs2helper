@@ -81,6 +81,11 @@ public class TenantUsageProcessor {
 //        String panelTagColName = (String) itemConfig.get("panelTagColName");
         String timeKey =(String) itemConfig.get("timeKey");
         String valKey = (String) itemConfig.get("valKey");
+        String testCountStr = request.get("test_count");
+        Integer testCount = null;
+        if(testCountStr != null && !testCountStr.isEmpty()){
+            testCount = Integer.parseInt(testCountStr);
+        }
 
         String sortBy = request.get("sort_by");
         String sortOrder = request.get("sort_order");
@@ -132,6 +137,7 @@ public class TenantUsageProcessor {
         }
 
         List<Map<String, Object>> tenantUsageList = new ArrayList<>();
+        int processed = 0;
         for (Map<String, Object> tenantMap : resp) {
             Map<String, Object> tenantResult = compileTenantsUsage(
                     tenantMap,
@@ -155,6 +161,11 @@ public class TenantUsageProcessor {
             }
 
             tenantUsageList.add(tenantResult);
+            processed++;
+            logger.info("processed tenant: " + tenantMap.get(itemIdColName) + " " + processed + "/" + resp.size());
+            if (testCount != null && processed >= testCount) {
+                break;
+            }
         }
 
         return Collections.singletonMap("tenant_list_usage_summary", tenantUsageList);
