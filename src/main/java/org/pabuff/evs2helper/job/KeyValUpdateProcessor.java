@@ -2,6 +2,7 @@ package org.pabuff.evs2helper.job;
 
 import org.pabuff.dto.ItemIdTypeEnum;
 import org.pabuff.dto.ItemTypeEnum;
+import org.pabuff.dto.SvcClaimDto;
 import org.pabuff.evs2helper.cache.DataAgent;
 import org.pabuff.evs2helper.email.SystemNotifier;
 import org.pabuff.evs2helper.event.OpResultEvent;
@@ -65,6 +66,7 @@ public class KeyValUpdateProcessor {
             String opName, String scopeStr,
             Map<String, Object> request,
             List<Map<String, Object>> opList,
+            SvcClaimDto svcClaimDto,
             boolean isScheduledJobMode, boolean isMock) {
 
         String meterTypeStr = (String) request.get("item_type");
@@ -153,6 +155,24 @@ public class KeyValUpdateProcessor {
 //        if(itemIdTypeStr != null && !itemIdTypeStr.isBlank()) {
 //            itemIdTypeEnum = ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
 //        }
+        String localNowStr = localHelper.getLocalNowStr();
+        Map<String, Object> meter0 = //opList.get(0);
+                opList.stream()
+                        .filter(item -> item.get("checked") != null && (boolean) item.get("checked"))
+                        .findFirst()
+                        .orElseThrow();
+        String meterId0 = (String) (meter0.get(itemSnKey)==null? "null" : meter0.get(itemSnKey));
+        queryHelper.postOpLog2(
+                localNowStr,
+                svcClaimDto.getUserId(),
+                svcClaimDto.getTarget(),
+                svcClaimDto.getOperation(),
+                meterId0,
+                opName,
+                opList.size(),
+                localNowStr,
+                "",
+                null);
 
         for( Map<String, Object> item : opList) {
             if(item.get("error") != null) {
@@ -236,7 +256,7 @@ public class KeyValUpdateProcessor {
                 }
             }else {
                 //live
-                String localNowStr = localHelper.getLocalNowStr();
+                localNowStr = localHelper.getLocalNowStr();
 
                 String val = (String) item.get(keyName);
                 //if val is a number, do not quote it
@@ -376,7 +396,7 @@ public class KeyValUpdateProcessor {
 
     //update multiple key/val pairs for items from opList
     public Map<String, Object> doOpMultiKeyValUpdate(Map<String, Object> request,
-                                                     List<Map<String, Object>> opList) {
+                                                     List<Map<String, Object>> opList, SvcClaimDto svcClaimDto) {
 
         String meterTypeStr = (String) request.get("item_type");
         ItemTypeEnum meterTypeEnum = ItemTypeEnum.METER;
@@ -450,6 +470,26 @@ public class KeyValUpdateProcessor {
         if(opName.contains(".")) {
             displayOpName = opName.split("\\.")[1];
         }
+
+        String localNowStr = localHelper.getLocalNowStr();
+        Map<String, Object> meter0 = //opList.get(0);
+                opList.stream()
+                        .filter(item -> item.get("checked") != null && (boolean) item.get("checked"))
+                        .findFirst()
+                        .orElseThrow();
+        String meterId0 = (String) (meter0.get(itemSnKey) == null ? "null" : meter0.get(itemSnKey));
+        queryHelper.postOpLog2(
+                localNowStr,
+                svcClaimDto.getUserId(),
+                svcClaimDto.getTarget(),
+                svcClaimDto.getOperation(),
+                meterId0,
+                opName,
+                opList.size(),
+                localNowStr,
+                "",
+                null);
+
         for( Map<String, Object> item : opList) {
             if(item.get("error") != null) {
                 continue;
@@ -513,7 +553,7 @@ public class KeyValUpdateProcessor {
             }else {
                 //live
 //                String localNowStr = DateTimeUtil.getSgNowStr();
-                String localNowStr = localHelper.getLocalNowStr();
+                localNowStr = localHelper.getLocalNowStr();
 
                 //sort thru the item map for key and non-empty value pairs to update
                 Map<String, Object> content = new HashMap<>();
