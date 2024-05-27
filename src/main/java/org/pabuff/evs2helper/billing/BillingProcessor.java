@@ -54,7 +54,7 @@ public class BillingProcessor {
 
             Map<String, Object> result =
                     genSingleTenantBill((String) tenantInfo.get("tenant_name"),
-                            fromDate, toDate, isMonthly, null, null, null, null);
+                            fromDate, toDate, isMonthly, null, null, null,  false, null);
             result2.put("result", result);
             billResult.add(result2);
 
@@ -72,6 +72,7 @@ public class BillingProcessor {
 //                                                   Map<String, Object> autoUsageInfo,
                                                    Map<String, Object> manualItemInfo,
                                                    Map<String, Object> lineItemInfo,
+                                                   boolean excludeAutoUsage,
                                                    String genBy) {
         logger.info("Processing bill");
 
@@ -113,127 +114,111 @@ public class BillingProcessor {
 //            logger.info("dgzjc-int-240103-369");
 //        }
 
-        Map<String, Object> tenantResult = tenantUsageProcessor.getListUsageSummary(tenantRequest);
-        List<Map<String, Object>> tenantListUsageSummary = (List<Map<String, Object>>) tenantResult.get("tenant_list_usage_summary");
-        List<Map<String, Object>> tenantUsageSummary = (List<Map<String, Object>>) tenantListUsageSummary.getFirst().get("tenant_usage_summary");
-        List<Map<String, Object>> subTenantListUsageSummary = new ArrayList<>();
-        if(tenantListUsageSummary.getFirst().get("sub_tenant_list_usage_summary") != null) {
-            subTenantListUsageSummary = (List<Map<String, Object>>) tenantListUsageSummary.getFirst().get("sub_tenant_list_usage_summary");
-        }
-        Double totalAutoUsageE = null;
-        Double totalAutoUsageW = null;
-        Double totalAutoUsageB = null;
-        Double totalAutoUsageN = null;
-        Double totalAutoUsageG = null;
+        Map<String, Object> billResult;
         Map<String, Object> meterTypeRates = new HashMap<>();
-        boolean incompleteUsageData = false;
+        List<String> meterTypes = List.of("E", "W", "B", "N", "G");
 
-        List<String> tenantMeterGroupIdList = new ArrayList<>();
-        for(Map<String, Object> meterGroupUsage : tenantUsageSummary){
-            String meterTypeTag = (String) meterGroupUsage.get("meter_type");
+        // if tpRateInfo is provided, use provided rate info
+        // else, get rate info from assigned tps
+        for(String meterTypeTag : meterTypes){
+            Map<String, Object> tariffResult = new HashMap<>();
+            if (tpRateInfo != null) {
+                //custom billing
+                if (genBy == null) {
+                    logger.severe("genBy is null");
+                    return Collections.singletonMap("error", "genBy is null");
+                }
+                if (tpRateInfo.containsKey(meterTypeTag)) {
+                    tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
+                } else {
+                    logger.info("No tariff supplied for meterTypeTag: " + meterTypeTag);
+//                    return Collections.singletonMap("error", "No tariff supplied for meterTypeTag: " + meterTypeTag);
+                }
+            } else {
+                // get tariff rates from assigned tps
+                tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
+            }
 
-            String meterGroupId = (String) meterGroupUsage.get("meter_group_id");
-            tenantMeterGroupIdList.add(meterGroupId);
+            if (tariffResult.containsKey("error")) {
+                logger.severe("Failed to find tariff for meterTypeTag: " + meterTypeTag);
+                return Collections.singletonMap("error", "Failed to find tariff for meterTypeTag: " + meterTypeTag);
+            }
+            meterTypeRates.put(meterTypeTag, tariffResult);
+        }
+        if(manualItemInfo != null && !manualItemInfo.isEmpty()){
+            logger.info("Manual item info provided");
+            //if manual usage can't be matched with type rates, return error
+            for (Map.Entry<String, Object> entry : manualItemInfo.entrySet()) {
+                String usageTypeTag = entry.getKey();
+                String meterTypeTag = usageTypeTag.replace("manual_usage_", "").toUpperCase();
+                if(!meterTypeRates.containsKey(meterTypeTag)){
+                    logger.severe("Manual item info not matched with meter type rates");
+                    return Collections.singletonMap("error", "Manual item info not matched with meter type rates");
+                }
+            }
+        }
 
-            Map<String, Object> tariffResult;
+        if(excludeAutoUsage){
+            logger.info("Excluding auto usage");
+        }else {
+            Map<String, Object> tenantResult = tenantUsageProcessor.getListUsageSummary(tenantRequest);
+            List<Map<String, Object>> tenantListUsageSummary = (List<Map<String, Object>>) tenantResult.get("tenant_list_usage_summary");
+            List<Map<String, Object>> tenantUsageSummary = (List<Map<String, Object>>) tenantListUsageSummary.getFirst().get("tenant_usage_summary");
+            List<Map<String, Object>> subTenantListUsageSummary = new ArrayList<>();
+            if (tenantListUsageSummary.getFirst().get("sub_tenant_list_usage_summary") != null) {
+                subTenantListUsageSummary = (List<Map<String, Object>>) tenantListUsageSummary.getFirst().get("sub_tenant_list_usage_summary");
+            }
+            Double totalAutoUsageE = null;
+            Double totalAutoUsageW = null;
+            Double totalAutoUsageB = null;
+            Double totalAutoUsageN = null;
+            Double totalAutoUsageG = null;
+//            Map<String, Object> meterTypeRates = new HashMap<>();
+            boolean incompleteUsageData = false;
+
+            List<String> tenantMeterGroupIdList = new ArrayList<>();
+            for (Map<String, Object> meterGroupUsage : tenantUsageSummary) {
+                String meterTypeTag = (String) meterGroupUsage.get("meter_type");
+
+                String meterGroupId = (String) meterGroupUsage.get("meter_group_id");
+                tenantMeterGroupIdList.add(meterGroupId);
+
+                //check tpRateInfo for the meterTypeTag
+                if(!meterTypeRates.containsKey(meterTypeTag)){
+                    logger.severe("No tariff supplied for meterTypeTag: " + meterTypeTag);
+                    return Collections.singletonMap("error", "No tariff supplied for meterTypeTag: " + meterTypeTag);
+                }
+
+//                Map<String, Object> tariffResult;
 //            if(tpRateInfo !=null && tpRateInfo.containsKey(meterTypeTag)) {
 //                tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
 //            }else{
 //                tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
 //            }
-            if(tpRateInfo !=null) {
-                //custom billing
-                if(genBy == null) {
-                    logger.severe("genBy is null");
-                    return Collections.singletonMap("error", "genBy is null");
-                }
-                if(tpRateInfo.containsKey(meterTypeTag)) {
-                    tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
-                }else {
-                    logger.info("No tariff supplied for meterTypeTag: " + meterTypeTag);
-//                    continue;
-                    // fail fast
-                    return Collections.singletonMap("error", "No tariff supplied for meterTypeTag: " + meterTypeTag);
-                }
-            }else{
-                tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
-            }
-            if(tariffResult.containsKey("error")){
-                logger.severe("Failed to find tariff for meterTypeTag: " + meterTypeTag);
-                return Collections.singletonMap("error", "Failed to find tariff for meterTypeTag: " + meterTypeTag);
-            }
-            meterTypeRates.put(meterTypeTag, tariffResult);
 
-            Map<String, Object> meterGroupUsageSummary = (Map<String, Object>) meterGroupUsage.get("meter_group_usage_summary");
-            List<Map<String, Object>> meterListUsage = (List<Map<String, Object>>) meterGroupUsageSummary.get("meter_list_usage_summary");
-
-            for(Map<String, Object> meterUsageSummary : meterListUsage){
-                Object usageObj = meterUsageSummary.get("usage");
-                if("-".equals(usageObj.toString())){
-                    incompleteUsageData = true;
-                    break;
-                }
-                Double usage = MathUtil.ObjToDouble(usageObj);
-                Double percentage = MathUtil.ObjToDouble(meterUsageSummary.get("percentage"));
-                double usageShare = usage * percentage/100;
-                switch (meterTypeTag){
-                    case "E":
-                        if(totalAutoUsageE == null){
-                            totalAutoUsageE = 0.0;
-                        }
-                        totalAutoUsageE += usageShare;
-                        break;
-                    case "W":
-                        if(totalAutoUsageW == null){
-                            totalAutoUsageW = 0.0;
-                        }
-                        totalAutoUsageW += usageShare;
-                        break;
-                    case "B":
-                        if(totalAutoUsageB == null){
-                            totalAutoUsageB = 0.0;
-                        }
-                        totalAutoUsageB += usageShare;
-                        break;
-                    case "N":
-                        if(totalAutoUsageN == null){
-                            totalAutoUsageN = 0.0;
-                        }
-                        totalAutoUsageN += usageShare;
-                        break;
-                    case "G":
-                        if(totalAutoUsageG == null){
-                            totalAutoUsageG = 0.0;
-                        }
-                        totalAutoUsageG += usageShare;
-                        break;
-                }
-            }
-            if(incompleteUsageData){
-                logger.severe("Inconsistent usage data found for tenant: " + tenantName);
-                return Collections.singletonMap("error", "Inconsistent usage data found for tenant: " + tenantName);
-            }
-        }
-
-        Map<String, Object> autoUsage = new HashMap<>();
-        autoUsage.put("billed_auto_usage_e", totalAutoUsageE);
-        autoUsage.put("billed_auto_usage_w", totalAutoUsageW);
-        autoUsage.put("billed_auto_usage_b", totalAutoUsageB);
-        autoUsage.put("billed_auto_usage_n", totalAutoUsageN);
-        autoUsage.put("billed_auto_usage_g", totalAutoUsageG);
-
-        //sub tenant usage
-        Double totalSubTenantUsageE = null;
-        Double totalSubTenantUsageW = null;
-        Double totalSubTenantUsageB = null;
-        Double totalSubTenantUsageN = null;
-        Double totalSubTenantUsageG = null;
-
-        for(Map<String, Object> subTenantUsage : subTenantListUsageSummary) {
-            String subTenantName = (String) subTenantUsage.get("tenant_name");
-            List<Map<String, Object>> subTenantUsageSummary = (List<Map<String, Object>>) subTenantUsage.get("tenant_usage_summary");
-            for (Map<String, Object> meterGroupUsage : subTenantUsageSummary) {
-                String meterTypeTag = (String) meterGroupUsage.get("meter_type");
+//                if (tpRateInfo != null) {
+//                    //custom billing
+//                    if (genBy == null) {
+//                        logger.severe("genBy is null");
+//                        return Collections.singletonMap("error", "genBy is null");
+//                    }
+//                    if (tpRateInfo.containsKey(meterTypeTag)) {
+//                        tariffResult = (Map<String, Object>) tpRateInfo.get(meterTypeTag);
+//                    } else {
+//                        logger.info("No tariff supplied for meterTypeTag: " + meterTypeTag);
+////                    continue;
+//                        // fail fast
+//                        return Collections.singletonMap("error", "No tariff supplied for meterTypeTag: " + meterTypeTag);
+//                    }
+//                } else {
+//                    // get tariff rates from assigned tps
+//                    tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
+//                }
+//                if (tariffResult.containsKey("error")) {
+//                    logger.severe("Failed to find tariff for meterTypeTag: " + meterTypeTag);
+//                    return Collections.singletonMap("error", "Failed to find tariff for meterTypeTag: " + meterTypeTag);
+//                }
+//                meterTypeRates.put(meterTypeTag, tariffResult);
 
                 Map<String, Object> meterGroupUsageSummary = (Map<String, Object>) meterGroupUsage.get("meter_group_usage_summary");
                 List<Map<String, Object>> meterListUsage = (List<Map<String, Object>>) meterGroupUsageSummary.get("meter_list_usage_summary");
@@ -249,52 +234,134 @@ public class BillingProcessor {
                     double usageShare = usage * percentage / 100;
                     switch (meterTypeTag) {
                         case "E":
-                            if (totalSubTenantUsageE == null) {
-                                totalSubTenantUsageE = 0.0;
+                            if (totalAutoUsageE == null) {
+                                totalAutoUsageE = 0.0;
                             }
-                            totalSubTenantUsageE += usageShare;
+                            totalAutoUsageE += usageShare;
                             break;
                         case "W":
-                            if (totalSubTenantUsageW == null) {
-                                totalSubTenantUsageW = 0.0;
+                            if (totalAutoUsageW == null) {
+                                totalAutoUsageW = 0.0;
                             }
-                            totalSubTenantUsageW += usageShare;
+                            totalAutoUsageW += usageShare;
                             break;
                         case "B":
-                            if (totalSubTenantUsageB == null) {
-                                totalSubTenantUsageB = 0.0;
+                            if (totalAutoUsageB == null) {
+                                totalAutoUsageB = 0.0;
                             }
-                            totalSubTenantUsageB += usageShare;
+                            totalAutoUsageB += usageShare;
                             break;
                         case "N":
-                            if (totalSubTenantUsageN == null) {
-                                totalSubTenantUsageN = 0.0;
+                            if (totalAutoUsageN == null) {
+                                totalAutoUsageN = 0.0;
                             }
-                            totalSubTenantUsageN += usageShare;
+                            totalAutoUsageN += usageShare;
                             break;
                         case "G":
-                            if (totalSubTenantUsageG == null) {
-                                totalSubTenantUsageG = 0.0;
+                            if (totalAutoUsageG == null) {
+                                totalAutoUsageG = 0.0;
                             }
-                            totalSubTenantUsageG += usageShare;
+                            totalAutoUsageG += usageShare;
                             break;
                     }
                 }
+                if (incompleteUsageData) {
+                    logger.severe("Inconsistent usage data found for tenant: " + tenantName);
+                    return Collections.singletonMap("error", "Inconsistent usage data found for tenant: " + tenantName);
+                }
             }
-        }
-        Map<String, Object> subTenantUsage = new HashMap<>();
-        subTenantUsage.put("billed_sub_tenant_usage_e", totalSubTenantUsageE);
-        subTenantUsage.put("billed_sub_tenant_usage_w", totalSubTenantUsageW);
-        subTenantUsage.put("billed_sub_tenant_usage_b", totalSubTenantUsageB);
-        subTenantUsage.put("billed_sub_tenant_usage_n", totalSubTenantUsageN);
-        subTenantUsage.put("billed_sub_tenant_usage_g", totalSubTenantUsageG);
 
-        Map<String, Object> billResult = genBillingRecord(
+            Map<String, Object> autoUsage = new HashMap<>();
+            autoUsage.put("billed_auto_usage_e", totalAutoUsageE);
+            autoUsage.put("billed_auto_usage_w", totalAutoUsageW);
+            autoUsage.put("billed_auto_usage_b", totalAutoUsageB);
+            autoUsage.put("billed_auto_usage_n", totalAutoUsageN);
+            autoUsage.put("billed_auto_usage_g", totalAutoUsageG);
+
+            //sub tenant usage
+            Double totalSubTenantUsageE = null;
+            Double totalSubTenantUsageW = null;
+            Double totalSubTenantUsageB = null;
+            Double totalSubTenantUsageN = null;
+            Double totalSubTenantUsageG = null;
+
+            for (Map<String, Object> subTenantUsage : subTenantListUsageSummary) {
+                String subTenantName = (String) subTenantUsage.get("tenant_name");
+                List<Map<String, Object>> subTenantUsageSummary = (List<Map<String, Object>>) subTenantUsage.get("tenant_usage_summary");
+                for (Map<String, Object> meterGroupUsage : subTenantUsageSummary) {
+                    String meterTypeTag = (String) meterGroupUsage.get("meter_type");
+
+                    Map<String, Object> meterGroupUsageSummary = (Map<String, Object>) meterGroupUsage.get("meter_group_usage_summary");
+                    List<Map<String, Object>> meterListUsage = (List<Map<String, Object>>) meterGroupUsageSummary.get("meter_list_usage_summary");
+
+                    for (Map<String, Object> meterUsageSummary : meterListUsage) {
+                        Object usageObj = meterUsageSummary.get("usage");
+                        if ("-".equals(usageObj.toString())) {
+                            incompleteUsageData = true;
+                            break;
+                        }
+                        Double usage = MathUtil.ObjToDouble(usageObj);
+                        Double percentage = MathUtil.ObjToDouble(meterUsageSummary.get("percentage"));
+                        double usageShare = usage * percentage / 100;
+                        switch (meterTypeTag) {
+                            case "E":
+                                if (totalSubTenantUsageE == null) {
+                                    totalSubTenantUsageE = 0.0;
+                                }
+                                totalSubTenantUsageE += usageShare;
+                                break;
+                            case "W":
+                                if (totalSubTenantUsageW == null) {
+                                    totalSubTenantUsageW = 0.0;
+                                }
+                                totalSubTenantUsageW += usageShare;
+                                break;
+                            case "B":
+                                if (totalSubTenantUsageB == null) {
+                                    totalSubTenantUsageB = 0.0;
+                                }
+                                totalSubTenantUsageB += usageShare;
+                                break;
+                            case "N":
+                                if (totalSubTenantUsageN == null) {
+                                    totalSubTenantUsageN = 0.0;
+                                }
+                                totalSubTenantUsageN += usageShare;
+                                break;
+                            case "G":
+                                if (totalSubTenantUsageG == null) {
+                                    totalSubTenantUsageG = 0.0;
+                                }
+                                totalSubTenantUsageG += usageShare;
+                                break;
+                        }
+                    }
+                }
+            }
+            Map<String, Object> subTenantUsage = new HashMap<>();
+            subTenantUsage.put("billed_sub_tenant_usage_e", totalSubTenantUsageE);
+            subTenantUsage.put("billed_sub_tenant_usage_w", totalSubTenantUsageW);
+            subTenantUsage.put("billed_sub_tenant_usage_b", totalSubTenantUsageB);
+            subTenantUsage.put("billed_sub_tenant_usage_n", totalSubTenantUsageN);
+            subTenantUsage.put("billed_sub_tenant_usage_g", totalSubTenantUsageG);
+
+            billResult = genBillingRecord(
+                    tenantInfo,
+                    tenantMeterGroupIdList,
+                    meterTypeRates,
+                    fromDate, toDate, isMonthly,
+                    autoUsage, subTenantUsage,
+                    manualItemInfo,
+                    lineItemInfo,
+                    genBy);
+        } //end of excludeAutoUsage
+
+        billResult = genBillingRecord(
                 tenantInfo,
-                tenantMeterGroupIdList,
+                null,
                 meterTypeRates,
                 fromDate, toDate, isMonthly,
-                autoUsage, subTenantUsage,
+                null, null,
                 manualItemInfo,
                 lineItemInfo,
                 genBy);
@@ -417,6 +484,10 @@ public class BillingProcessor {
 
         for (Map.Entry<String, Object> entry : meterTypeRates.entrySet()) {
             Map<String, Object> meterTypeRate = (Map<String, Object>) entry.getValue();
+            if(meterTypeRate.isEmpty()) {
+                logger.warning("Missing meter type rate");
+                continue;
+            }
             Long tariffPackageRateId = MathUtil.ObjToLong(meterTypeRate.get("id"));
             content.put("tariff_package_rate_id_"+entry.getKey().toLowerCase(), tariffPackageRateId);
             //get billed rates
@@ -524,14 +595,16 @@ public class BillingProcessor {
             }
             String billIndexStr = (String) billRecs.getFirst().get("id");
             //insert bill meter group
-            for(String meterGroupId : meterGroupIdList){
-                try {
-                    String billMeterGroupInsertSql = "INSERT INTO " + billingRecMeterGroup + " (billing_rec_id, meter_group_id) "
-                            + "VALUES (" + billIndexStr + ", " + meterGroupId + ")";
-                    oqgHelper.OqgIU(billMeterGroupInsertSql);
-                }catch (Exception e){
-                    logger.severe("Failed to insert bill meter group: " + e.getMessage());
-                    return Collections.singletonMap("error", "Failed to insert bill meter group: " + e.getMessage());
+            if(meterGroupIdList!=null) {
+                for (String meterGroupId : meterGroupIdList) {
+                    try {
+                        String billMeterGroupInsertSql = "INSERT INTO " + billingRecMeterGroup + " (billing_rec_id, meter_group_id) "
+                                + "VALUES (" + billIndexStr + ", " + meterGroupId + ")";
+                        oqgHelper.OqgIU(billMeterGroupInsertSql);
+                    } catch (Exception e) {
+                        logger.severe("Failed to insert bill meter group: " + e.getMessage());
+                        return Collections.singletonMap("error", "Failed to insert bill meter group: " + e.getMessage());
+                    }
                 }
             }
         }
