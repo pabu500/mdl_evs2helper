@@ -160,6 +160,15 @@ public class BillingProcessor {
 
         if(excludeAutoUsage){
             logger.info("Excluding auto usage");
+            billResult = genBillingRecord(
+                    tenantInfo,
+                    null,
+                    meterTypeRates,
+                    fromDate, toDate, isMonthly,
+                    null, null,
+                    manualItemInfo,
+                    lineItemInfo,
+                    genBy);
         }else {
             Map<String, Object> tenantResult = tenantUsageProcessor.getListUsageSummary(tenantRequest);
             List<Map<String, Object>> tenantListUsageSummary = (List<Map<String, Object>>) tenantResult.get("tenant_list_usage_summary");
@@ -356,15 +365,6 @@ public class BillingProcessor {
                     genBy);
         } //end of excludeAutoUsage
 
-        billResult = genBillingRecord(
-                tenantInfo,
-                null,
-                meterTypeRates,
-                fromDate, toDate, isMonthly,
-                null, null,
-                manualItemInfo,
-                lineItemInfo,
-                genBy);
         if(billResult.containsKey("error")){
             logger.severe("Failed to generate bill record: " + billResult.get("error"));
             return Collections.singletonMap("error", "Failed to generate bill record: " + billResult.get("error"));
