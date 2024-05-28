@@ -44,6 +44,7 @@ public class BillingProcessor {
             logger.severe("Failed to query tenant table: " + e.getMessage());
             return Collections.singletonMap("error", "Failed to query tenant table: " + e.getMessage());
         }
+
         int tenantCount = resp.size();
         int processedCount = 0;
         List<LinkedHashMap<String, Object>> billResult = new ArrayList<>();
@@ -53,8 +54,11 @@ public class BillingProcessor {
             result2.put("tenant_label", tenantInfo.get("tenant_label"));
 
             Map<String, Object> result =
-                    genSingleTenantBill((String) tenantInfo.get("tenant_name"),
-                            fromDate, toDate, isMonthly, null, null, null,  false, null);
+                    genSingleTenantBill(
+                            (String) tenantInfo.get("tenant_name"),
+                            fromDate, toDate,
+                            isMonthly,
+                            null, null, null,  false, null);
             result2.put("result", result);
             billResult.add(result2);
 
@@ -168,6 +172,7 @@ public class BillingProcessor {
                     null, null,
                     manualItemInfo,
                     lineItemInfo,
+                    excludeAutoUsage,
                     genBy);
         }else {
             Map<String, Object> tenantResult = tenantUsageProcessor.getListUsageSummary(tenantRequest);
@@ -193,7 +198,8 @@ public class BillingProcessor {
                 tenantMeterGroupIdList.add(meterGroupId);
 
                 //check tpRateInfo for the meterTypeTag
-                if(!meterTypeRates.containsKey(meterTypeTag)){
+                Map<String, Object> meterTypeRate = (Map<String, Object>) meterTypeRates.get(meterTypeTag);
+                if(meterTypeRate == null || meterTypeRate.isEmpty()){
                     logger.severe("No tariff supplied for meterTypeTag: " + meterTypeTag);
                     return Collections.singletonMap("error", "No tariff supplied for meterTypeTag: " + meterTypeTag);
                 }
@@ -362,6 +368,7 @@ public class BillingProcessor {
                     autoUsage, subTenantUsage,
                     manualItemInfo,
                     lineItemInfo,
+                    excludeAutoUsage,
                     genBy);
         } //end of excludeAutoUsage
 
@@ -427,6 +434,7 @@ public class BillingProcessor {
                                                  Map<String, Object> subTenantUsage,
                                                  Map<String, Object> manualItemInfo,
                                                  Map<String, Object> lineItemInfo,
+                                                 boolean excludeAutoUsage,
                                                  String genBy) {
         logger.info("Generating bill");
         if(meterTypeRates.isEmpty()){
@@ -444,6 +452,7 @@ public class BillingProcessor {
         content.put("from_timestamp", fromTimestamp);
         content.put("to_timestamp", toTimestamp);
         content.put("tenant_id", tenantIndex);
+        content.put("exclude_auto_usage", excludeAutoUsage);
 
         if(autoItemInfo!=null){
             for (Map.Entry<String, Object> entry : autoItemInfo.entrySet()) {
