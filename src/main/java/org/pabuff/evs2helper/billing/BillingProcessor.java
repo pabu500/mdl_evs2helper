@@ -143,11 +143,12 @@ public class BillingProcessor {
                 tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
             }
 
-            if (tariffResult.containsKey("error")) {
+            if (tariffResult != null && tariffResult.containsKey("error")) {
                 logger.severe("Failed to find tariff for meterTypeTag: " + meterTypeTag);
                 return Collections.singletonMap("error", "Failed to find tariff for meterTypeTag: " + meterTypeTag);
+            }else {
+                meterTypeRates.put(meterTypeTag, tariffResult);
             }
-            meterTypeRates.put(meterTypeTag, tariffResult);
         }
         if(manualItemInfo != null && !manualItemInfo.isEmpty()){
             logger.info("Manual item info provided");
@@ -493,7 +494,7 @@ public class BillingProcessor {
 
         for (Map.Entry<String, Object> entry : meterTypeRates.entrySet()) {
             Map<String, Object> meterTypeRate = (Map<String, Object>) entry.getValue();
-            if(meterTypeRate.isEmpty()) {
+            if(meterTypeRate == null || meterTypeRate.isEmpty()) {
                 logger.warning("Missing meter type rate");
                 continue;
             }
