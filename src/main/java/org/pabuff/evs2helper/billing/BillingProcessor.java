@@ -33,7 +33,7 @@ public class BillingProcessor {
     final String billingRecTable = "billing_rec_cw";
     final String billingRecMeterGroup = "billing_rec_meter_group_cw";
 
-    public Map<String, Object> genAllTenantBills(String fromDate, String toDate, Boolean isMonthly) {
+    public Map<String, Object> genAllTenantBills(String fromDate, String toDate, Boolean isMonthly, Integer testCount) {
         logger.info("Processing all tenant bills");
 
         String tenantInfoQuery = "select tenant_name, tenant_label from tenant";
@@ -49,6 +49,10 @@ public class BillingProcessor {
         int processedCount = 0;
         List<LinkedHashMap<String, Object>> billResult = new ArrayList<>();
         for (Map<String, Object> tenantInfo : resp) {
+            if(testCount != null && processedCount >= testCount){
+                break;
+            }
+
             LinkedHashMap<String, Object> result2 = new LinkedHashMap<>();
             result2.put("tenant_name", tenantInfo.get("tenant_name"));
             result2.put("tenant_label", tenantInfo.get("tenant_label"));

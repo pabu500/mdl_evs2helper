@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc update">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="billing fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/billing/BillingProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/billing/BillingProcessor.java" afterDir="false" />
@@ -454,7 +454,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716746528101</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="billing fix">
+      <option name="closed" value="true" />
+      <created>1717225452010</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1717225452010</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -493,6 +501,7 @@
     <MESSAGE value="misc fix" />
     <MESSAGE value="add net usage in result" />
     <MESSAGE value="misc update" />
-    <option name="LAST_COMMIT_MESSAGE" value="misc update" />
+    <MESSAGE value="billing fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="billing fix" />
   </component>
 </project>
