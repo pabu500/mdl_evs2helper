@@ -46,12 +46,13 @@ public class BillingProcessor {
         }
 
         int tenantCount = resp.size();
-        int processedCount = 0;
+        int processingCount = 0;
         List<LinkedHashMap<String, Object>> billResult = new ArrayList<>();
         for (Map<String, Object> tenantInfo : resp) {
-            if(testCount != null && processedCount >= testCount){
+            if(testCount != null && processingCount >= testCount){
                 break;
             }
+            processingCount++;
 
             LinkedHashMap<String, Object> result2 = new LinkedHashMap<>();
             result2.put("tenant_name", tenantInfo.get("tenant_name"));
@@ -66,8 +67,7 @@ public class BillingProcessor {
             result2.put("result", result);
             billResult.add(result2);
 
-            processedCount++;
-            logger.info(processedCount + " / " + tenantCount + " tenants processed");
+            logger.info(processingCount + " / " + tenantCount + " tenants processed");
         }
         return Collections.singletonMap("result", billResult);
     }
