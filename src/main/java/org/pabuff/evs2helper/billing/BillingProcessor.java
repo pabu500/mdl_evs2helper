@@ -144,12 +144,13 @@ public class BillingProcessor {
             }
 
             if (tariffResult != null && tariffResult.containsKey("error")) {
-                logger.severe("Failed to find tariff for meterTypeTag: " + meterTypeTag);
-                return Collections.singletonMap("error", "Failed to find tariff for meterTypeTag: " + meterTypeTag);
+                logger.severe("No tariff found for meterTypeTag: " + meterTypeTag);
+//                return Collections.singletonMap("error", "No tariff found for meterTypeTag: " + meterTypeTag);
             }else {
                 meterTypeRates.put(meterTypeTag, tariffResult);
             }
         }
+
         if(manualItemInfo != null && !manualItemInfo.isEmpty()){
             logger.info("Manual item info provided");
             //if manual usage can't be matched with type rates, return error
