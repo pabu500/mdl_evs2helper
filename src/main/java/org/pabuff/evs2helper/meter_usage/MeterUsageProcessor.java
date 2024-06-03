@@ -138,7 +138,8 @@ public class MeterUsageProcessor {
         }
 
         List<Map<String, Object>> usageSummaryList = new ArrayList<>();
-        int processedCount = 0;
+        int processingCount = 0;
+        int totalCount = selectedMeterList.size();
         for (Map<String, Object> meterMap : selectedMeterList) {
             String meterId = (String) meterMap.get(itemIdColName);
             String meterSn = meterMap.get(itemSnColName) == null ? "" : (String) meterMap.get(itemSnColName);
@@ -147,6 +148,8 @@ public class MeterUsageProcessor {
             String meterLcStatus = meterMap.get("lc_status") == null ? "" : (String) meterMap.get("lc_status");
             String commissionedTimestampStr = meterMap.get("commissioned_timestamp") == null ? "" : (String) meterMap.get("commissioned_timestamp");
             LocalDateTime commissionedDatetime = DateTimeUtil.getLocalDateTime(commissionedTimestampStr);
+
+            processingCount++;
 //            Integer commissionedYear = null;
 //            Integer commissionedMonth = null;
 //            if(commissionedDatetime != null){
@@ -241,11 +244,10 @@ public class MeterUsageProcessor {
 
                 usageSummaryList.add(usageSummary);
 
-                processedCount++;
-                if(testCount > 0 && processedCount >= testCount){
+                logger.info(processingCount + "/" + totalCount + " meter: " + meterSn + " usage: " + usage);
+                if(testCount > 0 && processingCount >= testCount){
                     break;
                 }
-
                 continue;
             }
 
@@ -321,8 +323,8 @@ public class MeterUsageProcessor {
 
             usageSummaryList.add(usageSummary);
 
-            processedCount++;
-            if(testCount > 0 && processedCount >= testCount){
+            logger.info(processingCount + "/" + totalCount + " meter: " + meterSn + " usage: " + usage);
+            if(testCount > 0 && processingCount >= testCount){
                 break;
             }
         }
@@ -875,3 +877,4 @@ public class MeterUsageProcessor {
         return result;
     }
 }
+
