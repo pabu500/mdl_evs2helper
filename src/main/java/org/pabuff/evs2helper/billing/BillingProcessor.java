@@ -170,7 +170,7 @@ public class BillingProcessor {
             }
         }
 
-        Map<String, Object> usageFactor = loadUsageFactor(scopeStr);
+        Map<String, Object> usageFactor = loadBilledUsageFactor(scopeStr);
         if(usageFactor.containsKey("error")){
             logger.severe("Failed to load usage factor: " + usageFactor.get("error"));
             return Collections.singletonMap("error", "Failed to load usage factor: " + usageFactor.get("error"));
@@ -759,19 +759,20 @@ public class BillingProcessor {
         return "b" + "-" + tenantName + "-" + yyMM + "-" +  suffix;
     }
 
-    private Map<String, Object> loadUsageFactor(String scopeStr) {
-        String fieldPrefix = "billed_usage_factor_";
+    private Map<String, Object> loadBilledUsageFactor(String scopeStr) {
+        String srcFieldPrefix = "usage_factor_";
+        String targetFieldPrefix = "billed_usage_factor_";
 
         List<String> usageTypes = List.of("E", "W", "B", "N", "G");
         Map<String, Object> usageFactor = new HashMap<>();
         for(String usageType : usageTypes){
-            Map<String, Object> usageFactorResult = queryHelper.getSysVar(Map.of("name",fieldPrefix+usageType.toLowerCase(),"scope_str", scopeStr.toLowerCase()));
+            Map<String, Object> usageFactorResult = queryHelper.getSysVar(Map.of("name",srcFieldPrefix + usageType.toLowerCase(),"scope_str", scopeStr.toLowerCase()));
             if(usageFactorResult.containsKey("error")){
-                logger.severe("Failed to get " + fieldPrefix + usageType.toLowerCase() + ": " + usageFactorResult.get("error"));
-                return Collections.singletonMap("error", "Failed to get " + fieldPrefix + usageType.toLowerCase() + ": " + usageFactorResult.get("error"));
+                logger.severe("Failed to get " + srcFieldPrefix + usageType.toLowerCase() + ": " + usageFactorResult.get("error"));
+                return Collections.singletonMap("error", "Failed to get " + srcFieldPrefix + usageType.toLowerCase() + ": " + usageFactorResult.get("error"));
             }
             double usageFactorVal = MathUtil.ObjToDouble(usageFactorResult.get("value"));
-            usageFactor.put(fieldPrefix+usageType.toLowerCase(), usageFactorVal);
+            usageFactor.put(targetFieldPrefix + usageType.toLowerCase(), usageFactorVal);
         }
 
         return usageFactor;
