@@ -84,6 +84,8 @@ public class BillingProcessor {
                                                    String genBy) {
         logger.info("Processing bill");
 
+        String scopeStr = "ems_cw_nus";
+
         Map<String, Object> tenantInfoResult = queryHelper.getItemInfo(tenantName, ItemIdTypeEnum.NAME, ItemTypeEnum.TENANT);
         if(tenantInfoResult == null){
             logger.severe("Tenant not found: " + tenantName);
@@ -110,7 +112,7 @@ public class BillingProcessor {
         String idSelQuery = "SELECT tenant_name FROM tenant WHERE tenant_name = '" + tenantName + "'";
 
         Map<String, String> tenantRequest = Map.of("is_monthly", isMonthly.toString(),
-                "project_scope", "ems_cw_nus",
+                "project_scope", scopeStr,
                 "site_scope", "",
                 "id_select_query", idSelQuery,
                 "start_datetime", fromDate,
@@ -168,6 +170,12 @@ public class BillingProcessor {
             }
         }
 
+        Map<String, Object> usageFactor = loadUsageFactor(scopeStr);
+        if(usageFactor.containsKey("error")){
+            logger.severe("Failed to load usage factor: " + usageFactor.get("error"));
+            return Collections.singletonMap("error", "Failed to load usage factor: " + usageFactor.get("error"));
+        }
+
         if(excludeAutoUsage){
             logger.info("Excluding auto usage");
             billResult = genBillingRecord(
@@ -176,7 +184,7 @@ public class BillingProcessor {
                     meterTypeRates,
                     fromDate, toDate, isMonthly,
                     null, null,
-                    manualItemInfo,
+                    manualItemInfo, usageFactor,
                     lineItemInfo,
                     excludeAutoUsage,
                     genBy);
@@ -372,6 +380,7 @@ public class BillingProcessor {
                     meterTypeRates,
                     fromDate, toDate, isMonthly,
                     autoUsage, subTenantUsage,
+                    usageFactor,
                     manualItemInfo,
                     lineItemInfo,
                     excludeAutoUsage,
@@ -438,6 +447,7 @@ public class BillingProcessor {
                                                  String fromTimestamp, String toTimestamp, Boolean isMonthly,
                                                  Map<String, Object> autoItemInfo,
                                                  Map<String, Object> subTenantUsage,
+                                                 Map<String, Object> usageFactor,
                                                  Map<String, Object> manualItemInfo,
                                                  Map<String, Object> lineItemInfo,
                                                  boolean excludeAutoUsage,
@@ -452,49 +462,55 @@ public class BillingProcessor {
         Long tenantIndex = MathUtil.ObjToLong(tenantIndexStr);
         String tenantName = (String) tenantInfo.get("tenant_name");
 
-        Map<String, Object> content = new HashMap<>();
-        content.put("scope_str", tenantInfo.get("scope_str"));
-        content.put("is_monthly", isMonthly);
-        content.put("from_timestamp", fromTimestamp);
-        content.put("to_timestamp", toTimestamp);
-        content.put("tenant_id", tenantIndex);
-        content.put("exclude_auto_usage", excludeAutoUsage);
+        Map<String, Object> billInsertContent = new HashMap<>();
+        billInsertContent.put("scope_str", tenantInfo.get("scope_str"));
+        billInsertContent.put("is_monthly", isMonthly);
+        billInsertContent.put("from_timestamp", fromTimestamp);
+        billInsertContent.put("to_timestamp", toTimestamp);
+        billInsertContent.put("tenant_id", tenantIndex);
+        billInsertContent.put("exclude_auto_usage", excludeAutoUsage);
+
+        for (Map.Entry<String, Object> entry : usageFactor.entrySet()) {
+            String usageType = entry.getKey();
+            Double typeUsageFactor = MathUtil.ObjToDouble(entry.getValue());
+            billInsertContent.put(usageType.toLowerCase(), typeUsageFactor);
+        }
 
         if(autoItemInfo!=null){
             for (Map.Entry<String, Object> entry : autoItemInfo.entrySet()) {
                 String usageType = entry.getKey();
                 Double usage = MathUtil.ObjToDouble(entry.getValue());
-                content.put(usageType.toLowerCase(), usage);
+                billInsertContent.put(usageType.toLowerCase(), usage);
             }
         }
         if(subTenantUsage!=null){
             for (Map.Entry<String, Object> entry : subTenantUsage.entrySet()) {
                 String usageType = entry.getKey();
                 Double usage = MathUtil.ObjToDouble(entry.getValue());
-                content.put(usageType.toLowerCase(), usage);
+                billInsertContent.put(usageType.toLowerCase(), usage);
             }
         }
         if(manualItemInfo!=null){
             for (Map.Entry<String, Object> entry : manualItemInfo.entrySet()) {
                 String meterTypeTag = entry.getKey();
                 Double usage = MathUtil.ObjToDouble(entry.getValue());
-                content.put(meterTypeTag.toLowerCase(), usage);
+                billInsertContent.put(meterTypeTag.toLowerCase(), usage);
             }
         }
         if(lineItemInfo!=null){
             if(lineItemInfo.containsKey("line_item_label_1")){
-                content.put("line_item_label_1", lineItemInfo.get("line_item_label_1"));
-                content.put("line_item_amount_1", lineItemInfo.get("line_item_amount_1"));
+                billInsertContent.put("line_item_label_1", lineItemInfo.get("line_item_label_1"));
+                billInsertContent.put("line_item_amount_1", lineItemInfo.get("line_item_amount_1"));
             }
         }
 
         Map<String, Object> netUsage = getNetUsage(autoItemInfo, subTenantUsage, manualItemInfo);
 
         if(genBy != null){
-            content.put("gen_type", "manual");
-            content.put("gen_by", genBy);
+            billInsertContent.put("gen_type", "manual");
+            billInsertContent.put("gen_by", genBy);
         }else{
-            content.put("gen_type", "auto");
+            billInsertContent.put("gen_type", "auto");
         }
 
         for (Map.Entry<String, Object> entry : meterTypeRates.entrySet()) {
@@ -504,7 +520,7 @@ public class BillingProcessor {
                 continue;
             }
             Long tariffPackageRateId = MathUtil.ObjToLong(meterTypeRate.get("id"));
-            content.put("tariff_package_rate_id_"+entry.getKey().toLowerCase(), tariffPackageRateId);
+            billInsertContent.put("tariff_package_rate_id_"+entry.getKey().toLowerCase(), tariffPackageRateId);
             //get billed rates
             Map<String, Object> tpResult = queryHelper.getTableField("tariff_package_rate", "rate, gst", "id", (String) meterTypeRate.get("id"));
             if(tpResult.containsKey("error")){
@@ -512,15 +528,15 @@ public class BillingProcessor {
                 return Collections.singletonMap("error", "Failed to get tp rate: " + tpResult.get("error"));
             }
             Double tpRate = MathUtil.ObjToDouble(tpResult.get("rate"));
-            content.put("billed_rate_"+entry.getKey().toLowerCase(), tpRate);
-            content.put("billed_gst", MathUtil.ObjToDouble(tpResult.get("gst")));
+            billInsertContent.put("billed_rate_"+entry.getKey().toLowerCase(), tpRate);
+            billInsertContent.put("billed_gst", MathUtil.ObjToDouble(tpResult.get("gst")));
         }
 
         boolean billExists = false;
         String billQuerySql = null;
         try {
             Map<String, String> sqlResult = SqlUtil.makeSelectSql2(
-                    Map.of("from", billingRecTable,"targets", content));
+                    Map.of("from", billingRecTable,"targets", billInsertContent));
             billQuerySql = sqlResult.get("sql");
         }catch (Exception e){
             logger.severe("Failed to generate bill query sql: " + e.getMessage());
@@ -553,7 +569,7 @@ public class BillingProcessor {
             String billUpdateSql = null;
             try {
                 String localNowStr = localHelper.getLocalNowStr();
-                content.put("updated_timestamp", localNowStr);
+                billInsertContent.put("updated_timestamp", localNowStr);
 
                 String billRecIndexStr = (String) billRecs.getFirst().get("id");
                 Long billRecIndex = MathUtil.ObjToLong(billRecIndexStr);
@@ -561,7 +577,7 @@ public class BillingProcessor {
                         Map.of("table", billingRecTable,
                                 "target_key", "id",
                                 "target_value", billRecIndex,
-                                "content", content)
+                                "content", billInsertContent)
                 );
                 billUpdateSql = sqlResult.get("sql");
             }catch (Exception e){
@@ -576,13 +592,13 @@ public class BillingProcessor {
             }
         }else {
             String billName = genBillingRecordName(tenantName, fromTimestamp, toTimestamp);
-            content.put("name", billName);
-            content.put("created_timestamp", localHelper.getLocalNowStr());
-            content.put("lc_status", "generated");
+            billInsertContent.put("name", billName);
+            billInsertContent.put("created_timestamp", localHelper.getLocalNowStr());
+            billInsertContent.put("lc_status", "generated");
 
             String billInsertSql = null;
             try {
-                Map<String, String> sqlResult = SqlUtil.makeInsertSql(Map.of("table", billingRecTable,"content", content));
+                Map<String, String> sqlResult = SqlUtil.makeInsertSql(Map.of("table", billingRecTable,"content", billInsertContent));
                 billInsertSql = sqlResult.get("sql");
             }catch (Exception e){
                 logger.severe("Failed to generate bill insert sql: " + e.getMessage());
@@ -624,7 +640,7 @@ public class BillingProcessor {
             }
         }
 
-        String respStr = (String) content.get("name");
+        String respStr = (String) billInsertContent.get("name");
         if(billExists){
             respStr = (String) billRecs.getFirst().get("name");
         }
@@ -741,5 +757,23 @@ public class BillingProcessor {
             suffix.append((int) (Math.random() * 10));
         }
         return "b" + "-" + tenantName + "-" + yyMM + "-" +  suffix;
+    }
+
+    private Map<String, Object> loadUsageFactor(String scopeStr) {
+        String fieldPrefix = "billed_usage_factor_";
+
+        List<String> usageTypes = List.of("E", "W", "B", "N", "G");
+        Map<String, Object> usageFactor = new HashMap<>();
+        for(String usageType : usageTypes){
+            Map<String, Object> usageFactorResult = queryHelper.getSysVar(Map.of("name",fieldPrefix+usageType.toLowerCase(),"scope_str", scopeStr.toLowerCase()));
+            if(usageFactorResult.containsKey("error")){
+                logger.severe("Failed to get " + fieldPrefix + usageType.toLowerCase() + ": " + usageFactorResult.get("error"));
+                return Collections.singletonMap("error", "Failed to get " + fieldPrefix + usageType.toLowerCase() + ": " + usageFactorResult.get("error"));
+            }
+            double usageFactorVal = MathUtil.ObjToDouble(usageFactorResult.get("value"));
+            usageFactor.put(fieldPrefix+usageType.toLowerCase(), usageFactorVal);
+        }
+
+        return usageFactor;
     }
 }
