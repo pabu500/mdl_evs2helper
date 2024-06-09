@@ -453,6 +453,11 @@ public class KeyValUpdateProcessor {
                 itemSnKey = "id";
 //                itemNameKey = "name";
             }
+            case BILLING_REC -> {
+                itemTableName = "billing_rec_cw";
+                itemSnKey = "id";
+                itemNameKey = "name";
+            }
             default -> {
                 return Map.of("error", "item_type not supported");
             }
