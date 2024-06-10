@@ -399,15 +399,15 @@ public class KeyValUpdateProcessor {
                                                      List<Map<String, Object>> opList, SvcClaimDto svcClaimDto) {
 
         String meterTypeStr = (String) request.get("item_type");
-        ItemTypeEnum meterTypeEnum = ItemTypeEnum.METER;
+        ItemTypeEnum itemTypeEnum = ItemTypeEnum.METER;
         if(meterTypeStr != null) {
-            meterTypeEnum = ItemTypeEnum.valueOf(meterTypeStr.toUpperCase());
+            itemTypeEnum = ItemTypeEnum.valueOf(meterTypeStr.toUpperCase());
         }
 
         String itemTableName = "meter";
         String itemSnKey = "meter_sn";
         String itemNameKey = "meter_displayname";
-        switch (meterTypeEnum) {
+        switch (itemTypeEnum) {
             case METER-> {
                 itemTableName = "meter";
                 itemSnKey = "meter_sn";
@@ -565,12 +565,12 @@ public class KeyValUpdateProcessor {
                 for(Map.Entry<String, Object> entry : item.entrySet()) {
                     String key = entry.getKey();
                     Object val = entry.getValue();
-                    if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                    if(itemTypeEnum == ItemTypeEnum.METER_IWOW){
                         if (key.equals("item_name")){
                             continue;
                         }
 //                        content.put("updated_timestamp", localNowStr);
-                    }else if(meterTypeEnum == ItemTypeEnum.TENANT){
+                    }else if(itemTypeEnum == ItemTypeEnum.TENANT){
                         if (key.equals("tenant_name")){
                             continue;
                         }
@@ -621,7 +621,7 @@ public class KeyValUpdateProcessor {
                             }
                             content.put("tenant_name", newTenantName);
                         }
-                    }else if(meterTypeEnum == ItemTypeEnum.JOB_TYPE_SUB){
+                    }else if(itemTypeEnum == ItemTypeEnum.JOB_TYPE_SUB){
 //                        content.put("updated_timestamp", localNowStr);
                     }else if(opName.equals("replacement")) {
                         if (key.equals(itemNameKey)) {
@@ -641,6 +641,16 @@ public class KeyValUpdateProcessor {
                     content.put(key, val);
                     if(opName.equals("replacement")) {
                         content.put("commissioned_timestamp", localNowStr);
+                    }
+
+                    if(itemTypeEnum == ItemTypeEnum.BILLING_REC){
+                        if("lc_status".equals(key)){
+                            if("mfd".equals(val)) {
+                                content.put("mark_delete_timestamp", localNowStr);
+                            }else{
+                                content.put("mark_delete_timestamp", null);
+                            }
+                        }
                     }
                 }
 
