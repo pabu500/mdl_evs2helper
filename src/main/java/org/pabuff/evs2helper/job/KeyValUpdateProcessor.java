@@ -167,6 +167,7 @@ public class KeyValUpdateProcessor {
                 localNowStr,
                 svcClaimDto.getUserId(),
                 svcClaimDto.getUsername(),
+                svcClaimDto.getScope(),
                 svcClaimDto.getTarget(),
                 svcClaimDto.getOperation(),
                 meterId0,
