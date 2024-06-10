@@ -162,9 +162,11 @@ public class KeyValUpdateProcessor {
                         .findFirst()
                         .orElseThrow();
         String meterId0 = (String) (meter0.get(itemSnKey)==null? "null" : meter0.get(itemSnKey));
+
         queryHelper.postOpLog2(
                 localNowStr,
                 svcClaimDto.getUserId(),
+                svcClaimDto.getUsername(),
                 svcClaimDto.getTarget(),
                 svcClaimDto.getOperation(),
                 meterId0,
@@ -486,6 +488,8 @@ public class KeyValUpdateProcessor {
         queryHelper.postOpLog2(
                 localNowStr,
                 svcClaimDto.getUserId(),
+                svcClaimDto.getUsername(),
+                svcClaimDto.getScope(),
                 svcClaimDto.getTarget(),
                 svcClaimDto.getOperation(),
                 meterId0,
