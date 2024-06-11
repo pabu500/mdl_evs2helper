@@ -428,8 +428,8 @@ public class KeyValUpdateProcessor {
             }
             case TENANT -> {
                 itemTableName = "tenant";
-                itemSnKey = "tenant_label";
-                itemNameKey = "tenant_name";
+                itemSnKey = "tenant_name";//"tenant_label";
+                itemNameKey = "tenant_label";//"tenant_name";
             }
             case METER_GROUP -> {
                 itemTableName = "meter_group";
