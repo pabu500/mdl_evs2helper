@@ -42,6 +42,9 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="openjdk-21" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -51,17 +54,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Maven.evs2helper [clean,deploy].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.evs2helper [package].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/_pa/_evs2/_svc_oresvc/20240508&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.importing&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.evs2helper [clean,deploy].executor": "Run",
+    "Maven.evs2helper [clean].executor": "Run",
+    "Maven.evs2helper [package].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/_pa/_evs2/_svc_oresvc/20240508",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.runner"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="evs2helper [clean,deploy]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
