@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc fix">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/job/KeyValUpdateProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/KeyValUpdateProcessor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,9 +43,6 @@
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="MavenRunner">
-    <option name="jreName" value="openjdk-21" />
-  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -54,18 +52,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.evs2helper [clean,deploy].executor": "Run",
-    "Maven.evs2helper [clean].executor": "Run",
-    "Maven.evs2helper [package].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/_pa/_evs2/_svc_oresvc/20240508",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.runner"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.evs2helper [clean,deploy].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.evs2helper [package].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/_pa/_evs2/_svc_oresvc/20240508&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.importing&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="evs2helper [clean,deploy]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
@@ -112,6 +109,70 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
+    </task>
+    <task id="LOCAL-00002" summary="add getItemTypeConfig2">
+      <option name="closed" value="true" />
+      <created>1712849950000</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1712849950000</updated>
+    </task>
+    <task id="LOCAL-00003" summary="add getItemTypeConfig2">
+      <option name="closed" value="true" />
+      <created>1712850321542</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1712850321542</updated>
+    </task>
+    <task id="LOCAL-00004" summary="add package">
+      <option name="closed" value="true" />
+      <created>1713016162983</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1713016162983</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add package">
+      <option name="closed" value="true" />
+      <created>1713016257829</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1713016257829</updated>
+    </task>
+    <task id="LOCAL-00006" summary="refactor">
+      <option name="closed" value="true" />
+      <created>1713031667135</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1713031667135</updated>
+    </task>
+    <task id="LOCAL-00007" summary="refactor">
+      <option name="closed" value="true" />
+      <created>1713033698944</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1713033698944</updated>
+    </task>
+    <task id="LOCAL-00008" summary="refactor">
+      <option name="closed" value="true" />
+      <created>1713035526094</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1713035526094</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add source">
+      <option name="closed" value="true" />
+      <created>1713064814824</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1713064814824</updated>
     </task>
     <task id="LOCAL-00010" summary="misc update">
       <option name="closed" value="true" />
@@ -433,79 +494,15 @@
       <option name="project" value="LOCAL" />
       <updated>1717234071366</updated>
     </task>
-    <task id="LOCAL-00050" summary="meter usage report update">
+    <task id="LOCAL-00050" summary="misc update">
       <option name="closed" value="true" />
-      <created>1717388995857</created>
+      <created>1717864404746</created>
       <option name="number" value="00050" />
       <option name="presentableId" value="LOCAL-00050" />
       <option name="project" value="LOCAL" />
-      <updated>1717388995858</updated>
+      <updated>1717864404746</updated>
     </task>
-    <task id="LOCAL-00051" summary="billed usage factor update">
-      <option name="closed" value="true" />
-      <created>1717471396543</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1717471396543</updated>
-    </task>
-    <task id="LOCAL-00052" summary="bill mfd timestamp update">
-      <option name="closed" value="true" />
-      <created>1717996368745</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1717996368745</updated>
-    </task>
-    <task id="LOCAL-00053" summary="misc update">
-      <option name="closed" value="true" />
-      <created>1718011391058</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1718011391058</updated>
-    </task>
-    <task id="LOCAL-00054" summary="misc update">
-      <option name="closed" value="true" />
-      <created>1718011621490</created>
-      <option name="number" value="00054" />
-      <option name="presentableId" value="LOCAL-00054" />
-      <option name="project" value="LOCAL" />
-      <updated>1718011621490</updated>
-    </task>
-    <task id="LOCAL-00055" summary="misc update">
-      <option name="closed" value="true" />
-      <created>1718012405684</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1718012405684</updated>
-    </task>
-    <task id="LOCAL-00056" summary="misc update">
-      <option name="closed" value="true" />
-      <created>1718013132322</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1718013132322</updated>
-    </task>
-    <task id="LOCAL-00057" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1718079460691</created>
-      <option name="number" value="00057" />
-      <option name="presentableId" value="LOCAL-00057" />
-      <option name="project" value="LOCAL" />
-      <updated>1718079460691</updated>
-    </task>
-    <task id="LOCAL-00058" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1718098462149</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1718098462149</updated>
-    </task>
-    <option name="localTasksCounter" value="59" />
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -541,13 +538,10 @@
     <MESSAGE value="misc" />
     <MESSAGE value="bill processor update" />
     <MESSAGE value="fleet health update" />
+    <MESSAGE value="misc fix" />
     <MESSAGE value="add net usage in result" />
     <MESSAGE value="billing fix" />
-    <MESSAGE value="meter usage report update" />
-    <MESSAGE value="billed usage factor update" />
-    <MESSAGE value="bill mfd timestamp update" />
     <MESSAGE value="misc update" />
-    <MESSAGE value="misc fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="misc fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="misc update" />
   </component>
 </project>

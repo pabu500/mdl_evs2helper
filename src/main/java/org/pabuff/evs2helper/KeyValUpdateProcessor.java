@@ -1,4 +1,4 @@
-package org.pabuff.evs2helper.job;
+package org.pabuff.evs2helper;
 
 import org.pabuff.dto.ItemIdTypeEnum;
 import org.pabuff.dto.ItemTypeEnum;
@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 @Service
-@Getter
+//@Getter <- this will cause lombok to generate 'Source code does not match the bytecode' error
 public class KeyValUpdateProcessor {
     private static final Logger logger = Logger.getLogger(KeyValUpdateProcessor.class.getName());
 
