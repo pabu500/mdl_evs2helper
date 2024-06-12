@@ -1,7 +1,8 @@
-package org.pabuff.evs2helper.job;
+package org.pabuff.evs2helper;
 
 import org.pabuff.dto.ItemIdTypeEnum;
 import org.pabuff.dto.ItemTypeEnum;
+import org.pabuff.dto.SvcClaimDto;
 import org.pabuff.evs2helper.cache.DataAgent;
 import org.pabuff.evs2helper.email.SystemNotifier;
 import org.pabuff.evs2helper.event.OpResultEvent;
@@ -20,7 +21,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 @Service
-@Getter
+//@Getter <- this will cause lombok to generate 'Source code does not match the bytecode' error
 public class KeyValUpdateProcessor {
     private static final Logger logger = Logger.getLogger(KeyValUpdateProcessor.class.getName());
 
@@ -65,6 +66,7 @@ public class KeyValUpdateProcessor {
             String opName, String scopeStr,
             Map<String, Object> request,
             List<Map<String, Object>> opList,
+            SvcClaimDto svcClaimDto,
             boolean isScheduledJobMode, boolean isMock) {
 
         String meterTypeStr = (String) request.get("item_type");
@@ -100,8 +102,8 @@ public class KeyValUpdateProcessor {
             }
             case TENANT -> {
                 itemTableName = "tenant";
-                itemSnKey = "tenant_label";
-                itemNameKey = "tenant_name";
+                itemSnKey = "tenant_name";//"tenant_label";
+                itemNameKey = "tenant_label";//"tenant_name";
             }
             case USER -> {
                 itemTableName = "evs2_user";
@@ -153,6 +155,27 @@ public class KeyValUpdateProcessor {
 //        if(itemIdTypeStr != null && !itemIdTypeStr.isBlank()) {
 //            itemIdTypeEnum = ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
 //        }
+        String localNowStr = localHelper.getLocalNowStr();
+        Map<String, Object> meter0 = //opList.get(0);
+                opList.stream()
+                        .filter(item -> item.get("checked") != null && (boolean) item.get("checked"))
+                        .findFirst()
+                        .orElseThrow();
+        String meterId0 = (String) (meter0.get(itemSnKey)==null? "null" : meter0.get(itemSnKey));
+
+        queryHelper.postOpLog2(
+                localNowStr,
+                svcClaimDto.getUserId(),
+                svcClaimDto.getUsername(),
+                svcClaimDto.getScope(),
+                svcClaimDto.getTarget(),
+                svcClaimDto.getOperation(),
+                meterId0,
+                opName,
+                opList.size(),
+                localNowStr,
+                "",
+                null);
 
         for( Map<String, Object> item : opList) {
             if(item.get("error") != null) {
@@ -236,7 +259,7 @@ public class KeyValUpdateProcessor {
                 }
             }else {
                 //live
-                String localNowStr = localHelper.getLocalNowStr();
+                localNowStr = localHelper.getLocalNowStr();
 
                 String val = (String) item.get(keyName);
                 //if val is a number, do not quote it
@@ -376,18 +399,18 @@ public class KeyValUpdateProcessor {
 
     //update multiple key/val pairs for items from opList
     public Map<String, Object> doOpMultiKeyValUpdate(Map<String, Object> request,
-                                                     List<Map<String, Object>> opList) {
+                                                     List<Map<String, Object>> opList, SvcClaimDto svcClaimDto) {
 
         String meterTypeStr = (String) request.get("item_type");
-        ItemTypeEnum meterTypeEnum = ItemTypeEnum.METER;
+        ItemTypeEnum itemTypeEnum = ItemTypeEnum.METER;
         if(meterTypeStr != null) {
-            meterTypeEnum = ItemTypeEnum.valueOf(meterTypeStr.toUpperCase());
+            itemTypeEnum = ItemTypeEnum.valueOf(meterTypeStr.toUpperCase());
         }
 
         String itemTableName = "meter";
         String itemSnKey = "meter_sn";
         String itemNameKey = "meter_displayname";
-        switch (meterTypeEnum) {
+        switch (itemTypeEnum) {
             case METER-> {
                 itemTableName = "meter";
                 itemSnKey = "meter_sn";
@@ -405,8 +428,8 @@ public class KeyValUpdateProcessor {
             }
             case TENANT -> {
                 itemTableName = "tenant";
-                itemSnKey = "tenant_label";
-                itemNameKey = "tenant_name";
+                itemSnKey = "tenant_name";//"tenant_label";
+                itemNameKey = "tenant_label";//"tenant_name";
             }
             case METER_GROUP -> {
                 itemTableName = "meter_group";
@@ -433,6 +456,11 @@ public class KeyValUpdateProcessor {
                 itemSnKey = "id";
 //                itemNameKey = "name";
             }
+            case BILLING_REC -> {
+                itemTableName = "billing_rec_cw";
+                itemSnKey = "id";
+                itemNameKey = "name";
+            }
             default -> {
                 return Map.of("error", "item_type not supported");
             }
@@ -450,6 +478,28 @@ public class KeyValUpdateProcessor {
         if(opName.contains(".")) {
             displayOpName = opName.split("\\.")[1];
         }
+
+        String localNowStr = localHelper.getLocalNowStr();
+        Map<String, Object> meter0 = //opList.get(0);
+                opList.stream()
+                        .filter(item -> item.get("checked") != null && (boolean) item.get("checked"))
+                        .findFirst()
+                        .orElseThrow();
+        String meterId0 = (String) (meter0.get(itemSnKey) == null ? "null" : meter0.get(itemSnKey));
+        queryHelper.postOpLog2(
+                localNowStr,
+                svcClaimDto.getUserId(),
+                svcClaimDto.getUsername(),
+                svcClaimDto.getScope(),
+                svcClaimDto.getTarget(),
+                svcClaimDto.getOperation(),
+                meterId0,
+                opName,
+                opList.size(),
+                localNowStr,
+                "",
+                null);
+
         for( Map<String, Object> item : opList) {
             if(item.get("error") != null) {
                 continue;
@@ -513,20 +563,19 @@ public class KeyValUpdateProcessor {
             }else {
                 //live
 //                String localNowStr = DateTimeUtil.getSgNowStr();
-                String localNowStr = localHelper.getLocalNowStr();
+                localNowStr = localHelper.getLocalNowStr();
 
                 //sort thru the item map for key and non-empty value pairs to update
                 Map<String, Object> content = new HashMap<>();
                 for(Map.Entry<String, Object> entry : item.entrySet()) {
                     String key = entry.getKey();
                     Object val = entry.getValue();
-                    if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                    if(itemTypeEnum == ItemTypeEnum.METER_IWOW){
                         if (key.equals("item_name")){
                             continue;
                         }
-                        content.put("updated_timestamp", localNowStr);
-
-                    }else if(meterTypeEnum == ItemTypeEnum.TENANT){
+//                        content.put("updated_timestamp", localNowStr);
+                    }else if(itemTypeEnum == ItemTypeEnum.TENANT){
                         if (key.equals("tenant_name")){
                             continue;
                         }
@@ -577,8 +626,8 @@ public class KeyValUpdateProcessor {
                             }
                             content.put("tenant_name", newTenantName);
                         }
-                    }else if(meterTypeEnum == ItemTypeEnum.JOB_TYPE_SUB){
-                        content.put("updated_timestamp", localNowStr);
+                    }else if(itemTypeEnum == ItemTypeEnum.JOB_TYPE_SUB){
+//                        content.put("updated_timestamp", localNowStr);
                     }else if(opName.equals("replacement")) {
                         if (key.equals(itemNameKey)) {
                             continue;
@@ -598,7 +647,18 @@ public class KeyValUpdateProcessor {
                     if(opName.equals("replacement")) {
                         content.put("commissioned_timestamp", localNowStr);
                     }
+
+                    if(itemTypeEnum == ItemTypeEnum.BILLING_REC){
+                        if("lc_status".equals(key)){
+                            if("mfd".equals(val)) {
+                                content.put("mark_delete_timestamp", localNowStr);
+                            }else{
+                                content.put("mark_delete_timestamp", null);
+                            }
+                        }
+                    }
                 }
+
                 if(content.isEmpty()){
                     logger.info("Error while doing " + opName + " op for item: " + itemSn);
                     item.put("error", Map.of("status", "No content to update"));
@@ -607,6 +667,10 @@ public class KeyValUpdateProcessor {
                     item.put("checked", false);
                     continue;
                 }
+
+                //all item tables should have updated_timestamp column
+                content.put("updated_timestamp", localNowStr);
+
                 Map<String, String> sqlResult = SqlUtil.makeUpdateSql(
                                                 Map.of(
                                                 "table", itemTableName,

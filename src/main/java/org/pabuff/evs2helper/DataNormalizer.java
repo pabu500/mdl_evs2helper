@@ -186,11 +186,10 @@ public class DataNormalizer {
             return normalizeMultiPartReading2(HistoryType.meter_reading_iwow,
                     normalization, normalizeField, deviceID,
                     "dt", resp, errorThreshold, config);
-//                    Map.of("clearRepeatedReadingOnly", false,
-//                           "allowConsolidation", allowConsolidation,
-//                           "genMeta", genMeta,
-//                           "getStatOnly", getStatOnly
-//                    ));
+        }else if(normalizationTarget.equals(HistoryType.fleet_health.toString())){
+            return normalizeMultiPartReading2(HistoryType.fleet_health,
+                    normalization, normalizeField, deviceID,
+                    "poll_timestamp", resp, errorThreshold, config);
         }
         return null;
     }
@@ -450,8 +449,26 @@ public class DataNormalizer {
         boolean clearRepeatedReadingsOnly = config.get("clearRepeatedReadingsOnly") != null && (Boolean) config.get("clearRepeatedReadingsOnly");
         boolean detectRestartEvent = config.get("detectRestartEvent") != null && (Boolean) config.get("detectRestartEvent");
         boolean forceAlignTimeRange = config.get("forceAlignTimeRange") != null && (Boolean) config.get("forceAlignTimeRange");
+        boolean intervalClean = true;
+        if(config.get("intervalClean") != null) {
+            intervalClean = (Boolean) config.get("intervalClean");
+        }
+        boolean normalizeNegative = true;
+        if(config.get("normalizeNegative") != null) {
+            normalizeNegative = (Boolean) config.get("normalizeNegative");
+        }
 
-        Map<String, Object> intervalCleanResult = cleanInterval(rawDataRows, timeField, clearRepeatedReadingsOnly, detectRestartEvent);
+        Map<String, Object> intervalCleanResult = new HashMap<>();
+        if(intervalClean) {
+            intervalCleanResult = cleanInterval(rawDataRows, timeField, clearRepeatedReadingsOnly, detectRestartEvent);
+        }else{
+            intervalCleanResult = Map.of(
+                    "cleaned_data", rawDataRows,
+                    "dominant_interval", 1L,
+                    "max_interval", 1D,
+                    "outlier_count", 0L
+            );
+        }
         List<Map<String, Object>> intervalCleanedDataRows = (List<Map<String, Object>>) intervalCleanResult.get("cleaned_data");
         long dominantIntervalMinute = (long) intervalCleanResult.get("dominant_interval");
         double maxInterval = (double) intervalCleanResult.get("max_interval");
@@ -487,6 +504,9 @@ public class DataNormalizer {
             Map<String, Map<String, Object>> readings = new HashMap<>();
             int readingsContainError = 0;
             for (String part : parts) {
+                if (row.get(part) == null || prevRow.get(part) == null){
+                    continue;
+                }
                 double readingTotal = MathUtil.ObjToDouble(row.get(part));
                 double readingTotal2 = MathUtil.ObjToDouble(prevRow.get(part));
                 double readingDiff = readingTotal - readingTotal2;
@@ -551,8 +571,11 @@ public class DataNormalizer {
         long totalNegCount = 0;
         if (normalization.contains("none")) {
         } else {
-            totalNegCount = normalizeNegativeReading(iotHistory);
-            logger.info("offset " + totalNegCount + " negative rows");
+            if(normalizeNegative) {
+                totalNegCount = normalizeNegativeReading(iotHistory);
+                logger.info("offset " + totalNegCount + " negative rows");
+            }else {
+            }
         }
 
         // insert estimated rows
@@ -589,6 +612,9 @@ public class DataNormalizer {
         Map<String, List<Double>> totalsMap = new HashMap<>();
         Map<String, List<Double>> diffsMap = new HashMap<>();
         for(String part : parts) {
+            if(iotHistoryNormalized.stream().map(IotHistoryRowDto2::getReadings).map(m -> m.get(part)).anyMatch(Objects::isNull)){
+                continue;
+            }
             List<Double> partTotals = iotHistoryNormalized.stream().map(IotHistoryRowDto2::getReadings).map(m -> m.get(part)).map(m -> MathUtil.ObjToDouble(m.get("rt"))).collect(Collectors.toList());
             totalsMap.put(part, partTotals);
             List<Double> partDiffs = iotHistoryNormalized.stream().map(IotHistoryRowDto2::getReadings).map(m -> m.get(part)).map(m -> MathUtil.ObjToDouble(m.get("rd"))).collect(Collectors.toList());
@@ -604,6 +630,9 @@ public class DataNormalizer {
         LocalDateTime end = iotHistoryNormalized.getFirst().getDt();
         LocalDateTime start = iotHistoryNormalized.getLast().getDt();
         for (String part : parts) {
+            if(totalsMap.get(part)==null || diffsMap.get(part)==null) {
+                continue;
+            }
             long duration = Duration.between(start, end).toMillis();
             List<Double> partReading = totalsMap.get(part);
             XtStat stat = MathUtil.findStat(partReading);

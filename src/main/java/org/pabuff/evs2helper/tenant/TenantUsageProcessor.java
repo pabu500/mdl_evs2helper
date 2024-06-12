@@ -1,8 +1,10 @@
-package org.pabuff.evs2helper.report;
+package org.pabuff.evs2helper.tenant;
 
 import org.pabuff.dto.ItemIdTypeEnum;
 import org.pabuff.dto.ItemTypeEnum;
 import org.pabuff.evs2helper.locale.LocalHelper;
+import org.pabuff.evs2helper.meter_group.MeterGroupUsageProcessor;
+import org.pabuff.evs2helper.meter_usage.MeterUsageProcessor;
 import org.pabuff.evs2helper.scope.ScopeHelper;
 import org.pabuff.oqghelper.OqgHelper;
 import org.pabuff.oqghelper.QueryHelper;
@@ -27,6 +29,8 @@ public class TenantUsageProcessor {
     @Autowired
 //    private MeterUsageProcessorLocal meterUsageProcessor;
     private MeterUsageProcessor meterUsageProcessor;
+    @Autowired
+    private MeterGroupUsageProcessor meterGroupUsageProcessor;
 
     public Map<String, Object> getListUsageSummary(Map<String, String> request) {
         logger.info("process getListUsageSummary");
@@ -77,6 +81,11 @@ public class TenantUsageProcessor {
 //        String panelTagColName = (String) itemConfig.get("panelTagColName");
         String timeKey =(String) itemConfig.get("timeKey");
         String valKey = (String) itemConfig.get("valKey");
+        String testCountStr = request.get("test_count");
+        Integer testCount = null;
+        if(testCountStr != null && !testCountStr.isEmpty()){
+            testCount = Integer.parseInt(testCountStr);
+        }
 
         String sortBy = request.get("sort_by");
         String sortOrder = request.get("sort_order");
@@ -107,7 +116,7 @@ public class TenantUsageProcessor {
             sort.put("sort_order", sortOrder);
         }
 
-        String fromSql = "SELECT id, " + itemIdColName + ", tenant_label, location_tag " +
+        String fromSql = "SELECT id, " + itemIdColName + ", tenant_label, location_tag, alt_name, type " +
                 meterSelectSql.substring(meterSelectSql.indexOf(" FROM"));
 
         String meterSelectSql2 = fromSql + " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
@@ -123,11 +132,12 @@ public class TenantUsageProcessor {
             return Collections.singletonMap("error", "oqgHelper error: resp is null");
         }
         if (resp.isEmpty()) {
-            logger.info("no meter found");
-            return Collections.singletonMap("info", "no meter found");
+            logger.info("no tenant found");
+            return Collections.singletonMap("info", "no tenant found");
         }
 
         List<Map<String, Object>> tenantUsageList = new ArrayList<>();
+        int processed = 0;
         for (Map<String, Object> tenantMap : resp) {
             Map<String, Object> tenantResult = compileTenantsUsage(
                     tenantMap,
@@ -151,6 +161,11 @@ public class TenantUsageProcessor {
             }
 
             tenantUsageList.add(tenantResult);
+            processed++;
+            logger.info("processed tenant: " + tenantMap.get(itemIdColName) + " " + processed + "/" + resp.size());
+            if (testCount != null && processed >= testCount) {
+                break;
+            }
         }
 
         return Collections.singletonMap("tenant_list_usage_summary", tenantUsageList);
@@ -181,6 +196,8 @@ public class TenantUsageProcessor {
         tenantResult.put("id", tenantMap.get("id"));
         tenantResult.put("tenant_name", tenantMap.get("tenant_name"));
         tenantResult.put("tenant_label", tenantMap.get("tenant_label"));
+        tenantResult.put("alt_name", tenantMap.get("alt_name"));
+        tenantResult.put("tenant_type", tenantMap.get("type"));
 
         //list of meter groups
         List<Map<String, Object>> meterGroups = (List<Map<String, Object>>) tenantMeters.get("group_full_info");
@@ -188,6 +205,7 @@ public class TenantUsageProcessor {
         List<Map<String, Object>> groupUsageList = new ArrayList<>();
         for (Map<String, Object> meterGroup : meterGroups) {
             String meterType = (String) meterGroup.get("meter_type");
+            String groupId = (String) meterGroup.get("group_id");
             String groupName = (String) meterGroup.get("group_name");
             String label = (String) meterGroup.get("group_label");
             List<Map<String, Object>> meterList = (List<Map<String, Object>>) meterGroup.get("group_meter_list");
@@ -237,6 +255,7 @@ public class TenantUsageProcessor {
             }
 
             Map<String, Object> groupUsage = new HashMap<>();
+            groupUsage.put("meter_group_id", groupId);
             groupUsage.put("meter_group_name", groupName);
             groupUsage.put("meter_group_label", label);
             groupUsage.put("meter_type", meterType);
@@ -246,7 +265,7 @@ public class TenantUsageProcessor {
                 for (Map<String, Object> meter : meterList) {
                     meterIdList.add((String) meter.get(itemNameColName));
                 }
-                Map<String, Object> trendingSnapshot = getMeterGroupTrendingSnapshot(
+                Map<String, Object> trendingSnapshot = meterGroupUsageProcessor.getMeterGroupTrendingSnapshot(
                         projectScope, siteScope,
                         meterTypeEnum.name(),
                         itemIdTypeEnum.name(),
@@ -266,41 +285,6 @@ public class TenantUsageProcessor {
         }
         tenantResult.put("tenant_usage_summary", groupUsageList);
         return tenantResult;
-    }
-
-    private Map<String, Object> getMeterGroupTrendingSnapshot(String projectScope, String siteScope,
-                                                              String meterTypeStr,
-                                                              String itemIdTypeStr,
-                                                              String meterList,
-                                                              String meterGroupId,
-                                                              String startDatetimeStr, String endDatetimeStr,
-                                                              boolean isMonthly) {
-        try {
-            Map<String, String> consolidatedUsageHistoryRequest = new HashMap<>();
-            consolidatedUsageHistoryRequest.put("target_interval", "month");
-            consolidatedUsageHistoryRequest.put("num_of_intervals", "3");
-            consolidatedUsageHistoryRequest.put("project_scope", projectScope);
-            consolidatedUsageHistoryRequest.put("site_scope", siteScope);
-            consolidatedUsageHistoryRequest.put("item_type", meterTypeStr);
-            consolidatedUsageHistoryRequest.put("group_name", meterGroupId);
-            consolidatedUsageHistoryRequest.put("item_id_type", itemIdTypeStr);
-            consolidatedUsageHistoryRequest.put("item_id_list", meterList);
-            consolidatedUsageHistoryRequest.put("start_datetime", startDatetimeStr);
-            consolidatedUsageHistoryRequest.put("end_datetime", endDatetimeStr);
-            consolidatedUsageHistoryRequest.put("is_monthly", String.valueOf(isMonthly));
-            consolidatedUsageHistoryRequest.put("sort_by", "kwh_timestamp");
-            consolidatedUsageHistoryRequest.put("sort_order", "desc");
-            consolidatedUsageHistoryRequest.put("max_rows_per_page", "1");
-            consolidatedUsageHistoryRequest.put("current_page", "1");
-
-            Map<String, Object> trendingResult =
-                    meterUsageProcessor.getMeterConsolidatedUsageHistory(consolidatedUsageHistoryRequest);
-
-            return trendingResult;
-        } catch (Exception e) {
-            logger.severe(e.getMessage());
-            return Map.of("error", e.getMessage());
-        }
     }
 
     private Map<String, Object> getSubTenantsUsage(String tenantId,
