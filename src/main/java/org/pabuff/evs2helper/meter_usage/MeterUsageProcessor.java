@@ -57,12 +57,13 @@ public class MeterUsageProcessor {
             meterTypeEnum = ItemTypeEnum.valueOf(meterTypeStr.toUpperCase());
         }
 
-        Map<String, Object> itemConfig = scopeHelper.getItemTypeConfig(projectScope, itemIdTypeStr);
+        Map<String, Object> itemConfig = scopeHelper.getItemTypeConfig2(projectScope, itemIdTypeStr);
         if(meterTypeEnum==null){
             meterTypeEnum = ItemTypeEnum.valueOf((String)itemConfig.get("itemTypeEnum"));
         }
-        String targetReadingTableName = (String) itemConfig.get("targetReadingTableName");
-        String targetTableName = (String) itemConfig.get("targetTableName");
+        String itemReadingTableName = (String) itemConfig.get("itemReadingTableName");
+        String itemTableName = (String) itemConfig.get("itemTableName");
+        String itemReadingIndexColName = (String) itemConfig.get("itemReadingIndexColName");
         String itemIdColName = (String) itemConfig.get("itemIdColName");
         String itemSnColName = (String) itemConfig.get("itemSnColName");
         String itemNameColName = (String) itemConfig.get("itemNameColName");
@@ -193,7 +194,8 @@ public class MeterUsageProcessor {
 //                        startDatetimeStr,
                                 endDatetimeStr,
                                 meterId,
-                                targetReadingTableName,
+                                itemReadingTableName,
+                                itemReadingIndexColName,
                                 itemIdColName,
                                 timeKey, valKey);
 
@@ -258,7 +260,7 @@ public class MeterUsageProcessor {
                     " LAST_VALUE(" + valKey + ") OVER w AS last_reading_val," +
                     " FIRST_VALUE(" + timeKey + ") OVER w AS first_reading_time," +
                     " LAST_VALUE(" + timeKey + ") OVER w AS last_reading_time " +
-                    " FROM " + targetReadingTableName + " WHERE " +
+                    " FROM " + itemReadingTableName + " WHERE " +
                     itemIdColName + " = '" + meterId + "' AND " +
                     timeKey + " BETWEEN '" + startDatetimeStr + "' AND '" + endDatetimeStr + "'" +
                     " WINDOW w AS ( ORDER BY " + timeKey + " RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)";
@@ -395,6 +397,7 @@ public class MeterUsageProcessor {
 
         Map<String, Object> itemConfig = scopeHelper.getItemTypeConfig(projectScope, itemIdTypeStr);
         String targetReadingTableName = (String) itemConfig.get("targetReadingTableName");
+        String itemReadingIndexColName = (String) itemConfig.get("itemReadingIndexColName");
         String targetTableName = (String) itemConfig.get("targetTableName");
         String itemIdColName = (String) itemConfig.get("itemIdColName");
         String itemSnColName = (String) itemConfig.get("itemSnColName");
@@ -498,6 +501,7 @@ public class MeterUsageProcessor {
                             endDateTimeInterval.toString(),
                             meterId,
                             targetReadingTableName,
+                            itemReadingIndexColName,
                             itemIdColName,
                             timeKey, valKey);
                     if(resultMonthly.containsKey("error")){
@@ -640,7 +644,8 @@ public class MeterUsageProcessor {
             LocalDateTime commissionedDatetime,
             String monthEndDatetimeStr,
             String meterId,
-            String targetReadingTableName,
+            String itemReadingTableName,
+            String itemIndexColName,
             String itemIdColName,
             String timeKey, String valKey) {
         logger.info("process findMonthlyReading");
@@ -680,7 +685,7 @@ public class MeterUsageProcessor {
             if(commissionedYear==theYear && commissionedMonth==theMonth){
                 //use the commissionedDatetime as the first reading of the month
                 String firstReadingOfCurrentMonthSqlAsCommissionedMonth =
-                        "SELECT " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
+                        "SELECT " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                                 + " WHERE "
                                 + itemIdColName + " = '" + meterId
                                 + "' AND " + timeKey + " >= '" + commissionedDatetime
@@ -714,7 +719,7 @@ public class MeterUsageProcessor {
             // search left 3 hours and right 3 hours of current month start
             // for the first reading with 'ref' as 'mbr',
             String firstReadingOfCurrentMonthSqlAsMbr =
-                    "SELECT " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
+                    "SELECT " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                             + " WHERE "
                             + itemIdColName + " = '" + meterId
                             + "' AND " + timeKey + " >= '" + monthStartDatetime.minusHours(3)
@@ -745,7 +750,7 @@ public class MeterUsageProcessor {
             if (respStartSearchRange.isEmpty()) {
                 LocalDateTime beginOfMonth = monthStartDatetime.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
                 LocalDateTime endOfMonth = monthStartDatetime.withDayOfMonth(monthStartDatetime.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
-                String firstReadingOfCurrentMonthSql = "SELECT id, " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
+                String firstReadingOfCurrentMonthSql = "SELECT id, " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                         + " WHERE " +
                         itemIdColName + " = '" + meterId + "' AND " +
                         timeKey + " >= '" + beginOfMonth + "' AND " +
@@ -773,8 +778,8 @@ public class MeterUsageProcessor {
                     if (firstReadingOfCurrentMonthRef == null || !firstReadingOfCurrentMonthRef.equalsIgnoreCase("mbr")) {
                         String firstReadingOfCurrentMonthId = (String) respFirstReadingOfCurrentMonth.getFirst().get("id");
                         String updateFirstReadingOfCurrentMonthSql =
-                                "UPDATE " + targetReadingTableName + " SET ref = 'mbr' WHERE " +
-                                        "id = '" + firstReadingOfCurrentMonthId + "'";
+                                "UPDATE " + itemReadingTableName + " SET ref = 'mbr' WHERE "
+                                        + itemIndexColName + " = '" + firstReadingOfCurrentMonthId + "'";
                         try {
                             oqgHelper.OqgIU(updateFirstReadingOfCurrentMonthSql);
                             logger.info("updateFirstReadingOfCurrentMonthSql: " + updateFirstReadingOfCurrentMonthSql);
@@ -792,7 +797,7 @@ public class MeterUsageProcessor {
         // find the last reading of the month
 
         // search left 3 hours and right 3 hours of current month end
-        String lastReadingOfCurrentMonthSqlAsMbr = "SELECT " + valKey + ", " + timeKey + ", ref FROM " + targetReadingTableName
+        String lastReadingOfCurrentMonthSqlAsMbr = "SELECT " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                 + " WHERE " +
                 itemIdColName + " = '" + meterId + "' AND " +
                 timeKey + " >= '" + monthEndDatetime.minusHours(3) + "' AND " +
@@ -823,7 +828,7 @@ public class MeterUsageProcessor {
         if(respEndSearchRange.isEmpty()) {
             LocalDateTime beginOfFollowingMonth = monthEndDatetime.plusMonths(1).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
             String firstReadingOfFollowingMonthSql = "SELECT id, " + valKey + ", " + timeKey + ", ref FROM "
-                    + targetReadingTableName + " WHERE " +
+                    + itemReadingTableName + " WHERE " +
                     itemIdColName + " = '" + meterId + "' AND " +
                     timeKey + " >= '" + beginOfFollowingMonth + "' AND " +
                     timeKey + " < '" + beginOfFollowingMonth.plusHours(3) + "' " +
@@ -850,8 +855,8 @@ public class MeterUsageProcessor {
                     // update the first reading of the following month to mbr
                     String firstReadingOfFollowingMonthId = (String) respFirstReadingOfFollowingMonth.getFirst().get("id");
                     String updateFirstReadingOfFollowingMonthSql =
-                            "UPDATE " + targetReadingTableName + " SET ref = 'mbr' WHERE " +
-                                    "id = '" + firstReadingOfFollowingMonthId + "'";
+                            "UPDATE " + itemReadingTableName + " SET ref = 'mbr' WHERE "
+                                    + itemIndexColName + " = '" + firstReadingOfFollowingMonthId + "'";
                     try {
                         oqgHelper.OqgIU(updateFirstReadingOfFollowingMonthSql);
                         logger.info("updateFirstReadingOfFollowingMonthSql: " + updateFirstReadingOfFollowingMonthSql);

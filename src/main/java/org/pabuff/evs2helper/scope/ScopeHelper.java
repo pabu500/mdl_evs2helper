@@ -37,6 +37,7 @@ public class ScopeHelper {
     public Map<String, Object> getItemTypeConfig(String projectScope, String itemIdTypeStr){
         ItemIdTypeEnum itemIdType = (itemIdTypeStr == null || itemIdTypeStr.isEmpty()) ? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
         String targetTableName = "meter";
+        String targetReadingIndexColName = "id";
         String targetReadingTableName = "meter_reading";
         String targetReadingIdColName = "meter_sn";
         String targetGroupTableName = "meter_group";
@@ -102,6 +103,7 @@ public class ScopeHelper {
         } else if (projectScope.toLowerCase().contains("ems_zsp")){
             itemType = ItemTypeEnum.METER_ZSP;
             targetTableName = "recorder";
+            targetReadingIndexColName = "egyid";
             targetReadingTableName = "energy_etc";
             targetGroupTableName = "recgroup";
             tenantTableName = "tenant";
@@ -116,6 +118,7 @@ public class ScopeHelper {
         }else if (projectScope.toLowerCase().contains("ems_mbfc")){
             itemType = ItemTypeEnum.METER_MBFC;
             targetTableName = "recorder";
+            targetReadingIndexColName = "egyid";
             targetReadingTableName = "energy_etc";
             targetGroupTableName = "recgroup";
             tenantTableName = "customer";
@@ -144,6 +147,7 @@ public class ScopeHelper {
         Map<String, Object> result = new HashMap<>();
         result.put("itemTypeEnum", itemType.toString());
         result.put("targetReadingTableName", targetReadingTableName);
+        result.put("targetReadingIndexColName", targetReadingIndexColName);
         result.put("targetReadingIdColName", targetReadingIdColName);
         result.put("targetTableName", targetTableName);
         result.put("targetGroupTableName", targetGroupTableName);
@@ -169,6 +173,7 @@ public class ScopeHelper {
         ItemIdTypeEnum itemIdType = (itemIdTypeStr == null || itemIdTypeStr.isEmpty()) ? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
         String itemTableName = "meter";
         String itemReadingTableName = "meter_reading";
+        String itemReadingIndexColName = "id";
         String itemReadingIdColName = "meter_sn";
         String itemUsageTableName = "meter_tariff";
         String itemGroupTableName = "meter_group";
@@ -240,12 +245,15 @@ public class ScopeHelper {
             itemType = ItemTypeEnum.METER_ZSP;
             itemTableName = "recorder";
             itemReadingTableName = "energy_etc";
+            itemReadingIndexColName = "egyid";
+            itemReadingIdColName = "egyinstkey";
             itemGroupTableName = "recgroup";
             tenantTableName = "tenant";
             tenantTargetGroupTableName = "tenantgroup";
             itemIdColName = "recid";
-            itemReadingIdColName = "egyinstkey";
-            itemNameColName = "recdisplayname";
+//            itemNameColName = "recdisplayname";
+            itemNameColName = "recid";
+            itemSnColName = "recid";
             timeKey = "timestamp";
             valKey = "kwhtot";
             itemLocBuildingColName = "buildingname";
@@ -253,12 +261,15 @@ public class ScopeHelper {
             itemType = ItemTypeEnum.METER_MBFC;
             itemTableName = "recorder";
             itemReadingTableName = "energy_etc";
+            itemReadingIndexColName = "egyid";
+            itemReadingIdColName = "egyinstkey";
             itemGroupTableName = "recgroup";
             tenantTableName = "customer";
             tenantTargetGroupTableName = "custgroup";
             itemIdColName = "recid";
-            itemReadingIdColName = "egyinstkey";
-            itemNameColName = "recdisplayname";
+//            itemNameColName = "recdisplayname";
+            itemNameColName = "recid";
+            itemSnColName = "recid";
             timeKey = "timestamp";
             valKey = "kwhtot";
             itemLocBuildingColName = "buildingname";
@@ -279,6 +290,7 @@ public class ScopeHelper {
         Map<String, Object> result = new HashMap<>();
         result.put("itemTypeEnum", itemType.toString());
         result.put("itemReadingTableName", itemReadingTableName);
+        result.put("itemReadingIndexColName", itemReadingIndexColName);
         result.put("itemReadingIdColName", itemReadingIdColName);
         result.put("itemUsageTableName", itemUsageTableName);
         result.put("itemTableName", itemTableName);
