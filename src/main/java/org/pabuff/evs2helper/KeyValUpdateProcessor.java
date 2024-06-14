@@ -431,6 +431,11 @@ public class KeyValUpdateProcessor {
                 itemSnKey = "tenant_name";//"tenant_label";
                 itemNameKey = "tenant_label";//"tenant_name";
             }
+            case USER -> {
+                itemTableName = "evs2_user";
+                itemSnKey = "id";
+                itemNameKey = "username";
+            }
             case METER_GROUP -> {
                 itemTableName = "meter_group";
                 itemSnKey = "id";
@@ -522,17 +527,20 @@ public class KeyValUpdateProcessor {
             if(itemIdTypeEnum == null) {
                 if (((itemName == null || itemName.isBlank()) || (itemSn == null || itemSn.isBlank()))) {
                     logger.info("Error while doing " + opName + " op for item");
+                    item.put("error", Map.of("status", "item_id_type not provided"));
                     continue;
                 }
             }else {
                 if(itemIdTypeEnum == ItemIdTypeEnum.SN) {
                     if ((itemSn == null || itemSn.isBlank())) {
                         logger.info("Error while doing " + opName + " op for item");
+                        item.put("error", Map.of("status", "item_sn not provided"));
                         continue;
                     }
                 }else if(itemIdTypeEnum == ItemIdTypeEnum.NAME) {
                     if ((itemName == null || itemName.isBlank())) {
                         logger.info("Error while doing " + opName + " op for item");
+                        item.put("error", Map.of("status", "item_name not provided"));
                         continue;
                     }
                     targetKey = itemNameKey;
@@ -628,7 +636,14 @@ public class KeyValUpdateProcessor {
                         }
                     }else if(itemTypeEnum == ItemTypeEnum.JOB_TYPE_SUB){
 //                        content.put("updated_timestamp", localNowStr);
-                    }else if(opName.equals("replacement")) {
+                    }else if(itemTypeEnum == ItemTypeEnum.USER){
+                        // id (itemSnKey) is not updatable
+                        // username (itemNameKey) is updatable
+                        if (key.equals(itemSnKey)) {
+                            continue;
+                        }
+                    }
+                    else if(opName.equals("replacement")) {
                         if (key.equals(itemNameKey)) {
                             continue;
                         }
