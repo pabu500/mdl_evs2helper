@@ -645,7 +645,7 @@ public class MeterUsageProcessor {
             String monthEndDatetimeStr,
             String meterId,
             String itemReadingTableName,
-            String itemIndexColName,
+            String itemReadingIndexColName,
             String itemIdColName,
             String timeKey, String valKey) {
         logger.info("process findMonthlyReading");
@@ -779,7 +779,7 @@ public class MeterUsageProcessor {
                         String firstReadingOfCurrentMonthId = (String) respFirstReadingOfCurrentMonth.getFirst().get("id");
                         String updateFirstReadingOfCurrentMonthSql =
                                 "UPDATE " + itemReadingTableName + " SET ref = 'mbr' WHERE "
-                                        + itemIndexColName + " = '" + firstReadingOfCurrentMonthId + "'";
+                                        + itemReadingIndexColName + " = '" + firstReadingOfCurrentMonthId + "'";
                         try {
                             oqgHelper.OqgIU(updateFirstReadingOfCurrentMonthSql);
                             logger.info("updateFirstReadingOfCurrentMonthSql: " + updateFirstReadingOfCurrentMonthSql);
@@ -856,7 +856,7 @@ public class MeterUsageProcessor {
                     String firstReadingOfFollowingMonthId = (String) respFirstReadingOfFollowingMonth.getFirst().get("id");
                     String updateFirstReadingOfFollowingMonthSql =
                             "UPDATE " + itemReadingTableName + " SET ref = 'mbr' WHERE "
-                                    + itemIndexColName + " = '" + firstReadingOfFollowingMonthId + "'";
+                                    + itemReadingIndexColName + " = '" + firstReadingOfFollowingMonthId + "'";
                     try {
                         oqgHelper.OqgIU(updateFirstReadingOfFollowingMonthSql);
                         logger.info("updateFirstReadingOfFollowingMonthSql: " + updateFirstReadingOfFollowingMonthSql);
