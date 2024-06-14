@@ -38,6 +38,7 @@ public class ScopeHelper {
         ItemIdTypeEnum itemIdType = (itemIdTypeStr == null || itemIdTypeStr.isEmpty()) ? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
         String targetTableName = "meter";
         String targetReadingTableName = "meter_reading";
+        String targetReadingIdColName = "meter_sn";
         String targetGroupTableName = "meter_group";
         String targetGroupTargetTableName = "meter_group_meter";
         String tenantTableName = "tenant";
@@ -98,7 +99,35 @@ public class ScopeHelper {
             if (itemIdType == ItemIdTypeEnum.NAME) {
                 itemIdColName = "item_name";
             }
-        } else {
+        } else if (projectScope.toLowerCase().contains("ems_zsp")){
+            itemType = ItemTypeEnum.METER_ZSP;
+            targetTableName = "recorder";
+            targetReadingTableName = "energy_etc";
+            targetGroupTableName = "recgroup";
+            tenantTableName = "tenant";
+            tenantTargetGroupTableName = "tenantgroup";
+            itemIdColName = "recid";
+            targetReadingIdColName = "egyinstkey";
+            itemNameColName = "recdisplayname";
+            timeKey = "timestamp";
+            valKey = "kwhtot";
+            itemLocBuildingColName = "buildingname";
+
+        }else if (projectScope.toLowerCase().contains("ems_mbfc")){
+            itemType = ItemTypeEnum.METER_MBFC;
+            targetTableName = "recorder";
+            targetReadingTableName = "energy_etc";
+            targetGroupTableName = "recgroup";
+            tenantTableName = "customer";
+            tenantTargetGroupTableName = "custgroup";
+            itemIdColName = "recid";
+            targetReadingIdColName = "egyinstkey";
+            itemNameColName = "recdisplayname";
+            timeKey = "timestamp";
+            valKey = "kwhtot";
+            itemLocBuildingColName = "buildingname";
+        }
+        else {
             if(itemIdType == null){
                 itemIdType = ItemIdTypeEnum.SN;
             }
@@ -115,6 +144,7 @@ public class ScopeHelper {
         Map<String, Object> result = new HashMap<>();
         result.put("itemTypeEnum", itemType.toString());
         result.put("targetReadingTableName", targetReadingTableName);
+        result.put("targetReadingIdColName", targetReadingIdColName);
         result.put("targetTableName", targetTableName);
         result.put("targetGroupTableName", targetGroupTableName);
         result.put("targetGroupTargetTableName", targetGroupTargetTableName);
@@ -139,6 +169,7 @@ public class ScopeHelper {
         ItemIdTypeEnum itemIdType = (itemIdTypeStr == null || itemIdTypeStr.isEmpty()) ? null : ItemIdTypeEnum.valueOf(itemIdTypeStr.toUpperCase());
         String itemTableName = "meter";
         String itemReadingTableName = "meter_reading";
+        String itemReadingIdColName = "meter_sn";
         String itemUsageTableName = "meter_tariff";
         String itemGroupTableName = "meter_group";
         String itemGroupTargetTableName = "meter_group_meter";
@@ -205,7 +236,33 @@ public class ScopeHelper {
             if (itemIdType == ItemIdTypeEnum.NAME) {
                 itemIdColName = "item_name";
             }
-        } else {
+        }else if (projectScope.toLowerCase().contains("ems_zsp")) {
+            itemType = ItemTypeEnum.METER_ZSP;
+            itemTableName = "recorder";
+            itemReadingTableName = "energy_etc";
+            itemGroupTableName = "recgroup";
+            tenantTableName = "tenant";
+            tenantTargetGroupTableName = "tenantgroup";
+            itemIdColName = "recid";
+            itemReadingIdColName = "egyinstkey";
+            itemNameColName = "recdisplayname";
+            timeKey = "timestamp";
+            valKey = "kwhtot";
+            itemLocBuildingColName = "buildingname";
+        }else if (projectScope.toLowerCase().contains("ems_mbfc")) {
+            itemType = ItemTypeEnum.METER_MBFC;
+            itemTableName = "recorder";
+            itemReadingTableName = "energy_etc";
+            itemGroupTableName = "recgroup";
+            tenantTableName = "customer";
+            tenantTargetGroupTableName = "custgroup";
+            itemIdColName = "recid";
+            itemReadingIdColName = "egyinstkey";
+            itemNameColName = "recdisplayname";
+            timeKey = "timestamp";
+            valKey = "kwhtot";
+            itemLocBuildingColName = "buildingname";
+        }else {
             if(itemIdType == null){
                 itemIdType = ItemIdTypeEnum.SN;
             }
@@ -222,6 +279,7 @@ public class ScopeHelper {
         Map<String, Object> result = new HashMap<>();
         result.put("itemTypeEnum", itemType.toString());
         result.put("itemReadingTableName", itemReadingTableName);
+        result.put("itemReadingIdColName", itemReadingIdColName);
         result.put("itemUsageTableName", itemUsageTableName);
         result.put("itemTableName", itemTableName);
         result.put("itemGroupTableName", itemGroupTableName);
