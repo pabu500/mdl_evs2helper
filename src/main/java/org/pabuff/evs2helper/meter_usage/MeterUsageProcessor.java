@@ -640,7 +640,7 @@ public class MeterUsageProcessor {
         return Collections.singletonMap("meter_list_consolidated_usage_history", meterListConsumptionHistory);
     }
 
-    Map<String, Object> findMonthlyReading(/*String monthStartDatetimeStr, */
+    public Map<String, Object> findMonthlyReading(/*String monthStartDatetimeStr, */
             LocalDateTime commissionedDatetime,
             String monthEndDatetimeStr,
             String meterId,
