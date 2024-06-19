@@ -14,7 +14,8 @@ public class DeviceLcStatusHelper {
             "commission_in_progress", "cip",
             "normal",
             "maintenance", "maint",
-            "decommissioned", "dc"
+            "decommissioned", "dc",
+            "bypassed", "byp"
     );
 
     public boolean isValidDeviceLcStatusStr(String status) {
@@ -36,6 +37,7 @@ public class DeviceLcStatusHelper {
             case "normal" -> DeviceLcStatusEnum.NORMAL;
             case "maintenance", "maint" -> DeviceLcStatusEnum.MAINTENANCE;
             case "decommissioned", "dc" -> DeviceLcStatusEnum.DECOMMISSIONED;
+            case "bypassed", "byp" -> DeviceLcStatusEnum.BYPASSED;
             default -> null;
         };
     }
@@ -49,6 +51,7 @@ public class DeviceLcStatusHelper {
             case NORMAL -> "normal";
             case MAINTENANCE -> "maint";
             case DECOMMISSIONED -> "dc";
+            case BYPASSED -> "bypassed";
         };
     }
 
