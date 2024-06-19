@@ -4,6 +4,7 @@ import org.pabuff.dto.ItemIdTypeEnum;
 import org.pabuff.dto.ItemTypeEnum;
 import org.pabuff.dto.SvcClaimDto;
 import org.pabuff.evs2helper.cache.DataAgent;
+import org.pabuff.evs2helper.device.DeviceLcStatusHelper;
 import org.pabuff.evs2helper.email.SystemNotifier;
 import org.pabuff.evs2helper.event.OpResultEvent;
 import org.pabuff.evs2helper.event.OpResultPublisher;
@@ -41,6 +42,8 @@ public class KeyValUpdateProcessor {
     private ReportHelper reportHelper;
     @Autowired
     private LocalHelper localHelper;
+    @Autowired
+    private DeviceLcStatusHelper deviceLcStatusHelper;
 
     public Map<String, Object> getOpList(String tableName, String keyName, List<String> meterSns) {
         List<Map<String, Object>> result = new ArrayList<>();
@@ -642,8 +645,7 @@ public class KeyValUpdateProcessor {
                         if (key.equals(itemSnKey)) {
                             continue;
                         }
-                    }
-                    else if(opName.equals("replacement")) {
+                    }else if(opName.equals("replacement")) {
                         if (key.equals(itemNameKey)) {
                             continue;
                         }
@@ -658,7 +660,26 @@ public class KeyValUpdateProcessor {
                     if (val == null /*|| val.toString().isBlank()*/) {
                         continue;
                     }
+
+                    //if is device
+                    if(itemTypeEnum == ItemTypeEnum.METER
+                    || itemTypeEnum == ItemTypeEnum.METER_3P
+                    || itemTypeEnum == ItemTypeEnum.METER_IWOW){
+                        if("lc_status".equals(key)){
+                            val = deviceLcStatusHelper.getDeviceLcStatusDbStr(val.toString());
+                            if(val == null){
+                                logger.info("Error while doing " + opName + " op for item: " + itemSn);
+                                item.put("error", Map.of("status", "Invalid lc_status"));
+                                item.put("prev_status", item.get("status"));
+                                item.put("status", op + " error");
+                                item.put("checked", false);
+                                continue;                            
+                            }
+                        }
+                    }
+
                     content.put(key, val);
+
                     if(opName.equals("replacement")) {
                         content.put("commissioned_timestamp", localNowStr);
                     }

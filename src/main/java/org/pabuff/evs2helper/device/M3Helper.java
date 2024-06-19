@@ -1,4 +1,4 @@
-package org.pabuff.evs2helper;
+package org.pabuff.evs2helper.device;
 
 import org.pabuff.dto.*;
 import org.apache.logging.log4j.Logger;
