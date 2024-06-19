@@ -275,8 +275,8 @@ public class KeyValUpdateProcessor {
 
                 //if is device
                 if(itemTypeEnum == ItemTypeEnum.METER
-                        || itemTypeEnum == ItemTypeEnum.METER_3P
-                        || itemTypeEnum == ItemTypeEnum.METER_IWOW){
+                || itemTypeEnum == ItemTypeEnum.METER_3P
+                || itemTypeEnum == ItemTypeEnum.METER_IWOW){
                     if("lc_status".equals(keyName)){
                         val = deviceLcStatusHelper.getDeviceLcStatusDbStr(val);
                         if(val == null){
