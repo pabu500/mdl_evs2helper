@@ -342,9 +342,9 @@ public class ScopeHelper {
         if(!input.matches("[0-9]+")) {
             return "sn must be numeric";
         }
-        //must start with 20
-        if(!input.startsWith("20")) {
-            return "sn must start with 20";
+        //must start with 20 or 0 (detached sn)
+        if(!input.startsWith("20") && !input.startsWith("0")) {
+            return "sn must start with 20 or 0";
         }
         return null;
     }
