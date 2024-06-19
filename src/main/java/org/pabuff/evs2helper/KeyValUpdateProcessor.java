@@ -272,6 +272,24 @@ public class KeyValUpdateProcessor {
 //                }else{
 //                    val = "'" + val + "'";
 //                }
+
+                //if is device
+                if(itemTypeEnum == ItemTypeEnum.METER
+                        || itemTypeEnum == ItemTypeEnum.METER_3P
+                        || itemTypeEnum == ItemTypeEnum.METER_IWOW){
+                    if("lc_status".equals(keyName)){
+                        val = deviceLcStatusHelper.getDeviceLcStatusDbStr(val);
+                        if(val == null){
+                            logger.info("Error while doing " + opName + " op for item: " + itemSn);
+                            item.put("error", Map.of("status", "Invalid lc_status"));
+                            item.put("prev_status", item.get("status"));
+                            item.put("status", op + " error");
+                            item.put("checked", false);
+                            continue;
+                        }
+                    }
+                }
+
                 Map<String, Object> content = new HashMap<>();
                 content.put(keyName, val);
 
@@ -673,7 +691,7 @@ public class KeyValUpdateProcessor {
                                 item.put("prev_status", item.get("status"));
                                 item.put("status", op + " error");
                                 item.put("checked", false);
-                                continue;                            
+                                continue;
                             }
                         }
                     }
