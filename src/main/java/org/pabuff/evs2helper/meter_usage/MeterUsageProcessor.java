@@ -776,7 +776,7 @@ public class MeterUsageProcessor {
                     // update the first reading of the month to mbr if it is not
                     String firstReadingOfCurrentMonthRef = (String) respFirstReadingOfCurrentMonth.getFirst().get("ref");
                     if (firstReadingOfCurrentMonthRef == null || !firstReadingOfCurrentMonthRef.equalsIgnoreCase("mbr")) {
-                        String firstReadingOfCurrentMonthId = (String) respFirstReadingOfCurrentMonth.getFirst().get("id");
+                        String firstReadingOfCurrentMonthId = (String) respFirstReadingOfCurrentMonth.getFirst().get(itemReadingIndexColName);
                         String updateFirstReadingOfCurrentMonthSql =
                                 "UPDATE " + itemReadingTableName + " SET ref = 'mbr' WHERE "
                                         + itemReadingIndexColName + " = '" + firstReadingOfCurrentMonthId + "'";
@@ -853,7 +853,7 @@ public class MeterUsageProcessor {
                 String respFirstReadingOfFollowingMonthRef = (String) respFirstReadingOfFollowingMonth.getFirst().get("ref");
                 if(respFirstReadingOfFollowingMonthRef == null || !respFirstReadingOfFollowingMonthRef.equalsIgnoreCase("mbr")) {
                     // update the first reading of the following month to mbr
-                    String firstReadingOfFollowingMonthId = (String) respFirstReadingOfFollowingMonth.getFirst().get("id");
+                    String firstReadingOfFollowingMonthId = (String) respFirstReadingOfFollowingMonth.getFirst().get(itemReadingIndexColName);
                     String updateFirstReadingOfFollowingMonthSql =
                             "UPDATE " + itemReadingTableName + " SET ref = 'mbr' WHERE "
                                     + itemReadingIndexColName + " = '" + firstReadingOfFollowingMonthId + "'";
