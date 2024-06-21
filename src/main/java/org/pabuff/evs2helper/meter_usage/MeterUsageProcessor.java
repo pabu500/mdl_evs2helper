@@ -750,7 +750,7 @@ public class MeterUsageProcessor {
             if (respStartSearchRange.isEmpty()) {
                 LocalDateTime beginOfMonth = monthStartDatetime.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
                 LocalDateTime endOfMonth = monthStartDatetime.withDayOfMonth(monthStartDatetime.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
-                String firstReadingOfCurrentMonthSql = "SELECT id, " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
+                String firstReadingOfCurrentMonthSql = "SELECT " + itemReadingIndexColName + ", " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                         + " WHERE " +
                         itemIdColName + " = '" + meterId + "' AND " +
                         timeKey + " >= '" + beginOfMonth + "' AND " +
@@ -827,7 +827,7 @@ public class MeterUsageProcessor {
         // if mbr is not found, use the first reading of the following month
         if(respEndSearchRange.isEmpty()) {
             LocalDateTime beginOfFollowingMonth = monthEndDatetime.plusMonths(1).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
-            String firstReadingOfFollowingMonthSql = "SELECT id, " + valKey + ", " + timeKey + ", ref FROM "
+            String firstReadingOfFollowingMonthSql = "SELECT " + itemReadingIndexColName + ", " + valKey + ", " + timeKey + ", ref FROM "
                     + itemReadingTableName + " WHERE " +
                     itemIdColName + " = '" + meterId + "' AND " +
                     timeKey + " >= '" + beginOfFollowingMonth + "' AND " +
