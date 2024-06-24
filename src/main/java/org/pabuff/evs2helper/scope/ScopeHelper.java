@@ -256,6 +256,8 @@ public class ScopeHelper {
 //            itemNameColName = "recdisplayname";
             itemNameColName = "recid";
             itemSnColName = "recid";
+            itemIdColSel = "recid";
+            itemLocColSel = "buildingname, unitnumber";
             timeKey = "timestamp";
             valKey = "kwhtot";
             itemLocBuildingColName = "buildingname";
@@ -272,6 +274,8 @@ public class ScopeHelper {
 //            itemNameColName = "recdisplayname";
             itemNameColName = "recid";
             itemSnColName = "recid";
+            itemIdColSel = "recid";
+            itemLocColSel = "buildingname, unitnumber";
             timeKey = "timestamp";
             valKey = "kwhtot";
             itemLocBuildingColName = "buildingname";

@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="findMonthlyReading update id">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="findMonthlyReading reading col name update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/scope/ScopeHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/scope/ScopeHelper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,14 +113,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00016" summary="FleetHealth update">
-      <option name="closed" value="true" />
-      <created>1713114054473</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1713114054473</updated>
     </task>
     <task id="LOCAL-00017" summary="misc">
       <option name="closed" value="true" />
@@ -505,7 +498,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719202247047</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="findMonthlyReading reading col name update">
+      <option name="closed" value="true" />
+      <created>1719208568976</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1719208568976</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -554,6 +555,7 @@
     <MESSAGE value="sn validator update" />
     <MESSAGE value="single key val update" />
     <MESSAGE value="findMonthlyReading update id" />
-    <option name="LAST_COMMIT_MESSAGE" value="findMonthlyReading update id" />
+    <MESSAGE value="findMonthlyReading reading col name update" />
+    <option name="LAST_COMMIT_MESSAGE" value="findMonthlyReading reading col name update" />
   </component>
 </project>

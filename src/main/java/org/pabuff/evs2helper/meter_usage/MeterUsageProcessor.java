@@ -143,9 +143,6 @@ public class MeterUsageProcessor {
         int processingCount = 0;
         int totalCount = selectedMeterList.size();
         for (Map<String, Object> meterMap : selectedMeterList) {
-
-
-
             String meterId = (String) meterMap.get(itemIdColName);
             String readingMeterId = (String) meterMap.get(itemReadingIdColName);
             String meterSn = meterMap.get(itemSnColName) == null ? "" : (String) meterMap.get(itemSnColName);
