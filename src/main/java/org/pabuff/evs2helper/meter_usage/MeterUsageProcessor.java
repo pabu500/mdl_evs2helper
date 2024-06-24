@@ -65,6 +65,7 @@ public class MeterUsageProcessor {
         String itemTableName = (String) itemConfig.get("itemTableName");
         String itemReadingIndexColName = (String) itemConfig.get("itemReadingIndexColName");
         String itemIdColName = (String) itemConfig.get("itemIdColName");
+        String itemReadingIdColName = (String) itemConfig.get("itemReadingIdColName");
         String itemSnColName = (String) itemConfig.get("itemSnColName");
         String itemNameColName = (String) itemConfig.get("itemNameColName");
         String itemAltName = (String) itemConfig.get("itemAltNameColName");
@@ -142,7 +143,11 @@ public class MeterUsageProcessor {
         int processingCount = 0;
         int totalCount = selectedMeterList.size();
         for (Map<String, Object> meterMap : selectedMeterList) {
+
+
+
             String meterId = (String) meterMap.get(itemIdColName);
+            String readingMeterId = (String) meterMap.get(itemReadingIdColName);
             String meterSn = meterMap.get(itemSnColName) == null ? "" : (String) meterMap.get(itemSnColName);
             String meterName = meterMap.get(itemNameColName) == null ? "" : (String) meterMap.get(itemNameColName);
             String meterAltName = meterMap.get(itemAltName) == null ? "" : (String) meterMap.get(itemAltName);
@@ -187,6 +192,8 @@ public class MeterUsageProcessor {
             }
             usageSummary.put("commissioned_timestamp", commissionedTimestampStr);
 
+
+
             if (isMonthly) {
                 Map<String, Object> resultMonthly =
                         findMonthlyReading(
@@ -196,7 +203,7 @@ public class MeterUsageProcessor {
                                 meterId,
                                 itemReadingTableName,
                                 itemReadingIndexColName,
-                                itemIdColName,
+                                readingMeterId,//itemIdColName,
                                 timeKey, valKey);
 
                 if (resultMonthly.containsKey("error")) {
@@ -261,7 +268,8 @@ public class MeterUsageProcessor {
                     " FIRST_VALUE(" + timeKey + ") OVER w AS first_reading_time," +
                     " LAST_VALUE(" + timeKey + ") OVER w AS last_reading_time " +
                     " FROM " + itemReadingTableName + " WHERE " +
-                    itemIdColName + " = '" + meterId + "' AND " +
+//                    itemIdColName + " = '" + meterId + "' AND " +
+                    itemReadingIdColName + " = '" + readingMeterId + "' AND " +
                     timeKey + " BETWEEN '" + startDatetimeStr + "' AND '" + endDatetimeStr + "'" +
                     " WINDOW w AS ( ORDER BY " + timeKey + " RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)";
 
