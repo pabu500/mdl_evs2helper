@@ -712,10 +712,11 @@ public class MeterUsageProcessor {
 //                    return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
 //                    result.put("first_reading_time", "-");
 //                    result.put("first_reading_val", "-");
+                }else {
+                    firstReadingTimestamp = (String) respCommissionedMonth.getFirst().get(timeKey);
+                    firstReadingVal = (String) respCommissionedMonth.getFirst().get(valKey);
+                    useCommissionedDatetime = true;
                 }
-                firstReadingTimestamp = (String) respCommissionedMonth.getFirst().get(timeKey);
-                firstReadingVal = (String) respCommissionedMonth.getFirst().get(valKey);
-                useCommissionedDatetime = true;
             }
         }
 
