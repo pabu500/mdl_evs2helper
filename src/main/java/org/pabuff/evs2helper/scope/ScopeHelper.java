@@ -245,22 +245,20 @@ public class ScopeHelper {
             }
         }else if (projectScope.toLowerCase().contains("ems_zsp")) {
             itemType = ItemTypeEnum.METER_ZSP;
-            itemTableName = "recorder";
-            itemReadingTableName = "energy_etc";
-            itemReadingIndexColName = "egyid";
-            itemReadingIdColName = "egyinstkey";
+            itemTableName = "meter_zsp";//"recorder";
+            itemReadingTableName = "meter_reading_zsp";//"energy_etc";
+            itemReadingIndexColName = "id";//"egyid";
+            itemReadingIdColName = "recorder_id";//"egyinstkey";
             itemGroupTableName = "recgroup";
-            tenantTableName = "tenant";
+            tenantTableName = "tenant_zsp";//"tenant";
             tenantTargetGroupTableName = "tenantgroup";
-            itemIdColName = "recid";
+            itemIdColName = "id";//"recid";
 //            itemNameColName = "recdisplayname";
-            itemNameColName = "recid";
-            itemSnColName = "recid";
-            itemIdColSel = "recid";
-            itemLocColSel = "buildingname, unitnumber";
-            timeKey = "timestamp";
-            valKey = "kwhtot";
-            itemLocBuildingColName = "buildingname";
+            itemNameColName = "rec_displayname";//"recid";
+            itemSnColName = "rec_name";//"recid";
+            timeKey = "kwh_timestamp";//"timestamp";
+            valKey = "kwh_total";//"kwhtot";
+            itemLocBuildingColName = "loc_building";
         }else if (projectScope.toLowerCase().contains("ems_mbfc")) {
             itemType = ItemTypeEnum.METER_MBFC;
             itemTableName = "recorder";
