@@ -252,31 +252,33 @@ public class ScopeHelper {
             itemGroupTableName = "recgroup";
             tenantTableName = "tenant_zsp";//"tenant";
             tenantTargetGroupTableName = "tenantgroup";
-            itemIdColName = "id";//"recid";
+            itemIdColName = "recorder_id";//"recid";
 //            itemNameColName = "recdisplayname";
             itemNameColName = "rec_displayname";//"recid";
             itemSnColName = "rec_name";//"recid";
+            itemIdColSel = "id, rec_displayname, rec_name";
+            itemLocColSel = "loc_building, loc_level, loc_unit";
             timeKey = "kwh_timestamp";//"timestamp";
             valKey = "kwh_total";//"kwhtot";
             itemLocBuildingColName = "loc_building";
         }else if (projectScope.toLowerCase().contains("ems_mbfc")) {
             itemType = ItemTypeEnum.METER_MBFC;
-            itemTableName = "recorder";
-            itemReadingTableName = "energy_etc";
-            itemReadingIndexColName = "egyid";
-            itemReadingIdColName = "egyinstkey";
+            itemTableName = "meter_mbfc"; //"recorder";
+            itemReadingTableName =  "meter_reading_mbfc";//"energy_etc";
+            itemReadingIndexColName = "id"; //"egyid";
+            itemReadingIdColName = "item_name";//"egyinstkey";
             itemGroupTableName = "recgroup";
             tenantTableName = "customer";
             tenantTargetGroupTableName = "custgroup";
-            itemIdColName = "recid";
+            itemIdColName = "id"; //"recid";
 //            itemNameColName = "recdisplayname";
-            itemNameColName = "recid";
-            itemSnColName = "recid";
-            itemIdColSel = "recid";
-            itemLocColSel = "buildingname, unitnumber";
-            timeKey = "timestamp";
-            valKey = "kwhtot";
-            itemLocBuildingColName = "buildingname";
+            itemNameColName = "rec_displayname"; //"recid";
+            itemSnColName = "rec_name"; //"recid";
+            itemIdColSel = "id, rec_displayname, rec_name";
+            itemLocColSel = "loc_building, loc_level, loc_unit";
+            timeKey = "kwh_timestamp";
+            valKey = "kwh_total";
+            itemLocBuildingColName = "loc_building";
         }else {
             if(itemIdType == null){
                 itemIdType = ItemIdTypeEnum.SN;
