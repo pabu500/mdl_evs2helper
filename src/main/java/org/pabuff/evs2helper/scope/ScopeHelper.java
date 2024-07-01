@@ -198,6 +198,7 @@ public class ScopeHelper {
         if (projectScope.toLowerCase().contains("ems_smrt")) {
             itemType = ItemTypeEnum.METER_3P;
             itemReadingTableName = "meter_reading_3p";
+            itemReadingIdColName = "meter_id";
             itemTableName = "meter_3p";
             itemIdColName = "meter_id";
             itemSnColName = "meter_sn";
@@ -216,6 +217,7 @@ public class ScopeHelper {
         } else if (projectScope.toLowerCase().contains("ems_cw_nus")) {
             itemType = ItemTypeEnum.METER_IWOW;
             itemReadingTableName = "meter_reading_iwow";
+            itemReadingIdColName = "item_name";
             itemUsageTableName = "meter_reading_iwow";
             itemTableName = "meter_iwow";
             itemGroupTableName = "meter_group";
@@ -254,6 +256,8 @@ public class ScopeHelper {
 //            itemNameColName = "recdisplayname";
             itemNameColName = "recid";
             itemSnColName = "recid";
+            itemIdColSel = "recid";
+            itemLocColSel = "buildingname, unitnumber";
             timeKey = "timestamp";
             valKey = "kwhtot";
             itemLocBuildingColName = "buildingname";
@@ -270,6 +274,8 @@ public class ScopeHelper {
 //            itemNameColName = "recdisplayname";
             itemNameColName = "recid";
             itemSnColName = "recid";
+            itemIdColSel = "recid";
+            itemLocColSel = "buildingname, unitnumber";
             timeKey = "timestamp";
             valKey = "kwhtot";
             itemLocBuildingColName = "buildingname";
