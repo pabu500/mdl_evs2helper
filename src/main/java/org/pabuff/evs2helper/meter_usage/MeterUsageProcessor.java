@@ -36,6 +36,8 @@ public class MeterUsageProcessor {
 
         int testCount = Integer.parseInt(request.getOrDefault("test_count", "0"));
 
+        Long mbrRangeHours = Long.parseLong(request.getOrDefault("mbr_range_hours", "3"));
+
         String projectScope = request.get("project_scope");
         String siteScope = request.get("site_scope");
         String meterSelectSql = request.get("id_select_query") == null ? "" : request.get("id_select_query");
@@ -194,6 +196,7 @@ public class MeterUsageProcessor {
                         findMonthlyReading(
                                 commissionedDatetime,
 //                        startDatetimeStr,
+                                mbrRangeHours,
                                 endDatetimeStr,
                                 meterId,
                                 itemReadingTableName,
@@ -341,6 +344,8 @@ public class MeterUsageProcessor {
     public Map<String, Object> getMeterConsolidatedUsageHistory(
             Map<String, String> request) {
         logger.info("process getMeterConsolidatedUsageHistory");
+
+        Long mbrRangeHours = Long.parseLong(request.getOrDefault("mbr_range_hours", "3"));
 
         String projectScope = request.get("project_scope");
         String siteScope = request.get("site_scope");
@@ -502,6 +507,7 @@ public class MeterUsageProcessor {
                     Map<String, Object> resultMonthly = findMonthlyReading(
 //                            startDateTimeInterval.toString(),
                             null,
+                            mbrRangeHours,
                             endDateTimeInterval.toString(),
                             meterId,
                             itemReadingTableName,
@@ -645,7 +651,7 @@ public class MeterUsageProcessor {
     }
 
     public Map<String, Object> findMonthlyReading(/*String monthStartDatetimeStr, */
-            LocalDateTime commissionedDatetime,
+            LocalDateTime commissionedDatetime, Long mbrRangeHours,
             String monthEndDatetimeStr,
             String meterId,
             String itemReadingTableName,
@@ -727,8 +733,8 @@ public class MeterUsageProcessor {
                     "SELECT " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                             + " WHERE "
                             + itemReadingIdColName + " = '" + meterId
-                            + "' AND " + timeKey + " >= '" + monthStartDatetime.minusHours(3)
-                            + "' AND " + timeKey + " < '" + monthStartDatetime.plusHours(3)
+                            + "' AND " + timeKey + " >= '" + monthStartDatetime.minusHours(mbrRangeHours)
+                            + "' AND " + timeKey + " < '" + monthStartDatetime.plusHours(mbrRangeHours)
                             + "' AND " + " ref = 'mbr' "
                             + " ORDER BY " + timeKey + " LIMIT 1";
             List<Map<String, Object>> respStartSearchRange;
@@ -805,8 +811,8 @@ public class MeterUsageProcessor {
         String lastReadingOfCurrentMonthSqlAsMbr = "SELECT " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                 + " WHERE " +
                 itemReadingIdColName + " = '" + meterId + "' AND " +
-                timeKey + " >= '" + monthEndDatetime.minusHours(3) + "' AND " +
-                timeKey + " < '" + monthEndDatetime.plusHours(3) + "' AND " +
+                timeKey + " >= '" + monthEndDatetime.minusHours(mbrRangeHours) + "' AND " +
+                timeKey + " < '" + monthEndDatetime.plusHours(mbrRangeHours) + "' AND " +
                 " ref = 'mbr' " +
                 " ORDER BY " + timeKey + " LIMIT 1";
         List<Map<String, Object>> respEndSearchRange;
@@ -836,7 +842,7 @@ public class MeterUsageProcessor {
                     + itemReadingTableName + " WHERE " +
                     itemReadingIdColName + " = '" + meterId + "' AND " +
                     timeKey + " >= '" + beginOfFollowingMonth + "' AND " +
-                    timeKey + " < '" + beginOfFollowingMonth.plusHours(3) + "' " +
+                    timeKey + " < '" + beginOfFollowingMonth.plusHours(mbrRangeHours) + "' " +
                     " ORDER BY " + timeKey + " LIMIT 1";
             List<Map<String, Object>> respFirstReadingOfFollowingMonth;
             try {

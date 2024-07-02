@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="find monthly reading fix">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,22 +38,22 @@
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="4988ddb1-85fc-4186-829b-00d877c55244" />
   </component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/pabu500/mdl_evs2helper.git",
-    "accountId": "99c90f38-29b0-416f-be37-e5259112c618"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/pabu500/mdl_evs2helper.git&quot;,
+    &quot;accountId&quot;: &quot;99c90f38-29b0-416f-be37-e5259112c618&quot;
   },
-  "recentNewPullRequestHead": {
-    "server": {
-      "useHttp": false,
-      "host": "github.com",
-      "port": null,
-      "suffix": null
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
     },
-    "owner": "pabu500",
-    "repository": "mdl_evs2helper"
+    &quot;owner&quot;: &quot;pabu500&quot;,
+    &quot;repository&quot;: &quot;mdl_evs2helper&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -74,7 +75,7 @@
     "Maven.evs2helper [clean,deploy].executor": "Run",
     "Maven.evs2helper [package].executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "#2 on test__reading__id__col",
+    "git-widget-placeholder": "test__reading__id__col",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/_pa/_evs2/_svc_oresvc/20240508",
     "settings.editor.selected.configurable": "reference.settings.project.maven.importing"
@@ -126,14 +127,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00020" summary="bill processor update">
-      <option name="closed" value="true" />
-      <created>1713600597716</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1713600597716</updated>
     </task>
     <task id="LOCAL-00021" summary="bill processor update">
       <option name="closed" value="true" />
@@ -519,7 +512,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719808907000</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="misc update">
+      <option name="closed" value="true" />
+      <created>1719824405282</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1719824405282</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -558,7 +559,6 @@
     <MESSAGE value="misc fix" />
     <MESSAGE value="add net usage in result" />
     <MESSAGE value="billing fix" />
-    <MESSAGE value="misc update" />
     <MESSAGE value="lombok fix" />
     <MESSAGE value="scope update" />
     <MESSAGE value="findMonthlyReading and Scope update" />
@@ -571,6 +571,7 @@
     <MESSAGE value="findMonthlyReading reading col name update" />
     <MESSAGE value="zsp scope update" />
     <MESSAGE value="find monthly reading fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="find monthly reading fix" />
+    <MESSAGE value="misc update" />
+    <option name="LAST_COMMIT_MESSAGE" value="misc update" />
   </component>
 </project>
