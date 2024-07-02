@@ -256,8 +256,8 @@ public class ScopeHelper {
 //            itemNameColName = "recdisplayname";
             itemNameColName = "rec_displayname";//"recid";
             itemSnColName = "rec_name";//"recid";
-            itemIdColSel = "id, recorder_id, rec_displayname, rec_name";
-            itemLocColSel = "loc_building, loc_level, loc_unit";
+            itemIdColSel = "id,recorder_id,rec_displayname,rec_name";
+            itemLocColSel = "loc_building,loc_level,loc_unit";
             timeKey = "kwh_timestamp";//"timestamp";
             valKey = "kwh_total";//"kwhtot";
             itemLocBuildingColName = "loc_building";
@@ -274,8 +274,8 @@ public class ScopeHelper {
 //            itemNameColName = "recdisplayname";
             itemNameColName = "rec_displayname"; //"recid";
             itemSnColName = "rec_name"; //"recid";
-            itemIdColSel = "id, recorder_id, rec_displayname, rec_name";
-            itemLocColSel = "loc_building, loc_level, loc_unit";
+            itemIdColSel = "id,recorder_id,rec_displayname,rec_name";
+            itemLocColSel = "loc_building,loc_level,loc_unit";
             timeKey = "kwh_timestamp";
             valKey = "kwh_total";
             itemLocBuildingColName = "loc_building";

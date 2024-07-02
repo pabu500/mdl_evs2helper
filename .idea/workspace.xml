@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="find monthly reading fix">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="ver">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/scope/ScopeHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/scope/ScopeHelper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,17 +70,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.evs2helper [clean,deploy].executor": "Run",
-    "Maven.evs2helper [package].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/_pa/_evs2/_svc_oresvc/20240508",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.importing"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.evs2helper [clean,deploy].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.evs2helper [package].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/_pa/_evs2/_svc_oresvc/20240508&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.importing&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="evs2helper [clean,deploy]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
@@ -126,14 +127,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00021" summary="bill processor update">
-      <option name="closed" value="true" />
-      <created>1713600609095</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1713600609095</updated>
     </task>
     <task id="LOCAL-00022" summary="bill processor update">
       <option name="closed" value="true" />
@@ -519,7 +512,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719886930439</updated>
     </task>
-    <option name="localTasksCounter" value="70" />
+    <task id="LOCAL-00070" summary="ver">
+      <option name="closed" value="true" />
+      <created>1719887001858</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1719887001858</updated>
+    </task>
+    <option name="localTasksCounter" value="71" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -546,7 +547,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add getItemTypeConfig2" />
     <MESSAGE value="add package" />
     <MESSAGE value="refactor" />
     <MESSAGE value="add source" />
@@ -571,6 +571,7 @@
     <MESSAGE value="findMonthlyReading reading col name update" />
     <MESSAGE value="zsp scope update" />
     <MESSAGE value="find monthly reading fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="find monthly reading fix" />
+    <MESSAGE value="ver" />
+    <option name="LAST_COMMIT_MESSAGE" value="ver" />
   </component>
 </project>
