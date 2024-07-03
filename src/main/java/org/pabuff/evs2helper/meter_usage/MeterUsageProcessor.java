@@ -887,8 +887,8 @@ public class MeterUsageProcessor {
         result.put("last_reading_val", lastReadingVal);
         result.put("use_commissioned_datetime", useCommissionedDatetime);
 
-        LocalDateTime searchingEnd = localHelper.getLocalNow();
-        logger.info("findMonthlyReading duration: " + Duration.between(searchingStart, searchingEnd).toSeconds() + " seconds");
+//        LocalDateTime searchingEnd = localHelper.getLocalNow();
+//        logger.info("findMonthlyReading duration: " + Duration.between(searchingStart, searchingEnd).toSeconds() + " seconds");
 
         return result;
     }
