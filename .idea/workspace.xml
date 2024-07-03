@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="ver">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc adj">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/scope/ScopeHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/scope/ScopeHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/billing/BillingProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/billing/BillingProcessor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,14 +127,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00022" summary="bill processor update">
-      <option name="closed" value="true" />
-      <created>1713600870862</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1713600870862</updated>
     </task>
     <task id="LOCAL-00023" summary="bill processor update">
       <option name="closed" value="true" />
@@ -520,7 +512,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719887001858</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="misc adj">
+      <option name="closed" value="true" />
+      <created>1719896729117</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1719896729117</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -547,7 +547,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add package" />
     <MESSAGE value="refactor" />
     <MESSAGE value="add source" />
     <MESSAGE value="jwt update" />
@@ -572,6 +571,7 @@
     <MESSAGE value="zsp scope update" />
     <MESSAGE value="find monthly reading fix" />
     <MESSAGE value="ver" />
-    <option name="LAST_COMMIT_MESSAGE" value="ver" />
+    <MESSAGE value="misc adj" />
+    <option name="LAST_COMMIT_MESSAGE" value="misc adj" />
   </component>
 </project>
