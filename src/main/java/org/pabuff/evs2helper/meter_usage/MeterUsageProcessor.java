@@ -112,10 +112,18 @@ public class MeterUsageProcessor {
         }
 
         String meterSelectSql2 = meterSelectSql;
-        meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColName, "SELECT " + itemIdColSel + ", " + itemLocColSel);
-        if(!meterSelectSql2.contains("commissioned_timestamp")) {
-            meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColSel, "SELECT " + itemIdColSel + ", commissioned_timestamp");
-        }
+        meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColName, "SELECT " + itemIdColSel + ", " + itemLocColSel + ", meter_type, commissioned_timestamp");
+
+//        String additionalCols = "";
+//        if(!meterSelectSql2.contains("commissioned_timestamp")) {
+//            additionalCols = ", commissioned_timestamp";
+//            //            meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColSel, "SELECT " + itemIdColSel + ", commissioned_timestamp");
+//        }
+//        if(!meterSelectSql2.contains("meter_type")){
+//            additionalCols += ", meter_type";
+//        }
+//        meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColSel, "SELECT " + itemIdColSel + additionalCols);
+
 //        meterSelectSql2 += ", " + itemLocColSel;
         meterSelectSql2 += " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
 
@@ -152,6 +160,7 @@ public class MeterUsageProcessor {
             String meterAltName = meterMap.get(itemAltName) == null ? "" : (String) meterMap.get(itemAltName);
             String meterLcStatus = meterMap.get("lc_status") == null ? "" : (String) meterMap.get("lc_status");
             String commissionedTimestampStr = meterMap.get("commissioned_timestamp") == null ? "" : (String) meterMap.get("commissioned_timestamp");
+            String meterType = meterMap.get("meter_type") == null ? "" : (String) meterMap.get("meter_type");
             LocalDateTime commissionedDatetime = DateTimeUtil.getLocalDateTime(commissionedTimestampStr);
 
             processingCount++;
