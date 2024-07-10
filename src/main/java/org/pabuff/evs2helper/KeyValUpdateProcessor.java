@@ -571,6 +571,9 @@ public class KeyValUpdateProcessor {
                     }
                     targetKey = itemNameKey;
                     targetValue = itemName;
+                }else if(itemIdTypeEnum == ItemIdTypeEnum.ID) {
+                    targetKey = "id";
+                    targetValue = (String) item.get("id");
                 }
             }
 
@@ -668,6 +671,10 @@ public class KeyValUpdateProcessor {
                         if (key.equals(itemSnKey)) {
                             continue;
                         }
+                    }else if(itemTypeEnum == ItemTypeEnum.CONCENTRATOR) {
+                        if (key.equals("id")) {
+                            continue;
+                        }
                     }else if(opName.equals("replacement")) {
                         if (key.equals(itemNameKey)) {
                             continue;
@@ -687,7 +694,8 @@ public class KeyValUpdateProcessor {
                     //if is device
                     if(itemTypeEnum == ItemTypeEnum.METER
                     || itemTypeEnum == ItemTypeEnum.METER_3P
-                    || itemTypeEnum == ItemTypeEnum.METER_IWOW){
+                    || itemTypeEnum == ItemTypeEnum.METER_IWOW
+                    || itemTypeEnum == ItemTypeEnum.CONCENTRATOR){
                         if("lc_status".equals(key)){
                             val = deviceLcStatusHelper.getDeviceLcStatusDbStr(val.toString());
                             if(val == null){

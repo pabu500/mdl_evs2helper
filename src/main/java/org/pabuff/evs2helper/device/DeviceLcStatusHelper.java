@@ -35,7 +35,7 @@ public class DeviceLcStatusHelper {
         return switch (status.toLowerCase()) {
             case "commission_in_progress", "cip" -> DeviceLcStatusEnum.COMMISSION_IN_PROGRESS;
             case "normal" -> DeviceLcStatusEnum.NORMAL;
-            case "maintenance", "maint" -> DeviceLcStatusEnum.MAINTENANCE;
+            case "maintenance", "maint", "maint."  -> DeviceLcStatusEnum.MAINTENANCE;
             case "decommissioned", "dc" -> DeviceLcStatusEnum.DECOMMISSIONED;
             case "bypassed", "byp" -> DeviceLcStatusEnum.BYPASSED;
             default -> null;
