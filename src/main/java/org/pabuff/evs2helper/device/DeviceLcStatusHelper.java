@@ -13,7 +13,7 @@ public class DeviceLcStatusHelper {
     private final static Set<String> deviceLcStatusDict = Set.of(
             "commission_in_progress", "cip",
             "normal",
-            "maintenance", "maint",
+            "maintenance", "maint", "maint.",
             "decommissioned", "dc",
             "bypassed", "byp"
     );
