@@ -487,6 +487,11 @@ public class KeyValUpdateProcessor {
                 itemSnKey = "id";
                 itemNameKey = "name";
             }
+            case CONCENTRATOR -> {
+                itemTableName = "concentrator";
+                itemSnKey = "id";
+                itemNameKey = "id";
+            }
             default -> {
                 return Map.of("error", "item_type not supported");
             }
