@@ -71,7 +71,9 @@ public class EmailService {
             helper.setText(text, isHtml);
 
             // Add attachment
-            helper.addAttachment(attachedFile.getName(), attachedFile);
+            if(attachedFile != null) {
+                helper.addAttachment(attachedFile.getName(), attachedFile);
+            }
 
             try {
                 mailSender.send(mimeMessage);

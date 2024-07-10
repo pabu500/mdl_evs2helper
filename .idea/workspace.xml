@@ -7,6 +7,7 @@
     <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/email/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/email/EmailService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,14 +127,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00026" summary="fleet health update">
-      <option name="closed" value="true" />
-      <created>1714189276532</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1714189276532</updated>
     </task>
     <task id="LOCAL-00027" summary="fleet health update">
       <option name="closed" value="true" />
@@ -519,7 +512,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720161249605</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="misc update">
+      <option name="closed" value="true" />
+      <created>1720518257769</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1720518257770</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
