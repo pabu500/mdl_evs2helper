@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.pabuff</groupId>
 	<artifactId>evs2helper</artifactId>
-	<version>3.33.18</version>
+	<version>3.33.22</version>
 	<name>evs2helper</name>
 	<description>EVS2 Helper Module</description>
 
@@ -26,8 +26,8 @@
 <!--		<java.version>20</java.version>-->
 <!--	</properties>-->
 	<properties>
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.source>22</maven.compiler.source>
+		<maven.compiler.target>22</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -49,6 +49,11 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>maven_central</id>
+			<name>Maven Central</name>
+			<url>https://repo.maven.apache.org/maven2/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -65,7 +70,7 @@
 		<dependency>
 			<groupId>org.pabuff</groupId>
 			<artifactId>oqghelper</artifactId>
-			<version>3.38.10</version>
+			<version>3.39.1</version>
 		</dependency>
 
 		<dependency>
@@ -76,7 +81,7 @@
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
-			<version>0.12.5</version>
+			<version>0.12.6</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
