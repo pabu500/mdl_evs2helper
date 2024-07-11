@@ -266,7 +266,7 @@ public class ScopeHelper {
             itemTableName = "meter_mbfc"; //"recorder";
             itemReadingTableName =  "meter_reading_mbfc";//"energy_etc";
             itemReadingIndexColName = "id"; //"egyid";
-            itemReadingIdColName = "item_name";//"egyinstkey";
+            itemReadingIdColName = "recorder_id";//"item_name";//"egyinstkey";
             itemGroupTableName = "recgroup";
             tenantTableName = "customer";
             tenantTargetGroupTableName = "custgroup";
