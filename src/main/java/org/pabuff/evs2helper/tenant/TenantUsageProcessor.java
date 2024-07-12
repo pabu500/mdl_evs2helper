@@ -139,6 +139,8 @@ public class TenantUsageProcessor {
         List<Map<String, Object>> tenantUsageList = new ArrayList<>();
         int processed = 0;
         for (Map<String, Object> tenantMap : resp) {
+            logger.info("processing tenant: " + tenantMap.get(itemIdColName));
+
             Map<String, Object> tenantResult = compileTenantsUsage(
                     tenantMap,
                     projectScope, siteScope,

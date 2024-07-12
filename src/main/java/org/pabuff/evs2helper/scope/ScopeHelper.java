@@ -198,6 +198,7 @@ public class ScopeHelper {
         if (projectScope.toLowerCase().contains("ems_smrt")) {
             itemType = ItemTypeEnum.METER_3P;
             itemReadingTableName = "meter_reading_3p";
+            itemReadingIdColName = "meter_id";
             itemTableName = "meter_3p";
             itemIdColName = "meter_id";
             itemSnColName = "meter_sn";
@@ -216,6 +217,7 @@ public class ScopeHelper {
         } else if (projectScope.toLowerCase().contains("ems_cw_nus")) {
             itemType = ItemTypeEnum.METER_IWOW;
             itemReadingTableName = "meter_reading_iwow";
+            itemReadingIdColName = "item_name";
             itemUsageTableName = "meter_reading_iwow";
             itemTableName = "meter_iwow";
             itemGroupTableName = "meter_group";
@@ -243,36 +245,40 @@ public class ScopeHelper {
             }
         }else if (projectScope.toLowerCase().contains("ems_zsp")) {
             itemType = ItemTypeEnum.METER_ZSP;
-            itemTableName = "recorder";
-            itemReadingTableName = "energy_etc";
-            itemReadingIndexColName = "egyid";
-            itemReadingIdColName = "egyinstkey";
+            itemTableName = "meter_zsp";//"recorder";
+            itemReadingTableName = "meter_reading_zsp";//"energy_etc";
+            itemReadingIndexColName = "id";//"egyid";
+            itemReadingIdColName = "recorder_id";//"egyinstkey";
             itemGroupTableName = "recgroup";
-            tenantTableName = "tenant";
+            tenantTableName = "tenant_zsp";//"tenant";
             tenantTargetGroupTableName = "tenantgroup";
-            itemIdColName = "recid";
+            itemIdColName = "recorder_id";//"recid";
 //            itemNameColName = "recdisplayname";
-            itemNameColName = "recid";
-            itemSnColName = "recid";
-            timeKey = "timestamp";
-            valKey = "kwhtot";
-            itemLocBuildingColName = "buildingname";
+            itemNameColName = "rec_displayname";//"recid";
+            itemSnColName = "rec_name";//"recid";
+            itemIdColSel = "id,recorder_id,rec_displayname,rec_name";
+            itemLocColSel = "loc_building,loc_level,loc_unit";
+            timeKey = "kwh_timestamp";//"timestamp";
+            valKey = "kwh_total";//"kwhtot";
+            itemLocBuildingColName = "loc_building";
         }else if (projectScope.toLowerCase().contains("ems_mbfc")) {
             itemType = ItemTypeEnum.METER_MBFC;
-            itemTableName = "recorder";
-            itemReadingTableName = "energy_etc";
-            itemReadingIndexColName = "egyid";
-            itemReadingIdColName = "egyinstkey";
+            itemTableName = "meter_mbfc"; //"recorder";
+            itemReadingTableName =  "meter_reading_mbfc";//"energy_etc";
+            itemReadingIndexColName = "id"; //"egyid";
+            itemReadingIdColName = "recorder_id";//"item_name";//"egyinstkey";
             itemGroupTableName = "recgroup";
             tenantTableName = "customer";
             tenantTargetGroupTableName = "custgroup";
-            itemIdColName = "recid";
+            itemIdColName = "id"; //"recid";
 //            itemNameColName = "recdisplayname";
-            itemNameColName = "recid";
-            itemSnColName = "recid";
-            timeKey = "timestamp";
-            valKey = "kwhtot";
-            itemLocBuildingColName = "buildingname";
+            itemNameColName = "rec_displayname"; //"recid";
+            itemSnColName = "rec_name"; //"recid";
+            itemIdColSel = "id,recorder_id,rec_displayname,rec_name";
+            itemLocColSel = "loc_building,loc_level,loc_unit";
+            timeKey = "kwh_timestamp";
+            valKey = "kwh_total";
+            itemLocBuildingColName = "loc_building";
         }else {
             if(itemIdType == null){
                 itemIdType = ItemIdTypeEnum.SN;
@@ -342,9 +348,9 @@ public class ScopeHelper {
         if(!input.matches("[0-9]+")) {
             return "sn must be numeric";
         }
-        //must start with 20
-        if(!input.startsWith("20")) {
-            return "sn must start with 20";
+        //must start with 20 or 0 (detached sn)
+        if(!input.startsWith("20") && !input.startsWith("0")) {
+            return "sn must start with 20 or 0";
         }
         return null;
     }

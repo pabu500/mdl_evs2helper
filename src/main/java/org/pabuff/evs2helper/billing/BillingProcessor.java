@@ -33,7 +33,8 @@ public class BillingProcessor {
     final String billingRecTable = "billing_rec_cw";
     final String billingRecMeterGroup = "billing_rec_meter_group_cw";
 
-    public Map<String, Object> genAllTenantBills(String fromDate, String toDate, Boolean isMonthly, Integer testCount) {
+    public Map<String, Object> genAllTenantBills(String fromDate, String toDate, Boolean isMonthly,
+                                                 Integer testCount) {
         logger.info("Processing all tenant bills");
 
         String tenantInfoQuery = "select tenant_name, tenant_label from tenant";
@@ -63,7 +64,7 @@ public class BillingProcessor {
                             (String) tenantInfo.get("tenant_name"),
                             fromDate, toDate,
                             isMonthly,
-                            null, null, null,  false, null);
+                            null, true, null, null,  false, null);
             result2.put("result", result);
             billResult.add(result2);
 
@@ -75,8 +76,10 @@ public class BillingProcessor {
     // generate bill with auto usage calculation
     // then record billed usage and rate
     public Map<String, Object> genSingleTenantBill(String tenantName,
-                                                   String fromDate, String toDate, Boolean isMonthly,
+                                                   String fromDate, String toDate,
+                                                   Boolean isMonthly,
                                                    Map<String, Object> tpRateInfo,
+                                                   boolean useAssignedTPs,
 //                                                   Map<String, Object> autoUsageInfo,
                                                    Map<String, Object> manualItemInfo,
                                                    Map<String, Object> lineItemInfo,
@@ -132,7 +135,10 @@ public class BillingProcessor {
         // else, get rate info from assigned tps
         for(String meterTypeTag : meterTypes){
             Map<String, Object> tariffResult = new HashMap<>();
-            if (tpRateInfo != null) {
+            if (tpRateInfo == null || useAssignedTPs) {
+                // get tariff rates from assigned tps
+                tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
+            } else {
                 //custom billing
                 if (genBy == null) {
                     logger.severe("genBy is null");
@@ -144,9 +150,6 @@ public class BillingProcessor {
                     logger.info("No tariff supplied for meterTypeTag: " + meterTypeTag);
 //                    return Collections.singletonMap("error", "No tariff supplied for meterTypeTag: " + meterTypeTag);
                 }
-            } else {
-                // get tariff rates from assigned tps
-                tariffResult = findTariff(meterTypeTag, tenantTariffIds, fromDate, toDate);
             }
 
             if (tariffResult != null && tariffResult.containsKey("error")) {

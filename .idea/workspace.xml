@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="findMonthlyReading and Scope update">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +21,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -28,16 +34,25 @@
     &quot;assignee&quot;: &quot;evs2bu500&quot;
   }
 }</component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="4b29f79b-9473-4cc4-bc2e-1eebe0bac594" />
+  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/pabu500/mdl_evs2helper.git&quot;,
-    &quot;accountId&quot;: &quot;383b3a92-3b26-453c-a87b-218677c8b0b3&quot;
+    &quot;accountId&quot;: &quot;99c90f38-29b0-416f-be37-e5259112c618&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;pabu500&quot;,
+    &quot;repository&quot;: &quot;mdl_evs2helper&quot;
   }
 }</component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="jar://$MAVEN_REPOSITORY$/org/pabuff/evs2dto/1.27.8/evs2dto-1.27.8.jar!/org/pabuff/dto/ItemTypeEnum.class" root0="SKIP_INSPECTION" />
-    <setting file="jar://$MAVEN_REPOSITORY$/org/pabuff/oqghelper/3.30.12/oqghelper-3.30.12.jar!/org/pabuff/oqghelper/OqgHelper.class" root0="SKIP_INSPECTION" />
-  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -54,19 +69,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Maven.evs2helper [clean,deploy].executor&quot;: &quot;Debug&quot;,
-    &quot;Maven.evs2helper [package].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;kcbranch&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/_pa/_evs2/_svc_oresvc/20240508&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.importing&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.evs2helper [clean,deploy].executor": "Run",
+    "Maven.evs2helper [package].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/_pa/_evs2/_svc_oresvc/20240508",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="evs2helper [clean,deploy]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
@@ -113,174 +126,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00005" summary="add package">
-      <option name="closed" value="true" />
-      <created>1713016257829</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1713016257829</updated>
-    </task>
-    <task id="LOCAL-00006" summary="refactor">
-      <option name="closed" value="true" />
-      <created>1713031667135</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1713031667135</updated>
-    </task>
-    <task id="LOCAL-00007" summary="refactor">
-      <option name="closed" value="true" />
-      <created>1713033698944</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1713033698944</updated>
-    </task>
-    <task id="LOCAL-00008" summary="refactor">
-      <option name="closed" value="true" />
-      <created>1713035526094</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1713035526094</updated>
-    </task>
-    <task id="LOCAL-00009" summary="add source">
-      <option name="closed" value="true" />
-      <created>1713064814824</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1713064814824</updated>
-    </task>
-    <task id="LOCAL-00010" summary="misc update">
-      <option name="closed" value="true" />
-      <created>1713065336242</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1713065336242</updated>
-    </task>
-    <task id="LOCAL-00011" summary="jwt update">
-      <option name="closed" value="true" />
-      <created>1713065649039</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1713065649039</updated>
-    </task>
-    <task id="LOCAL-00012" summary="jwt update">
-      <option name="closed" value="true" />
-      <created>1713106299612</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1713106299612</updated>
-    </task>
-    <task id="LOCAL-00013" summary="FleetHealth update">
-      <option name="closed" value="true" />
-      <created>1713110451233</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1713110451233</updated>
-    </task>
-    <task id="LOCAL-00014" summary="FleetHealth update">
-      <option name="closed" value="true" />
-      <created>1713111596903</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1713111596903</updated>
-    </task>
-    <task id="LOCAL-00015" summary="FleetHealth update">
-      <option name="closed" value="true" />
-      <created>1713114037303</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1713114037303</updated>
-    </task>
-    <task id="LOCAL-00016" summary="FleetHealth update">
-      <option name="closed" value="true" />
-      <created>1713114054473</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1713114054473</updated>
-    </task>
-    <task id="LOCAL-00017" summary="misc">
-      <option name="closed" value="true" />
-      <created>1713363485842</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1713363485842</updated>
-    </task>
-    <task id="LOCAL-00018" summary="misc">
-      <option name="closed" value="true" />
-      <created>1713452192255</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1713452192255</updated>
-    </task>
-    <task id="LOCAL-00019" summary="misc">
-      <option name="closed" value="true" />
-      <created>1713452842291</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1713452842291</updated>
-    </task>
-    <task id="LOCAL-00020" summary="bill processor update">
-      <option name="closed" value="true" />
-      <created>1713600597716</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1713600597716</updated>
-    </task>
-    <task id="LOCAL-00021" summary="bill processor update">
-      <option name="closed" value="true" />
-      <created>1713600609095</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1713600609095</updated>
-    </task>
-    <task id="LOCAL-00022" summary="bill processor update">
-      <option name="closed" value="true" />
-      <created>1713600870862</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1713600870862</updated>
-    </task>
-    <task id="LOCAL-00023" summary="bill processor update">
-      <option name="closed" value="true" />
-      <created>1713609223321</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1713609223322</updated>
-    </task>
-    <task id="LOCAL-00024" summary="bill processor update">
-      <option name="closed" value="true" />
-      <created>1713707077959</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1713707077959</updated>
-    </task>
-    <task id="LOCAL-00025" summary="bill processor update">
-      <option name="closed" value="true" />
-      <created>1713708236358</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1713708236358</updated>
     </task>
     <task id="LOCAL-00026" summary="fleet health update">
       <option name="closed" value="true" />
@@ -506,7 +351,175 @@
       <option name="project" value="LOCAL" />
       <updated>1718348135566</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="minor refactoring">
+      <option name="closed" value="true" />
+      <created>1718348613949</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1718348613949</updated>
+    </task>
+    <task id="LOCAL-00055" summary="minor refactoring">
+      <option name="closed" value="true" />
+      <created>1718348900591</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1718348900591</updated>
+    </task>
+    <task id="LOCAL-00056" summary="made findMonthlyReading public">
+      <option name="closed" value="true" />
+      <created>1718685179050</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1718685179051</updated>
+    </task>
+    <task id="LOCAL-00057" summary="device lc status update">
+      <option name="closed" value="true" />
+      <created>1718772220988</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1718772220988</updated>
+    </task>
+    <task id="LOCAL-00058" summary="device lc status update">
+      <option name="closed" value="true" />
+      <created>1718774306267</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1718774306267</updated>
+    </task>
+    <task id="LOCAL-00059" summary="sn validator update">
+      <option name="closed" value="true" />
+      <created>1718774951332</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1718774951332</updated>
+    </task>
+    <task id="LOCAL-00060" summary="single key val update">
+      <option name="closed" value="true" />
+      <created>1718775601474</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1718775601474</updated>
+    </task>
+    <task id="LOCAL-00061" summary="single key val update">
+      <option name="closed" value="true" />
+      <created>1718779527608</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1718779527608</updated>
+    </task>
+    <task id="LOCAL-00062" summary="findMonthlyReading update id">
+      <option name="closed" value="true" />
+      <created>1718935607665</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1718935607665</updated>
+    </task>
+    <task id="LOCAL-00063" summary="findMonthlyReading update id">
+      <option name="closed" value="true" />
+      <created>1718962817916</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1718962817916</updated>
+    </task>
+    <task id="LOCAL-00064" summary="findMonthlyReading update id">
+      <option name="closed" value="true" />
+      <created>1719202247047</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1719202247047</updated>
+    </task>
+    <task id="LOCAL-00065" summary="findMonthlyReading reading col name update">
+      <option name="closed" value="true" />
+      <created>1719208568976</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1719208568976</updated>
+    </task>
+    <task id="LOCAL-00066" summary="zsp scope update">
+      <option name="closed" value="true" />
+      <created>1719802133496</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1719802133496</updated>
+    </task>
+    <task id="LOCAL-00067" summary="zsp scope update">
+      <option name="closed" value="true" />
+      <created>1719804234223</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1719804234223</updated>
+    </task>
+    <task id="LOCAL-00068" summary="find monthly reading fix">
+      <option name="closed" value="true" />
+      <created>1719808907000</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1719808907000</updated>
+    </task>
+    <task id="LOCAL-00069" summary="find monthly reading fix">
+      <option name="closed" value="true" />
+      <created>1719886930439</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1719886930439</updated>
+    </task>
+    <task id="LOCAL-00070" summary="ver">
+      <option name="closed" value="true" />
+      <created>1719887001858</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1719887001858</updated>
+    </task>
+    <task id="LOCAL-00071" summary="misc adj">
+      <option name="closed" value="true" />
+      <created>1719896729117</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1719896729117</updated>
+    </task>
+    <task id="LOCAL-00072" summary="add use_assigned_tps for bill gen">
+      <option name="closed" value="true" />
+      <created>1719995867189</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1719995867189</updated>
+    </task>
+    <task id="LOCAL-00073" summary="misc update">
+      <option name="closed" value="true" />
+      <created>1720001575876</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1720001575876</updated>
+    </task>
+    <task id="LOCAL-00074" summary="misc update">
+      <option name="closed" value="true" />
+      <created>1720698103086</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1720698103086</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -533,9 +546,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add getItemTypeConfig2" />
-    <MESSAGE value="add package" />
-    <MESSAGE value="refactor" />
     <MESSAGE value="add source" />
     <MESSAGE value="jwt update" />
     <MESSAGE value="FleetHealth update" />
@@ -545,21 +555,22 @@
     <MESSAGE value="misc fix" />
     <MESSAGE value="add net usage in result" />
     <MESSAGE value="billing fix" />
-    <MESSAGE value="misc update" />
     <MESSAGE value="lombok fix" />
     <MESSAGE value="scope update" />
     <MESSAGE value="findMonthlyReading and Scope update" />
-    <option name="LAST_COMMIT_MESSAGE" value="findMonthlyReading and Scope update" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java</url>
-          <line>71</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="minor refactoring" />
+    <MESSAGE value="made findMonthlyReading public" />
+    <MESSAGE value="device lc status update" />
+    <MESSAGE value="sn validator update" />
+    <MESSAGE value="single key val update" />
+    <MESSAGE value="findMonthlyReading update id" />
+    <MESSAGE value="findMonthlyReading reading col name update" />
+    <MESSAGE value="zsp scope update" />
+    <MESSAGE value="find monthly reading fix" />
+    <MESSAGE value="ver" />
+    <MESSAGE value="misc adj" />
+    <MESSAGE value="add use_assigned_tps for bill gen" />
+    <MESSAGE value="misc update" />
+    <option name="LAST_COMMIT_MESSAGE" value="misc update" />
   </component>
 </project>

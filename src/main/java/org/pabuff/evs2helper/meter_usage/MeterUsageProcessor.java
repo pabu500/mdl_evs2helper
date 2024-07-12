@@ -36,6 +36,8 @@ public class MeterUsageProcessor {
 
         int testCount = Integer.parseInt(request.getOrDefault("test_count", "0"));
 
+        Long mbrRangeHours = Long.parseLong(request.getOrDefault("mbr_range_hours", "3"));
+
         String projectScope = request.get("project_scope");
         String siteScope = request.get("site_scope");
         String meterSelectSql = request.get("id_select_query") == null ? "" : request.get("id_select_query");
@@ -65,6 +67,7 @@ public class MeterUsageProcessor {
         String itemTableName = (String) itemConfig.get("itemTableName");
         String itemReadingIndexColName = (String) itemConfig.get("itemReadingIndexColName");
         String itemIdColName = (String) itemConfig.get("itemIdColName");
+        String itemReadingIdColName = (String) itemConfig.get("itemReadingIdColName");
         String itemSnColName = (String) itemConfig.get("itemSnColName");
         String itemNameColName = (String) itemConfig.get("itemNameColName");
         String itemAltName = (String) itemConfig.get("itemAltNameColName");
@@ -109,10 +112,18 @@ public class MeterUsageProcessor {
         }
 
         String meterSelectSql2 = meterSelectSql;
-        meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColName, "SELECT " + itemIdColSel + ", " + itemLocColSel);
-        if(!meterSelectSql2.contains("commissioned_timestamp")) {
-            meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColSel, "SELECT " + itemIdColSel + ", commissioned_timestamp");
-        }
+        meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColName, "SELECT " + itemIdColSel + ", " + itemLocColSel + ", meter_type, commissioned_timestamp");
+
+//        String additionalCols = "";
+//        if(!meterSelectSql2.contains("commissioned_timestamp")) {
+//            additionalCols = ", commissioned_timestamp";
+//            //            meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColSel, "SELECT " + itemIdColSel + ", commissioned_timestamp");
+//        }
+//        if(!meterSelectSql2.contains("meter_type")){
+//            additionalCols += ", meter_type";
+//        }
+//        meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColSel, "SELECT " + itemIdColSel + additionalCols);
+
 //        meterSelectSql2 += ", " + itemLocColSel;
         meterSelectSql2 += " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
 
@@ -143,11 +154,13 @@ public class MeterUsageProcessor {
         int totalCount = selectedMeterList.size();
         for (Map<String, Object> meterMap : selectedMeterList) {
             String meterId = (String) meterMap.get(itemIdColName);
+            String readingMeterId = (String) meterMap.get(itemReadingIdColName);
             String meterSn = meterMap.get(itemSnColName) == null ? "" : (String) meterMap.get(itemSnColName);
             String meterName = meterMap.get(itemNameColName) == null ? "" : (String) meterMap.get(itemNameColName);
             String meterAltName = meterMap.get(itemAltName) == null ? "" : (String) meterMap.get(itemAltName);
             String meterLcStatus = meterMap.get("lc_status") == null ? "" : (String) meterMap.get("lc_status");
             String commissionedTimestampStr = meterMap.get("commissioned_timestamp") == null ? "" : (String) meterMap.get("commissioned_timestamp");
+            String meterType = meterMap.get("meter_type") == null ? "" : (String) meterMap.get("meter_type");
             LocalDateTime commissionedDatetime = DateTimeUtil.getLocalDateTime(commissionedTimestampStr);
 
             processingCount++;
@@ -192,11 +205,12 @@ public class MeterUsageProcessor {
                         findMonthlyReading(
                                 commissionedDatetime,
 //                        startDatetimeStr,
+                                mbrRangeHours,
                                 endDatetimeStr,
                                 meterId,
                                 itemReadingTableName,
                                 itemReadingIndexColName,
-                                itemIdColName,
+                                itemReadingIdColName,//itemIdColName,
                                 timeKey, valKey);
 
                 if (resultMonthly.containsKey("error")) {
@@ -261,7 +275,8 @@ public class MeterUsageProcessor {
                     " FIRST_VALUE(" + timeKey + ") OVER w AS first_reading_time," +
                     " LAST_VALUE(" + timeKey + ") OVER w AS last_reading_time " +
                     " FROM " + itemReadingTableName + " WHERE " +
-                    itemIdColName + " = '" + meterId + "' AND " +
+//                    itemIdColName + " = '" + meterId + "' AND " +
+                    itemReadingIdColName + " = '" + readingMeterId + "' AND " +
                     timeKey + " BETWEEN '" + startDatetimeStr + "' AND '" + endDatetimeStr + "'" +
                     " WINDOW w AS ( ORDER BY " + timeKey + " RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)";
 
@@ -339,6 +354,8 @@ public class MeterUsageProcessor {
             Map<String, String> request) {
         logger.info("process getMeterConsolidatedUsageHistory");
 
+        Long mbrRangeHours = Long.parseLong(request.getOrDefault("mbr_range_hours", "3"));
+
         String projectScope = request.get("project_scope");
         String siteScope = request.get("site_scope");
 //        String meterSelectSql = request.get("id_select_query");
@@ -395,10 +412,11 @@ public class MeterUsageProcessor {
             }
         }
 
-        Map<String, Object> itemConfig = scopeHelper.getItemTypeConfig(projectScope, itemIdTypeStr);
-        String targetReadingTableName = (String) itemConfig.get("targetReadingTableName");
+        Map<String, Object> itemConfig = scopeHelper.getItemTypeConfig2(projectScope, itemIdTypeStr);
+        String itemReadingTableName = (String) itemConfig.get("itemReadingTableName");
         String itemReadingIndexColName = (String) itemConfig.get("itemReadingIndexColName");
-        String targetTableName = (String) itemConfig.get("targetTableName");
+        String itemReadingIdColName = (String) itemConfig.get("itemReadingIdColName");
+        String itemTableName = (String) itemConfig.get("itemTableName");
         String itemIdColName = (String) itemConfig.get("itemIdColName");
         String itemSnColName = (String) itemConfig.get("itemSnColName");
         String itemNameColName = (String) itemConfig.get("itemNameColName");
@@ -462,7 +480,7 @@ public class MeterUsageProcessor {
             String meterIndex = meterId;
             if(itemIdTypeEnum != ItemIdTypeEnum.ID){
                 Map<String, Object> result = queryHelper.getTableField(
-                        targetTableName, "id", itemIdColName, meterId);
+                        itemTableName, "id", itemIdColName, meterId);
                 String meterIdStr = (String) result.get("id");
                 if (meterIdStr == null || meterIdStr.isEmpty()) {
                     logger.info("meter_id is null or empty");
@@ -498,11 +516,12 @@ public class MeterUsageProcessor {
                     Map<String, Object> resultMonthly = findMonthlyReading(
 //                            startDateTimeInterval.toString(),
                             null,
+                            mbrRangeHours,
                             endDateTimeInterval.toString(),
                             meterId,
-                            targetReadingTableName,
+                            itemReadingTableName,
                             itemReadingIndexColName,
-                            itemIdColName,
+                            itemReadingIdColName, //itemIdColName,
                             timeKey, valKey);
                     if(resultMonthly.containsKey("error")){
                         logger.info("error: " + resultMonthly.get("error"));
@@ -549,7 +568,7 @@ public class MeterUsageProcessor {
                             " LAST_VALUE(" + valKey + ") OVER w AS last_reading_val," +
                             " FIRST_VALUE(" + timeKey + ") OVER w AS first_reading_time," +
                             " LAST_VALUE(" + timeKey + ") OVER w AS last_reading_time " +
-                            " FROM " + targetReadingTableName + " WHERE " +
+                            " FROM " + itemReadingTableName + " WHERE " +
                             itemIdColName + " = '" + meterId + "' AND " +
                             timeKey + " BETWEEN " + startDatetimeStr2 + " AND " + endDatetimeStr2 +
                             " WINDOW w AS ( ORDER BY " + timeKey + " RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)";
@@ -640,13 +659,13 @@ public class MeterUsageProcessor {
         return Collections.singletonMap("meter_list_consolidated_usage_history", meterListConsumptionHistory);
     }
 
-    Map<String, Object> findMonthlyReading(/*String monthStartDatetimeStr, */
-            LocalDateTime commissionedDatetime,
+    public Map<String, Object> findMonthlyReading(/*String monthStartDatetimeStr, */
+            LocalDateTime commissionedDatetime, Long mbrRangeHours,
             String monthEndDatetimeStr,
             String meterId,
             String itemReadingTableName,
             String itemReadingIndexColName,
-            String itemIdColName,
+            String itemReadingIdColName,
             String timeKey, String valKey) {
         logger.info("process findMonthlyReading");
         LocalDateTime searchingStart = localHelper.getLocalNow();
@@ -687,7 +706,7 @@ public class MeterUsageProcessor {
                 String firstReadingOfCurrentMonthSqlAsCommissionedMonth =
                         "SELECT " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                                 + " WHERE "
-                                + itemIdColName + " = '" + meterId
+                                + itemReadingIdColName + " = '" + meterId
                                 + "' AND " + timeKey + " >= '" + commissionedDatetime
                                 + "' AND " + timeKey + " < '" + monthEndDatetime + "' "
 //                        + AND " + " ref = 'mbr' "
@@ -708,10 +727,11 @@ public class MeterUsageProcessor {
 //                    return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
 //                    result.put("first_reading_time", "-");
 //                    result.put("first_reading_val", "-");
+                }else {
+                    firstReadingTimestamp = (String) respCommissionedMonth.getFirst().get(timeKey);
+                    firstReadingVal = (String) respCommissionedMonth.getFirst().get(valKey);
+                    useCommissionedDatetime = true;
                 }
-                firstReadingTimestamp = (String) respCommissionedMonth.getFirst().get(timeKey);
-                firstReadingVal = (String) respCommissionedMonth.getFirst().get(valKey);
-                useCommissionedDatetime = true;
             }
         }
 
@@ -721,9 +741,9 @@ public class MeterUsageProcessor {
             String firstReadingOfCurrentMonthSqlAsMbr =
                     "SELECT " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                             + " WHERE "
-                            + itemIdColName + " = '" + meterId
-                            + "' AND " + timeKey + " >= '" + monthStartDatetime.minusHours(3)
-                            + "' AND " + timeKey + " < '" + monthStartDatetime.plusHours(3)
+                            + itemReadingIdColName + " = '" + meterId
+                            + "' AND " + timeKey + " >= '" + monthStartDatetime.minusHours(mbrRangeHours)
+                            + "' AND " + timeKey + " < '" + monthStartDatetime.plusHours(mbrRangeHours)
                             + "' AND " + " ref = 'mbr' "
                             + " ORDER BY " + timeKey + " LIMIT 1";
             List<Map<String, Object>> respStartSearchRange;
@@ -750,9 +770,9 @@ public class MeterUsageProcessor {
             if (respStartSearchRange.isEmpty()) {
                 LocalDateTime beginOfMonth = monthStartDatetime.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
                 LocalDateTime endOfMonth = monthStartDatetime.withDayOfMonth(monthStartDatetime.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
-                String firstReadingOfCurrentMonthSql = "SELECT id, " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
+                String firstReadingOfCurrentMonthSql = "SELECT " + itemReadingIndexColName + ", " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                         + " WHERE " +
-                        itemIdColName + " = '" + meterId + "' AND " +
+                        itemReadingIdColName + " = '" + meterId + "' AND " +
                         timeKey + " >= '" + beginOfMonth + "' AND " +
                         timeKey + " < '" + /*beginOfMonth.plusHours(3)*/ endOfMonth + "' " +
                         " ORDER BY " + timeKey + " LIMIT 1";
@@ -776,7 +796,7 @@ public class MeterUsageProcessor {
                     // update the first reading of the month to mbr if it is not
                     String firstReadingOfCurrentMonthRef = (String) respFirstReadingOfCurrentMonth.getFirst().get("ref");
                     if (firstReadingOfCurrentMonthRef == null || !firstReadingOfCurrentMonthRef.equalsIgnoreCase("mbr")) {
-                        String firstReadingOfCurrentMonthId = (String) respFirstReadingOfCurrentMonth.getFirst().get("id");
+                        String firstReadingOfCurrentMonthId = (String) respFirstReadingOfCurrentMonth.getFirst().get(itemReadingIndexColName);
                         String updateFirstReadingOfCurrentMonthSql =
                                 "UPDATE " + itemReadingTableName + " SET ref = 'mbr' WHERE "
                                         + itemReadingIndexColName + " = '" + firstReadingOfCurrentMonthId + "'";
@@ -799,9 +819,9 @@ public class MeterUsageProcessor {
         // search left 3 hours and right 3 hours of current month end
         String lastReadingOfCurrentMonthSqlAsMbr = "SELECT " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
                 + " WHERE " +
-                itemIdColName + " = '" + meterId + "' AND " +
-                timeKey + " >= '" + monthEndDatetime.minusHours(3) + "' AND " +
-                timeKey + " < '" + monthEndDatetime.plusHours(3) + "' AND " +
+                itemReadingIdColName + " = '" + meterId + "' AND " +
+                timeKey + " >= '" + monthEndDatetime.minusHours(mbrRangeHours) + "' AND " +
+                timeKey + " < '" + monthEndDatetime.plusHours(mbrRangeHours) + "' AND " +
                 " ref = 'mbr' " +
                 " ORDER BY " + timeKey + " LIMIT 1";
         List<Map<String, Object>> respEndSearchRange;
@@ -827,11 +847,11 @@ public class MeterUsageProcessor {
         // if mbr is not found, use the first reading of the following month
         if(respEndSearchRange.isEmpty()) {
             LocalDateTime beginOfFollowingMonth = monthEndDatetime.plusMonths(1).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
-            String firstReadingOfFollowingMonthSql = "SELECT id, " + valKey + ", " + timeKey + ", ref FROM "
+            String firstReadingOfFollowingMonthSql = "SELECT " + itemReadingIndexColName + ", " + valKey + ", " + timeKey + ", ref FROM "
                     + itemReadingTableName + " WHERE " +
-                    itemIdColName + " = '" + meterId + "' AND " +
+                    itemReadingIdColName + " = '" + meterId + "' AND " +
                     timeKey + " >= '" + beginOfFollowingMonth + "' AND " +
-                    timeKey + " < '" + beginOfFollowingMonth.plusHours(3) + "' " +
+                    timeKey + " < '" + beginOfFollowingMonth.plusHours(mbrRangeHours) + "' " +
                     " ORDER BY " + timeKey + " LIMIT 1";
             List<Map<String, Object>> respFirstReadingOfFollowingMonth;
             try {
@@ -853,7 +873,7 @@ public class MeterUsageProcessor {
                 String respFirstReadingOfFollowingMonthRef = (String) respFirstReadingOfFollowingMonth.getFirst().get("ref");
                 if(respFirstReadingOfFollowingMonthRef == null || !respFirstReadingOfFollowingMonthRef.equalsIgnoreCase("mbr")) {
                     // update the first reading of the following month to mbr
-                    String firstReadingOfFollowingMonthId = (String) respFirstReadingOfFollowingMonth.getFirst().get("id");
+                    String firstReadingOfFollowingMonthId = (String) respFirstReadingOfFollowingMonth.getFirst().get(itemReadingIndexColName);
                     String updateFirstReadingOfFollowingMonthSql =
                             "UPDATE " + itemReadingTableName + " SET ref = 'mbr' WHERE "
                                     + itemReadingIndexColName + " = '" + firstReadingOfFollowingMonthId + "'";
@@ -876,8 +896,8 @@ public class MeterUsageProcessor {
         result.put("last_reading_val", lastReadingVal);
         result.put("use_commissioned_datetime", useCommissionedDatetime);
 
-        LocalDateTime searchingEnd = localHelper.getLocalNow();
-        logger.info("findMonthlyReading duration: " + Duration.between(searchingStart, searchingEnd).toSeconds() + " seconds");
+//        LocalDateTime searchingEnd = localHelper.getLocalNow();
+//        logger.info("findMonthlyReading duration: " + Duration.between(searchingStart, searchingEnd).toSeconds() + " seconds");
 
         return result;
     }
