@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>org.pabuff</groupId>
 			<artifactId>evs2dto</artifactId>
-			<version>1.28.2</version>
+			<version>1.28.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.pabuff</groupId>
