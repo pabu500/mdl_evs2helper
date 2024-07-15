@@ -252,7 +252,7 @@ public class ScopeHelper {
             itemGroupTableName = "recgroup";
             tenantTableName = "tenant_zsp";//"tenant";
             tenantTargetGroupTableName = "tenantgroup";
-            itemIdColName = "recorder_id";//"recid";
+            itemIdColName = "id";//"recid";
 //            itemNameColName = "recdisplayname";
             itemNameColName = "rec_displayname";//"recid";
             itemSnColName = "rec_name";//"recid";
