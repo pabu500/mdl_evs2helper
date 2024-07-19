@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: org.pabuff:evs2dto:1.27.8" type="java-imported" external-system-id="Maven">
+    <properties groupId="org.pabuff" artifactId="evs2dto" version="1.27.8" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/pabuff/evs2dto/1.27.8/evs2dto-1.27.8.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/pabuff/evs2dto/1.27.8/evs2dto-1.27.8-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/pabuff/evs2dto/1.27.8/evs2dto-1.27.8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -2,6 +2,7 @@ package org.pabuff.evs2helper.email;
 
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.util.ByteArrayDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,6 +11,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -124,8 +126,20 @@ public class EmailService {
             // Add attachment
             for(Map<String, Object> file : files){
                 String attachmentName = (String) file.get("name");
-                InputStreamSource attachedFile = (InputStreamSource) file.get("content");
-                helper.addAttachment(attachmentName, attachedFile);
+                Object content = file.get("content");
+                if (content instanceof String) {
+                    // Content is a Base64 encoded string
+                    String byteStr = (String) content;
+                    byte[] fileBytes = Base64.getDecoder().decode(byteStr);
+                    ByteArrayDataSource dataSource = new ByteArrayDataSource(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                    helper.addAttachment(attachmentName, dataSource);
+                } else if (content instanceof InputStreamSource) {
+                    // Content is an InputStreamSource
+                    InputStreamSource attachedFile = (InputStreamSource) content;
+                    helper.addAttachment(attachmentName, attachedFile);
+                } else {
+                    throw new IllegalArgumentException("Unsupported content type: " + content.getClass().getName());
+                }
             }
 
             try {

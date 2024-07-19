@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: org.joda:joda-money:1.0.3" type="java-imported" external-system-id="Maven">
+    <properties groupId="org.joda" artifactId="joda-money" version="1.0.3" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/joda/joda-money/1.0.3/joda-money-1.0.3.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/joda/joda-money/1.0.3/joda-money-1.0.3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/joda/joda-money/1.0.3/joda-money-1.0.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

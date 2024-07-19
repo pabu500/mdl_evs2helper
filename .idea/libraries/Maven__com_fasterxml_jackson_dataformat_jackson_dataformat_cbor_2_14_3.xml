@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.14.3" type="java-imported" external-system-id="Maven">
+    <properties groupId="com.fasterxml.jackson.dataformat" artifactId="jackson-dataformat-cbor" version="2.14.3" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.14.3/jackson-dataformat-cbor-2.14.3.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.14.3/jackson-dataformat-cbor-2.14.3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-cbor/2.14.3/jackson-dataformat-cbor-2.14.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

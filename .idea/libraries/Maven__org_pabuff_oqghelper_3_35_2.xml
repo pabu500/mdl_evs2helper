@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: org.pabuff:oqghelper:3.35.2" type="java-imported" external-system-id="Maven">
+    <properties groupId="org.pabuff" artifactId="oqghelper" version="3.35.2" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/pabuff/oqghelper/3.35.2/oqghelper-3.35.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/pabuff/oqghelper/3.35.2/oqghelper-3.35.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/pabuff/oqghelper/3.35.2/oqghelper-3.35.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
