@@ -200,6 +200,11 @@ public class MeterUsageProcessor {
             }
             usageSummary.put("commissioned_timestamp", commissionedTimestampStr);
 
+            String mbrAdditionalConstraint = "";
+            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                mbrAdditionalConstraint = " duplicated != true AND interpolated != true ";
+            }
+
             if (isMonthly) {
                 Map<String, Object> resultMonthly =
                         findMonthlyReading(
@@ -211,7 +216,8 @@ public class MeterUsageProcessor {
                                 itemReadingTableName,
                                 itemReadingIndexColName,
                                 itemReadingIdColName,//itemIdColName,
-                                timeKey, valKey);
+                                timeKey, valKey,
+                                mbrAdditionalConstraint);
 
                 if (resultMonthly.containsKey("error")) {
                     logger.info("error: " + resultMonthly.get("error"));
@@ -513,6 +519,12 @@ public class MeterUsageProcessor {
                         continue;
                     }
                     LocalDateTime startDateTimeInterval = endDatetimeMonthEnd.minusMonths(i+1);
+
+                    String mbrAdditionalConstraint = "";
+                    if(itemTypeEnum == ItemTypeEnum.METER_IWOW){
+                        mbrAdditionalConstraint = " duplicated != true AND interpolated != true ";
+                    }
+
                     Map<String, Object> resultMonthly = findMonthlyReading(
 //                            startDateTimeInterval.toString(),
                             null,
@@ -522,7 +534,8 @@ public class MeterUsageProcessor {
                             itemReadingTableName,
                             itemReadingIndexColName,
                             itemReadingIdColName, //itemIdColName,
-                            timeKey, valKey);
+                            timeKey, valKey,
+                            mbrAdditionalConstraint);
                     if(resultMonthly.containsKey("error")){
                         logger.info("error: " + resultMonthly.get("error"));
                         return Collections.singletonMap("error", resultMonthly.get("error"));
@@ -589,16 +602,7 @@ public class MeterUsageProcessor {
 //                    return Collections.singletonMap("info", "no meter found");
                         break;
                     }
-//                    firstReadingTimeStr = (String) resp2.getFirst().get("first_reading_time");
-//                    lastReadingTimeStr = (String) resp2.getFirst().get("last_reading_time");
-//                    firstReadingVal = (String) resp2.getFirst().get("first_reading_val");
-//                    lastReadingVal = (String) resp2.getFirst().get("last_reading_val");
-//                    Double firstReadingValDouble = Double.parseDouble(firstReadingVal);
-//                    Double lastReadingValDouble = Double.parseDouble(lastReadingVal);
-//                    Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-//                    firstReadingVal = String.format("%.2f", firstReadingValDouble);
-//                    lastReadingVal = String.format("%.2f", lastReadingValDouble);
-//                    usage = String.format("%.2f", usageDouble);
+
                     firstReadingVal = (String) resp2.getFirst().get("first_reading_val");
                     lastReadingVal = (String) resp2.getFirst().get("last_reading_val");
                     firstReadingTimeStr = (String) resp2.getFirst().get("first_reading_time");
@@ -666,7 +670,8 @@ public class MeterUsageProcessor {
             String itemReadingTableName,
             String itemReadingIndexColName,
             String itemReadingIdColName,
-            String timeKey, String valKey) {
+            String timeKey, String valKey,
+            String mbrAdditionalConstraint) {
         logger.info("process findMonthlyReading");
         LocalDateTime searchingStart = localHelper.getLocalNow();
 
@@ -767,6 +772,7 @@ public class MeterUsageProcessor {
                 firstReadingVal = (String) respStartSearchRange.getFirst().get(valKey);
             }
             // if mbr near the beginning of the month is not found, use the first reading of the month
+            // that is not duplicated and not interpolated
             if (respStartSearchRange.isEmpty()) {
                 LocalDateTime beginOfMonth = monthStartDatetime.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
                 LocalDateTime endOfMonth = monthStartDatetime.withDayOfMonth(monthStartDatetime.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
@@ -774,8 +780,13 @@ public class MeterUsageProcessor {
                         + " WHERE " +
                         itemReadingIdColName + " = '" + meterId + "' AND " +
                         timeKey + " >= '" + beginOfMonth + "' AND " +
-                        timeKey + " < '" + /*beginOfMonth.plusHours(3)*/ endOfMonth + "' " +
-                        " ORDER BY " + timeKey + " LIMIT 1";
+                        timeKey + " < '" + /*beginOfMonth.plusHours(3)*/ endOfMonth + "' ";
+
+                if(mbrAdditionalConstraint != null && !mbrAdditionalConstraint.isEmpty()){
+                    firstReadingOfCurrentMonthSql += " AND " + mbrAdditionalConstraint;
+                }
+                firstReadingOfCurrentMonthSql += " ORDER BY " + timeKey + " LIMIT 1";
+
                 List<Map<String, Object>> respFirstReadingOfCurrentMonth;
                 try {
                     respFirstReadingOfCurrentMonth = oqgHelper.OqgR2(firstReadingOfCurrentMonthSql, true);
@@ -845,14 +856,20 @@ public class MeterUsageProcessor {
             lastReadingVal = (String) respEndSearchRange.getFirst().get(valKey);
         }
         // if mbr is not found, use the first reading of the following month
+        // that is not duplicated and not interpolated
         if(respEndSearchRange.isEmpty()) {
             LocalDateTime beginOfFollowingMonth = monthEndDatetime.plusMonths(1).withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
             String firstReadingOfFollowingMonthSql = "SELECT " + itemReadingIndexColName + ", " + valKey + ", " + timeKey + ", ref FROM "
                     + itemReadingTableName + " WHERE " +
                     itemReadingIdColName + " = '" + meterId + "' AND " +
                     timeKey + " >= '" + beginOfFollowingMonth + "' AND " +
-                    timeKey + " < '" + beginOfFollowingMonth.plusHours(mbrRangeHours) + "' " +
-                    " ORDER BY " + timeKey + " LIMIT 1";
+                    timeKey + " < '" + beginOfFollowingMonth.plusHours(mbrRangeHours) + "' ";
+
+            if(mbrAdditionalConstraint != null && !mbrAdditionalConstraint.isEmpty()){
+                firstReadingOfFollowingMonthSql += " AND " + mbrAdditionalConstraint;
+            }
+            firstReadingOfFollowingMonthSql += " ORDER BY " + timeKey + " LIMIT 1";
+
             List<Map<String, Object>> respFirstReadingOfFollowingMonth;
             try {
                 respFirstReadingOfFollowingMonth = oqgHelper.OqgR2(firstReadingOfFollowingMonthSql, true);
