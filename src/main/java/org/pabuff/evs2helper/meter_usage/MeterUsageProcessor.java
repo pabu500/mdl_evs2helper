@@ -73,7 +73,7 @@ public class MeterUsageProcessor {
         String itemAltName = (String) itemConfig.get("itemAltNameColName");
         String panelTagColName = (String) itemConfig.get("panelTagColName");
         String itemIdColSel = (String) itemConfig.get("itemIdColSel");
-        String itemLocColSel = (String) itemConfig.get("itemLocColSel");
+        String itemLocColSel = (String) itemConfig.get("itemLocColSel") == null ? "" : (String) itemConfig.get("itemLocColSel");
         String timeKey =(String) itemConfig.get("timeKey");
         String valKey = (String) itemConfig.get("valKey");
 
@@ -116,7 +116,7 @@ public class MeterUsageProcessor {
         if(meterTypeEnum == ItemTypeEnum.METER_3P){
             itemLocColSel = "";
         }
-        String replacementStr = "SELECT " + itemIdColSel + ", meter_type, commissioned_timestamp";
+        String replacementStr = "SELECT " + itemIdColSel + ", meter_type, commissioned_timestamp, last_reading_timestamp";
         if(itemLocColSel != null && !itemLocColSel.isEmpty()){
             replacementStr += ", " + itemLocColSel;
         }
@@ -170,6 +170,7 @@ public class MeterUsageProcessor {
             String commissionedTimestampStr = meterMap.get("commissioned_timestamp") == null ? "" : (String) meterMap.get("commissioned_timestamp");
             String meterType = meterMap.get("meter_type") == null ? "" : (String) meterMap.get("meter_type");
             LocalDateTime commissionedDatetime = DateTimeUtil.getLocalDateTime(commissionedTimestampStr);
+            String lastReadingTimestampStr = meterMap.get("last_reading_timestamp") == null ? "" : (String) meterMap.get("last_reading_timestamp");
 
             processingCount++;
 //            Integer commissionedYear = null;
@@ -191,12 +192,14 @@ public class MeterUsageProcessor {
             LinkedHashMap<String, Object> usageSummary = new LinkedHashMap<>();
 
             String[] idColList = itemIdColSel.split(",");
-            String[] locColList = itemLocColSel.split(",");
+            String[] locColList = itemLocColSel != null ? itemLocColSel.split(",") : null;
             for(String idCol : idColList){
                 usageSummary.put(idCol, meterMap.get(idCol));
             }
-            for(String locCol : locColList){
-                usageSummary.put(locCol, meterMap.get(locCol));
+            if(locColList != null){
+                for(String locCol : locColList){
+                    usageSummary.put(locCol, meterMap.get(locCol));
+                }
             }
             usageSummary.put("site_tag", meterMap.get("site_tag"));
             if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
@@ -271,6 +274,7 @@ public class MeterUsageProcessor {
 //                usageSummary.put("last_reading_ref", resultMonthly.get("last_reading_ref"));
                 boolean useCommissionDatetime = resultMonthly.get("use_commissioned_datetime") != null && (boolean) resultMonthly.get("use_commissioned_datetime");
                 usageSummary.put("use_commissioned_datetime", useCommissionDatetime);
+                usageSummary.put("last_reading_timestamp", lastReadingTimestampStr);
 
                 usageSummaryList.add(usageSummary);
 
