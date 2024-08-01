@@ -202,7 +202,7 @@ public class MeterUsageProcessor {
 
             String mbrAdditionalConstraint = "";
             if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
-                mbrAdditionalConstraint = " duplicated != true AND interpolated != true ";
+                mbrAdditionalConstraint = " (duplicated != true OR duplicated is null) AND (interpolated != true OR interpolated is null) ";
             }
 
             if (isMonthly) {
