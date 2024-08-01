@@ -114,10 +114,13 @@ public class MeterUsageProcessor {
         String meterSelectSql2 = meterSelectSql;
 
         if(meterTypeEnum == ItemTypeEnum.METER_3P){
-            itemLocColSel = " 1=1 ";
+            itemLocColSel = "";
         }
-
-        meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColName, "SELECT " + itemIdColSel + ", " + itemLocColSel + ", meter_type, commissioned_timestamp");
+        String replacementStr = "SELECT " + itemIdColSel + ", meter_type, commissioned_timestamp";
+        if(itemLocColSel != null && !itemLocColSel.isEmpty()){
+            replacementStr += ", " + itemLocColSel;
+        }
+        meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColName, replacementStr);
 
 //        String additionalCols = "";
 //        if(!meterSelectSql2.contains("commissioned_timestamp")) {
