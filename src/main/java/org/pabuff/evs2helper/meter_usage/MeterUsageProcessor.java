@@ -112,6 +112,11 @@ public class MeterUsageProcessor {
         }
 
         String meterSelectSql2 = meterSelectSql;
+
+        if(meterTypeEnum == ItemTypeEnum.METER_3P){
+            itemLocColSel = "";
+        }
+
         meterSelectSql2 = meterSelectSql2.replace("SELECT " + itemIdColName, "SELECT " + itemIdColSel + ", " + itemLocColSel + ", meter_type, commissioned_timestamp");
 
 //        String additionalCols = "";
