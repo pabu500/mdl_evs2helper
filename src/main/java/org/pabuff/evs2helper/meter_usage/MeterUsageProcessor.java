@@ -116,7 +116,7 @@ public class MeterUsageProcessor {
         if(meterTypeEnum == ItemTypeEnum.METER_3P){
             itemLocColSel = "";
         }
-        String replacementStr = "SELECT " + itemIdColSel + ", meter_type, commissioned_timestamp, last_reading_timestamp";
+        String replacementStr = "SELECT " + itemIdColSel + ", meter_type, commissioned_timestamp, last_reading_timestamp, lc_status";
         if(itemLocColSel != null && !itemLocColSel.isEmpty()){
             replacementStr += ", " + itemLocColSel;
         }
