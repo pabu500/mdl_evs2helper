@@ -206,6 +206,7 @@ public class BillingProcessor {
             Double totalAutoUsageG = null;
 //            Map<String, Object> meterTypeRates = new HashMap<>();
             boolean incompleteUsageData = false;
+            String incompleteUsageDataReason = "";
 
             List<String> tenantMeterGroupIdList = new ArrayList<>();
             for (Map<String, Object> meterGroupUsage : tenantUsageSummary) {
@@ -256,9 +257,20 @@ public class BillingProcessor {
                 List<Map<String, Object>> meterListUsage = (List<Map<String, Object>>) meterGroupUsageSummary.get("meter_list_usage_summary");
 
                 for (Map<String, Object> meterUsageSummary : meterListUsage) {
+                    String itemName = (String) meterUsageSummary.get("item_name");
                     Object usageObj = meterUsageSummary.get("usage");
                     if ("-".equals(usageObj.toString())) {
                         incompleteUsageData = true;
+                        Object firstReadingTime = meterUsageSummary.get("first_reading_time");
+                        Object lastReadingTime = meterUsageSummary.get("last_reading_time");
+
+                        incompleteUsageDataReason = itemName;
+                        if ("-".equalsIgnoreCase((String)firstReadingTime)) {
+                            incompleteUsageDataReason = "-missing first reading time";
+                        }
+                        if ("-".equalsIgnoreCase((String)lastReadingTime)) {
+                            incompleteUsageDataReason += "-missing last reading time";
+                        }
                         break;
                     }
                     Double usage = MathUtil.ObjToDouble(usageObj);
@@ -298,8 +310,8 @@ public class BillingProcessor {
                     }
                 }
                 if (incompleteUsageData) {
-                    logger.severe("Inconsistent usage data found for tenant: " + tenantName);
-                    return Collections.singletonMap("error", "Inconsistent usage data found for tenant: " + tenantName);
+                    logger.severe("Incomplete usage data for tenant: " + tenantName);
+                    return Map.of("error", "Incomplete usage data for tenant: " + tenantName, "reason", incompleteUsageDataReason);
                 }
             }
 
