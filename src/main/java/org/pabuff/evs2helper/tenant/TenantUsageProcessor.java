@@ -225,6 +225,8 @@ public class TenantUsageProcessor {
             requestMeterListUsage.put("max_rows_per_page", "1000");
             requestMeterListUsage.put("current_page", "1");
 
+            requestMeterListUsage.put("mbr_range_hours", "18");
+
             Map<String, Object> usageResult = meterUsageProcessor.getMeterListUsageSummary(requestMeterListUsage, meterList);
 
             // handle percentage
