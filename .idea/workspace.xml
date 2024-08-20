@@ -124,14 +124,6 @@
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
     </task>
-    <task id="LOCAL-00033" summary="add net usage in result">
-      <option name="closed" value="true" />
-      <created>1714537675989</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1714537675989</updated>
-    </task>
     <task id="LOCAL-00034" summary="misc update">
       <option name="closed" value="true" />
       <created>1714725369071</created>
@@ -516,7 +508,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724143096459</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="Util cell style upgrade">
+      <option name="closed" value="true" />
+      <created>1724147292428</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1724147292428</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
