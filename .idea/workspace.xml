@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="loc sel update">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="refactor addRows, addSheet function">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/report/ReportHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/report/ReportHelper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +51,9 @@
     &quot;repository&quot;: &quot;mdl_evs2helper&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/org/pabuff/oqghelper/3.30.12/oqghelper-3.30.12.jar!/org/pabuff/oqghelper/OqgHelper.class" root0="SKIP_INSPECTION" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -66,17 +70,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Maven.evs2helper [clean,deploy].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.evs2helper [package].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/_pa/_evs2/_svc_oresvc/20240508&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.evs2helper [clean,deploy].executor": "Debug",
+    "Maven.evs2helper [package].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "kcbranch",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/_pa/_evs2/_svc_oresvc/20240508",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="evs2helper [clean,deploy]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
@@ -123,14 +128,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00032" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1714322968009</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1714322968009</updated>
     </task>
     <task id="LOCAL-00033" summary="add net usage in result">
       <option name="closed" value="true" />
@@ -516,7 +513,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722595278368</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="version update">
+      <option name="closed" value="true" />
+      <created>1724143226604</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1724143226604</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -543,8 +548,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FleetHealth update" />
-    <MESSAGE value="misc" />
     <MESSAGE value="bill processor update" />
     <MESSAGE value="fleet health update" />
     <MESSAGE value="misc fix" />
@@ -565,9 +568,11 @@
     <MESSAGE value="ver" />
     <MESSAGE value="misc adj" />
     <MESSAGE value="add use_assigned_tps for bill gen" />
-    <MESSAGE value="misc update" />
     <MESSAGE value="first reading mbr constraint update" />
     <MESSAGE value="loc sel update" />
-    <option name="LAST_COMMIT_MESSAGE" value="loc sel update" />
+    <MESSAGE value="misc update" />
+    <MESSAGE value="version update" />
+    <MESSAGE value="refactor addRows, addSheet function" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor addRows, addSheet function" />
   </component>
 </project>

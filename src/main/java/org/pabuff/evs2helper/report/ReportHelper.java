@@ -34,7 +34,6 @@ public class ReportHelper {
         return Map.of("file_location", fileLocation, "full_report_name", fullReportName);
     }
 
-    @Deprecated
     public Map<String, Object> genReportExcel(
             String reportName,
             List<LinkedHashMap<String, Object>> report,
@@ -65,7 +64,7 @@ public class ReportHelper {
         return result;
     }
 
-    public Map<String, Object> genReportExcel(
+    public Map<String, Object> genReportExcel2(
             String reportName,
             List<LinkedHashMap<String, Object>> report,
             LinkedHashMap<String, Integer> headerMap,
@@ -80,7 +79,7 @@ public class ReportHelper {
         Sheet sheet = workbook.getSheet(sheetName);
         sheet.createFreezePane(0, 1);
 
-        ExcelUtil.addRows(workbook, sheetName, report, excelMap);
+        ExcelUtil.addRows2(workbook, sheetName, report, excelMap);
 
         Map<String, Object> reportInfo = genReportInfo(reportName, "xlsx");
         String fileLocation = (String) reportInfo.get("file_location");
@@ -95,7 +94,6 @@ public class ReportHelper {
         return result;
     }
 
-    @Deprecated
     public Map<String, Object> genReportExcelMultiSheet(String reportName, List<Map<String, Object>> multiSheetReportInfo) {
         logger.info("genReportExcelMultiSheet() called");
 
@@ -125,7 +123,7 @@ public class ReportHelper {
         return result;
     }
 
-    public Map<String, Object> genReportExcelMultiSheet(String reportName, List<Map<String, Object>> multiSheetReportInfo, Map<String, Object> excelMap) {
+    public Map<String, Object> genReportExcelMultiSheet2(String reportName, List<Map<String, Object>> multiSheetReportInfo, Map<String, Object> excelMap) {
         logger.info("genReportExcelMultiSheet() called");
 
         Workbook workbook = ExcelUtil.createWorkbookEmpty();
@@ -134,7 +132,7 @@ public class ReportHelper {
             String sheetName = (String) sheetInfo.get("sheet_name");
             List<LinkedHashMap<String, Object>> reportSheet = (List<LinkedHashMap<String, Object>>) sheetInfo.get("report");
             LinkedHashMap<String, Integer> header = (LinkedHashMap<String, Integer>) sheetInfo.get("header");
-            ExcelUtil.addSheet(workbook, sheetName, header, reportSheet, null, null, excelMap);
+            ExcelUtil.addSheet2(workbook, sheetName, header, reportSheet, null, null, excelMap);
             List<Map<String, Object>> patch = (List<Map<String, Object>>) sheetInfo.get("patch");
             if(patch != null) {
                 ExcelUtil.addPatch(workbook, sheetName, patch);
