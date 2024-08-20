@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc update">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="commission date update for MTD meter usage">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/billing/BillingProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/billing/BillingProcessor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,14 +123,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00031" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1714209866779</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1714209866779</updated>
     </task>
     <task id="LOCAL-00032" summary="misc fix">
       <option name="closed" value="true" />
@@ -516,7 +508,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723553422728</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <task id="LOCAL-00080" summary="commission date update for MTD meter usage">
+      <option name="closed" value="true" />
+      <created>1724171931846</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1724171931846</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -543,7 +543,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FleetHealth update" />
     <MESSAGE value="misc" />
     <MESSAGE value="bill processor update" />
     <MESSAGE value="fleet health update" />
@@ -568,6 +567,7 @@
     <MESSAGE value="first reading mbr constraint update" />
     <MESSAGE value="loc sel update" />
     <MESSAGE value="misc update" />
-    <option name="LAST_COMMIT_MESSAGE" value="misc update" />
+    <MESSAGE value="commission date update for MTD meter usage" />
+    <option name="LAST_COMMIT_MESSAGE" value="commission date update for MTD meter usage" />
   </component>
 </project>

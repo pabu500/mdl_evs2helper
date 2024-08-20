@@ -519,7 +519,7 @@ public class BillingProcessor {
             }
         }
 
-        Map<String, Object> netUsage = getNetUsage(autoItemInfo, subTenantUsage, manualItemInfo);
+        Map<String, Object> netUsage = getNetUsage(excludeAutoUsage, autoItemInfo, subTenantUsage, manualItemInfo);
 
         if(genBy != null){
             billInsertContent.put("gen_type", "manual");
@@ -662,7 +662,7 @@ public class BillingProcessor {
         return Map.of("result", respStr, "is_new", !billExists, "net_usage", netUsage);
     }
 
-    private Map<String, Object> getNetUsage(Map<String, Object> autoItemInfo, Map<String, Object> subTenantUsage, Map<String, Object> manualItemInfo) {
+    public Map<String, Object> getNetUsage(boolean excludeAutoUsage, Map<String, Object> autoItemInfo, Map<String, Object> subTenantUsage, Map<String, Object> manualItemInfo) {
 
         Double netUsageE = null;
         Double netUsageW = null;
@@ -670,7 +670,7 @@ public class BillingProcessor {
         Double netUsageN = null;
         Double netUsageG = null;
 
-        if(autoItemInfo!=null){
+        if(autoItemInfo!=null && !excludeAutoUsage){
             if(autoItemInfo.get("billed_auto_usage_e") != null){
                 netUsageE = MathUtil.ObjToDouble(autoItemInfo.get("billed_auto_usage_e"));
             }
@@ -687,7 +687,7 @@ public class BillingProcessor {
                 netUsageG = MathUtil.ObjToDouble(autoItemInfo.get("billed_auto_usage_g"));
             }
         }
-        if(subTenantUsage!=null){
+        if(subTenantUsage!=null && !subTenantUsage.isEmpty()){
             if(subTenantUsage.get("billed_sub_tenant_usage_e") != null){
                 if(netUsageE == null){
                     netUsageE = 0.0;
