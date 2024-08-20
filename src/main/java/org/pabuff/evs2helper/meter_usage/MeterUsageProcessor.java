@@ -285,6 +285,63 @@ public class MeterUsageProcessor {
                 continue;
             }
 
+            String firstReadingVal = "-";
+            String lastReadingVal = "-";
+            String firstReadingTime = "-";
+            String lastReadingTime = "-";
+            String usage = "-";
+
+            //first check commissionedDatetime
+            LocalDateTime monthEndDatetime = DateTimeUtil.getLocalDateTime(endDatetimeStr);
+            int theYear = monthEndDatetime.getYear();
+            int theMonth = monthEndDatetime.getMonthValue();
+
+            int commissionedYear = 0;
+            int commissionedMonth = 0;
+            if(commissionedDatetime != null){
+                commissionedYear = commissionedDatetime.getYear();
+                commissionedMonth = commissionedDatetime.getMonthValue();
+            }
+            boolean useCommissionedDatetime = false;
+            if(commissionedYear > 0){
+                if(commissionedYear > theYear || (commissionedYear == theYear && commissionedMonth > theMonth)){
+                    // if commissionedDatetime is in the future, ignore the commissionedDatetime
+                    //return Collections.singletonMap("info", "commissionedDatetime is in the future");
+                }
+                if(commissionedYear==theYear && commissionedMonth==theMonth){
+                    //use the commissionedDatetime as the first reading of the month
+                    String firstReadingOfCurrentMonthSqlAsCommissionedMonth =
+                            "SELECT " + valKey + ", " + timeKey + ", ref FROM " + itemReadingTableName
+                                    + " WHERE "
+                                    + itemReadingIdColName + " = '" + meterId
+                                    + "' AND " + timeKey + " >= '" + commissionedDatetime
+                                    + "' AND " + timeKey + " < '" + monthEndDatetime + "' "
+//                        + AND " + " ref = 'mbr' "
+                                    + " ORDER BY " + timeKey + " LIMIT 1";
+                    List<Map<String, Object>> respCommissionedMonth;
+                    try {
+                        respCommissionedMonth = oqgHelper.OqgR2(firstReadingOfCurrentMonthSqlAsCommissionedMonth, true);
+                    } catch (Exception e) {
+                        logger.info("oqgHelper error: " + e.getMessage());
+                        return Collections.singletonMap("error", "oqgHelper error: " + e.getMessage());
+                    }
+                    if (respCommissionedMonth == null) {
+                        logger.info("oqgHelper error: resp is null");
+                        return Collections.singletonMap("error", "oqgHelper error: resp is null");
+                    }
+                    if (respCommissionedMonth.isEmpty()) {
+                        logger.info("no commission month reading found for meter: " + meterId);
+//                    return Collections.singletonMap("info", "no first reading of the month found for meter: " + meterId);
+//                    result.put("first_reading_time", "-");
+//                    result.put("first_reading_val", "-");
+                    }else {
+                        firstReadingTime = (String) respCommissionedMonth.getFirst().get(timeKey);
+                        firstReadingVal = (String) respCommissionedMonth.getFirst().get(valKey);
+                        useCommissionedDatetime = true;
+                    }
+                }
+            }
+
             // get first and last dt between start and end datetime,
             // and get val at first and last dt
             String sql = "SELECT DISTINCT " +
@@ -313,16 +370,14 @@ public class MeterUsageProcessor {
                 logger.info("no reading found for meter: " + meterSn);
 //                return Collections.singletonMap("info", "no reading found for meter: " + meterSn);
             }
-            String firstReadingVal = "-";
-            String lastReadingVal = "-";
-            String firstReadingTime = "-";
-            String lastReadingTime = "-";
-            String usage = "-";
+
             if(resp2.isEmpty()){
             }else {
-                firstReadingVal = (String) resp2.getFirst().get("first_reading_val");
+                if(!useCommissionedDatetime) {
+                    firstReadingVal = (String) resp2.getFirst().get("first_reading_val");
+                    firstReadingTime = (String) resp2.getFirst().get("first_reading_time");
+                }
                 lastReadingVal = (String) resp2.getFirst().get("last_reading_val");
-                firstReadingTime = (String) resp2.getFirst().get("first_reading_time");
                 lastReadingTime = (String) resp2.getFirst().get("last_reading_time");
                 Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
                 Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
@@ -355,6 +410,10 @@ public class MeterUsageProcessor {
             usageSummary.put("first_reading_val", firstReadingVal);
             usageSummary.put("last_reading_val", lastReadingVal);
             usageSummary.put("usage", usage);
+
+            if(useCommissionedDatetime){
+                usageSummary.put("use_commissioned_datetime", true);
+            }
 
             usageSummaryList.add(usageSummary);
 
@@ -931,4 +990,3 @@ public class MeterUsageProcessor {
         return result;
     }
 }
-
