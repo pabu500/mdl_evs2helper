@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="misc update">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="loc sel update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/report/ReportHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/report/ReportHelper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,9 +34,6 @@
     &quot;assignee&quot;: &quot;evs2bu500&quot;
   }
 }</component>
-  <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="4b29f79b-9473-4cc4-bc2e-1eebe0bac594" />
-  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/pabu500/mdl_evs2helper.git&quot;,
@@ -72,18 +68,13 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Maven.evs2helper [clean,deploy].executor&quot;: &quot;Debug&quot;,
+    &quot;Maven.evs2helper [clean,deploy].executor&quot;: &quot;Run&quot;,
     &quot;Maven.evs2helper [package].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;kcbranch&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/_pa/_evs2/_svc_oresvc/20240508&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
 }</component>
   <component name="RunManager">
@@ -132,46 +123,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00027" summary="fleet health update">
-      <option name="closed" value="true" />
-      <created>1714189434015</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1714189434015</updated>
-    </task>
-    <task id="LOCAL-00028" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1714192858671</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1714192858671</updated>
-    </task>
-    <task id="LOCAL-00029" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1714193431472</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1714193431472</updated>
-    </task>
-    <task id="LOCAL-00030" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1714207614955</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1714207614955</updated>
-    </task>
-    <task id="LOCAL-00031" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1714209866779</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1714209866779</updated>
     </task>
     <task id="LOCAL-00032" summary="misc fix">
       <option name="closed" value="true" />
@@ -525,7 +476,47 @@
       <option name="project" value="LOCAL" />
       <updated>1720700096360</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="first reading mbr constraint update">
+      <option name="closed" value="true" />
+      <created>1722484680390</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1722484680391</updated>
+    </task>
+    <task id="LOCAL-00077" summary="loc sel update">
+      <option name="closed" value="true" />
+      <created>1722500156853</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1722500156853</updated>
+    </task>
+    <task id="LOCAL-00078" summary="loc sel update">
+      <option name="closed" value="true" />
+      <created>1722500354814</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1722500354814</updated>
+    </task>
+    <task id="LOCAL-00079" summary="loc sel update">
+      <option name="closed" value="true" />
+      <created>1722500590261</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1722500590261</updated>
+    </task>
+    <task id="LOCAL-00080" summary="loc sel update">
+      <option name="closed" value="true" />
+      <created>1722595278368</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1722595278368</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -552,8 +543,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add source" />
-    <MESSAGE value="jwt update" />
     <MESSAGE value="FleetHealth update" />
     <MESSAGE value="misc" />
     <MESSAGE value="bill processor update" />
@@ -577,6 +566,8 @@
     <MESSAGE value="misc adj" />
     <MESSAGE value="add use_assigned_tps for bill gen" />
     <MESSAGE value="misc update" />
-    <option name="LAST_COMMIT_MESSAGE" value="misc update" />
+    <MESSAGE value="first reading mbr constraint update" />
+    <MESSAGE value="loc sel update" />
+    <option name="LAST_COMMIT_MESSAGE" value="loc sel update" />
   </component>
 </project>
