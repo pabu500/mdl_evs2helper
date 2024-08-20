@@ -519,7 +519,7 @@ public class BillingProcessor {
             }
         }
 
-        Map<String, Object> netUsage = getNetUsage(excludeAutoUsage, autoItemInfo, subTenantUsage, manualItemInfo);
+        Map<String, Object> netUsage = getNetUsage(excludeAutoUsage, autoItemInfo, subTenantUsage, manualItemInfo, usageFactor);
 
         if(genBy != null){
             billInsertContent.put("gen_type", "manual");
@@ -662,7 +662,11 @@ public class BillingProcessor {
         return Map.of("result", respStr, "is_new", !billExists, "net_usage", netUsage);
     }
 
-    public Map<String, Object> getNetUsage(boolean excludeAutoUsage, Map<String, Object> autoItemInfo, Map<String, Object> subTenantUsage, Map<String, Object> manualItemInfo) {
+    public Map<String, Object> getNetUsage(boolean excludeAutoUsage,
+                                           Map<String, Object> autoItemInfo,
+                                           Map<String, Object> subTenantUsage,
+                                           Map<String, Object> manualItemInfo,
+                                           Map<String, Object> usageFactor) {
 
         Double netUsageE = null;
         Double netUsageW = null;
