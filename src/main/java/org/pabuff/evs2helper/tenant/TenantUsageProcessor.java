@@ -116,7 +116,7 @@ public class TenantUsageProcessor {
             sort.put("sort_order", sortOrder);
         }
 
-        String fromSql = "SELECT id, " + itemIdColName + ", tenant_label, location_tag, alt_name, type " +
+        String fromSql = "SELECT id, " + itemIdColName + ", tenant_label, location_tag, location_tag2, alt_name, type " +
                 meterSelectSql.substring(meterSelectSql.indexOf(" FROM"));
 
         String meterSelectSql2 = fromSql + " ORDER BY " + itemIdColName + " LIMIT " + limit + " OFFSET " + offset;
