@@ -777,6 +777,11 @@ public class BillingProcessor {
         Double billedAutoUsageG = null;
 
         if (!excludeAutoUsage) {
+            if(autoItemInfo == null || autoItemInfo.isEmpty()){
+                logger.severe("Missing auto item info");
+                return Collections.singletonMap("error", "Missing auto item info");
+            }
+
             billedAutoUsageE = MathUtil.ObjToDouble(autoItemInfo.get("billed_auto_usage_e"));
             billedAutoUsageW = MathUtil.ObjToDouble(autoItemInfo.get("billed_auto_usage_w"));
             billedAutoUsageB = MathUtil.ObjToDouble(autoItemInfo.get("billed_auto_usage_b"));
