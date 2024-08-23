@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="Util cell style upgrade">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="Util version update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/billing/BillingProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/billing/BillingProcessor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,18 +67,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Maven.evs2helper [clean,deploy].executor&quot;: &quot;Debug&quot;,
-    &quot;Maven.evs2helper [package].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;kcbranch&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/_pa/_evs2/_svc_oresvc/20240508&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.evs2helper [clean,deploy].executor": "Run",
+    "Maven.evs2helper [package].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "Merging kcbranch",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/_pa/_evs2/_svc_oresvc/20240508",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="evs2helper [clean,deploy]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
@@ -124,22 +124,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00034" summary="misc update">
-      <option name="closed" value="true" />
-      <created>1714725369071</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1714725369071</updated>
-    </task>
-    <task id="LOCAL-00035" summary="misc update">
-      <option name="closed" value="true" />
-      <created>1715835286803</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1715835286803</updated>
     </task>
     <task id="LOCAL-00036" summary="misc update">
       <option name="closed" value="true" />
@@ -485,39 +469,55 @@
       <option name="project" value="LOCAL" />
       <updated>1722500354814</updated>
     </task>
-    <task id="LOCAL-00079" summary="misc update">
+    <task id="LOCAL-00079" summary="loc sel update">
       <option name="closed" value="true" />
-      <created>1723553422728</created>
+      <created>1722500590261</created>
       <option name="number" value="00079" />
       <option name="presentableId" value="LOCAL-00079" />
       <option name="project" value="LOCAL" />
-      <updated>1723553422728</updated>
+      <updated>1722500590261</updated>
     </task>
-    <task id="LOCAL-00080" summary="commission date update for MTD meter usage">
+    <task id="LOCAL-00080" summary="loc sel update">
       <option name="closed" value="true" />
-      <created>1724171931846</created>
+      <created>1722595278368</created>
       <option name="number" value="00080" />
       <option name="presentableId" value="LOCAL-00080" />
       <option name="project" value="LOCAL" />
-      <updated>1724171931846</updated>
+      <updated>1722595278368</updated>
     </task>
-    <task id="LOCAL-00081" summary="getNetUsage">
+    <task id="LOCAL-00081" summary="Util cell style upgrade">
       <option name="closed" value="true" />
-      <created>1724173048769</created>
+      <created>1724143096459</created>
       <option name="number" value="00081" />
       <option name="presentableId" value="LOCAL-00081" />
       <option name="project" value="LOCAL" />
-      <updated>1724173048769</updated>
+      <updated>1724143096459</updated>
     </task>
     <task id="LOCAL-00082" summary="Util cell style upgrade">
       <option name="closed" value="true" />
-      <created>1724201411021</created>
+      <created>1724147292428</created>
       <option name="number" value="00082" />
       <option name="presentableId" value="LOCAL-00082" />
       <option name="project" value="LOCAL" />
-      <updated>1724201411021</updated>
+      <updated>1724147292428</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="Util cell style upgrade">
+      <option name="closed" value="true" />
+      <created>1724148372911</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1724148372911</updated>
+    </task>
+    <task id="LOCAL-00084" summary="netUsage() to billedTotalUsage()">
+      <option name="closed" value="true" />
+      <created>1724214591321</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1724214591321</updated>
+    </task>
+    <option name="localTasksCounter" value="85" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -563,12 +563,12 @@
     <MESSAGE value="ver" />
     <MESSAGE value="misc adj" />
     <MESSAGE value="add use_assigned_tps for bill gen" />
+    <MESSAGE value="misc update" />
     <MESSAGE value="first reading mbr constraint update" />
     <MESSAGE value="loc sel update" />
-    <MESSAGE value="misc update" />
-    <MESSAGE value="commission date update for MTD meter usage" />
-    <MESSAGE value="getNetUsage" />
     <MESSAGE value="Util cell style upgrade" />
-    <option name="LAST_COMMIT_MESSAGE" value="Util cell style upgrade" />
+    <MESSAGE value="netUsage() to billedTotalUsage()" />
+    <MESSAGE value="Util version update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Util version update" />
   </component>
 </project>
