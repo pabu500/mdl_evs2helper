@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.pabuff</groupId>
 	<artifactId>evs2helper</artifactId>
-	<version>3.36.10</version>
+	<version>3.36.11</version>
 	<name>evs2helper</name>
 	<description>EVS2 Helper Module</description>
 

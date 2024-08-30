@@ -162,11 +162,18 @@ public class MeterUsageProcessor {
         int totalCount = selectedMeterList.size();
         for (Map<String, Object> meterMap : selectedMeterList) {
             String meterId = (String) meterMap.get(itemIdColName);
+            String meterLcStatus = meterMap.get("lc_status") == null ? "" : (String) meterMap.get("lc_status");
+            if(meterTypeEnum == ItemTypeEnum.METER_IWOW){
+                if("dc".equals(meterLcStatus)){
+                    logger.info("meter " + meterId + " is in dc status");
+                    continue;
+                }
+            }
+
             String readingMeterId = (String) meterMap.get(itemReadingIdColName);
             String meterSn = meterMap.get(itemSnColName) == null ? "" : (String) meterMap.get(itemSnColName);
             String meterName = meterMap.get(itemNameColName) == null ? "" : (String) meterMap.get(itemNameColName);
             String meterAltName = meterMap.get(itemAltName) == null ? "" : (String) meterMap.get(itemAltName);
-            String meterLcStatus = meterMap.get("lc_status") == null ? "" : (String) meterMap.get("lc_status");
             String commissionedTimestampStr = meterMap.get("commissioned_timestamp") == null ? "" : (String) meterMap.get("commissioned_timestamp");
             String meterType = meterMap.get("meter_type") == null ? "" : (String) meterMap.get("meter_type");
             LocalDateTime commissionedDatetime = DateTimeUtil.getLocalDateTime(commissionedTimestampStr);

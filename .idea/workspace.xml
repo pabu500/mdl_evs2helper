@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="netUsage() to billedTotalUsage()">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="getNetUsage">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +75,7 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;D:/_pa/_evs2/_svc_oresvc/20240508&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.project.grazie&quot;
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
 }</component>
   <component name="RunManager">
@@ -123,6 +124,30 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
+    </task>
+    <task id="LOCAL-00033" summary="add net usage in result">
+      <option name="closed" value="true" />
+      <created>1714537675989</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1714537675989</updated>
+    </task>
+    <task id="LOCAL-00034" summary="misc update">
+      <option name="closed" value="true" />
+      <created>1714725369071</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1714725369071</updated>
+    </task>
+    <task id="LOCAL-00035" summary="misc update">
+      <option name="closed" value="true" />
+      <created>1715835286803</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1715835286803</updated>
     </task>
     <task id="LOCAL-00036" summary="misc update">
       <option name="closed" value="true" />
@@ -468,55 +493,31 @@
       <option name="project" value="LOCAL" />
       <updated>1722500354814</updated>
     </task>
-    <task id="LOCAL-00079" summary="loc sel update">
+    <task id="LOCAL-00079" summary="misc update">
       <option name="closed" value="true" />
-      <created>1722500590261</created>
+      <created>1723553422728</created>
       <option name="number" value="00079" />
       <option name="presentableId" value="LOCAL-00079" />
       <option name="project" value="LOCAL" />
-      <updated>1722500590261</updated>
+      <updated>1723553422728</updated>
     </task>
-    <task id="LOCAL-00080" summary="loc sel update">
+    <task id="LOCAL-00080" summary="commission date update for MTD meter usage">
       <option name="closed" value="true" />
-      <created>1722595278368</created>
+      <created>1724171931846</created>
       <option name="number" value="00080" />
       <option name="presentableId" value="LOCAL-00080" />
       <option name="project" value="LOCAL" />
-      <updated>1722595278368</updated>
+      <updated>1724171931846</updated>
     </task>
-    <task id="LOCAL-00081" summary="Util cell style upgrade">
+    <task id="LOCAL-00081" summary="getNetUsage">
       <option name="closed" value="true" />
-      <created>1724143096459</created>
+      <created>1724173048769</created>
       <option name="number" value="00081" />
       <option name="presentableId" value="LOCAL-00081" />
       <option name="project" value="LOCAL" />
-      <updated>1724143096459</updated>
+      <updated>1724173048769</updated>
     </task>
-    <task id="LOCAL-00082" summary="Util cell style upgrade">
-      <option name="closed" value="true" />
-      <created>1724147292428</created>
-      <option name="number" value="00082" />
-      <option name="presentableId" value="LOCAL-00082" />
-      <option name="project" value="LOCAL" />
-      <updated>1724147292428</updated>
-    </task>
-    <task id="LOCAL-00083" summary="Util cell style upgrade">
-      <option name="closed" value="true" />
-      <created>1724148372911</created>
-      <option name="number" value="00083" />
-      <option name="presentableId" value="LOCAL-00083" />
-      <option name="project" value="LOCAL" />
-      <updated>1724148372911</updated>
-    </task>
-    <task id="LOCAL-00084" summary="netUsage() to billedTotalUsage()">
-      <option name="closed" value="true" />
-      <created>1724214591321</created>
-      <option name="number" value="00084" />
-      <option name="presentableId" value="LOCAL-00084" />
-      <option name="project" value="LOCAL" />
-      <updated>1724214591321</updated>
-    </task>
-    <option name="localTasksCounter" value="85" />
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -563,11 +564,11 @@
     <MESSAGE value="ver" />
     <MESSAGE value="misc adj" />
     <MESSAGE value="add use_assigned_tps for bill gen" />
-    <MESSAGE value="misc update" />
     <MESSAGE value="first reading mbr constraint update" />
     <MESSAGE value="loc sel update" />
-    <MESSAGE value="Util cell style upgrade" />
-    <MESSAGE value="netUsage() to billedTotalUsage()" />
-    <option name="LAST_COMMIT_MESSAGE" value="netUsage() to billedTotalUsage()" />
+    <MESSAGE value="misc update" />
+    <MESSAGE value="commission date update for MTD meter usage" />
+    <MESSAGE value="getNetUsage" />
+    <option name="LAST_COMMIT_MESSAGE" value="getNetUsage" />
   </component>
 </project>
