@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="netUsage() to billedTotalUsage()">
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="BillingProcessor fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/billing/BillingProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/billing/BillingProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/fleet_health/FleetStatProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/fleet_health/FleetStatProcessor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,14 +123,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00036" summary="misc update">
-      <option name="closed" value="true" />
-      <created>1715843862673</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1715843862673</updated>
     </task>
     <task id="LOCAL-00037" summary="misc update">
       <option name="closed" value="true" />
@@ -517,7 +508,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724214591321</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="BillingProcessor fix">
+      <option name="closed" value="true" />
+      <created>1725333247501</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1725333247502</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -544,7 +543,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="bill processor update" />
     <MESSAGE value="fleet health update" />
     <MESSAGE value="misc fix" />
     <MESSAGE value="add net usage in result" />
@@ -569,6 +567,23 @@
     <MESSAGE value="loc sel update" />
     <MESSAGE value="Util cell style upgrade" />
     <MESSAGE value="netUsage() to billedTotalUsage()" />
-    <option name="LAST_COMMIT_MESSAGE" value="netUsage() to billedTotalUsage()" />
+    <MESSAGE value="BillingProcessor fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="BillingProcessor fix" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/fleet_health/FleetStatProcessor.java</url>
+          <line>399</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/fleet_health/FleetStatProcessor.java</url>
+          <line>317</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

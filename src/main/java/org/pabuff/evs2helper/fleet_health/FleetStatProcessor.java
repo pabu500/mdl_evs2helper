@@ -431,6 +431,7 @@ public class FleetStatProcessor {
                     + " where "+ itemLocBuildingColName + " = '" + buildingNameSqlSafe + "'"
                     + blockSel
                     + " and " + valDiffHealthFilter
+                    + lcStatusConstraint
                     + " order by last_val_diff asc";
             List<Map<String, Object>> respValDiff;
             try {
