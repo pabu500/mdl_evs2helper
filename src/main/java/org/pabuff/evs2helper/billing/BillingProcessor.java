@@ -856,17 +856,35 @@ public class BillingProcessor {
             totalG -= billedSubTenantUsageG;
         }
 
-        String billedUsageFactorStrE = (String) usageFactor.get("billed_usage_factor_e");
-        String billedUsageFactorStrW = (String) usageFactor.get("billed_usage_factor_w");
-        String billedUsageFactorStrB = (String) usageFactor.get("billed_usage_factor_b");
-        String billedUsageFactorStrN = (String) usageFactor.get("billed_usage_factor_n");
-        String billedUsageFactorStrG = (String) usageFactor.get("billed_usage_factor_g");
+//        String billedUsageFactorStrE = (String) usageFactor.get("billed_usage_factor_e");
+//        String billedUsageFactorStrW = (String) usageFactor.get("billed_usage_factor_w");
+//        String billedUsageFactorStrB = (String) usageFactor.get("billed_usage_factor_b");
+//        String billedUsageFactorStrN = (String) usageFactor.get("billed_usage_factor_n");
+//        String billedUsageFactorStrG = (String) usageFactor.get("billed_usage_factor_g");
+        Object billedUsageFactorObjE = usageFactor.get("billed_usage_factor_e");
+        Object billedUsageFactorObjW = usageFactor.get("billed_usage_factor_w");
+        Object billedUsageFactorObjB = usageFactor.get("billed_usage_factor_b");
+        Object billedUsageFactorObjN = usageFactor.get("billed_usage_factor_n");
+        Object billedUsageFactorObjG = usageFactor.get("billed_usage_factor_g");
 
-        Double billedUsageFactorE = MathUtil.ObjToDouble(billedUsageFactorStrE);
-        Double billedUsageFactorW = MathUtil.ObjToDouble(billedUsageFactorStrW);
-        Double billedUsageFactorB = MathUtil.ObjToDouble(billedUsageFactorStrB);
-        Double billedUsageFactorN = MathUtil.ObjToDouble(billedUsageFactorStrN);
-        Double billedUsageFactorG = MathUtil.ObjToDouble(billedUsageFactorStrG);
+        Double billedUsageFactorE = null;
+        Double billedUsageFactorW = null;
+        Double billedUsageFactorB = null;
+        Double billedUsageFactorN = null;
+        Double billedUsageFactorG = null;
+        if(billedUsageFactorObjE instanceof String){
+            billedUsageFactorE = MathUtil.ObjToDouble(billedUsageFactorObjE);
+            billedUsageFactorW = MathUtil.ObjToDouble(billedUsageFactorObjW);
+            billedUsageFactorB = MathUtil.ObjToDouble(billedUsageFactorObjB);
+            billedUsageFactorN = MathUtil.ObjToDouble(billedUsageFactorObjN);
+            billedUsageFactorG = MathUtil.ObjToDouble(billedUsageFactorObjG);
+        }else{
+            billedUsageFactorE = (Double) billedUsageFactorObjE;
+            billedUsageFactorW = (Double) billedUsageFactorObjW;
+            billedUsageFactorB = (Double) billedUsageFactorObjB;
+            billedUsageFactorN = (Double) billedUsageFactorObjN;
+            billedUsageFactorG = (Double) billedUsageFactorObjG;
+        }
 
         // manual usages are already after applying the usage factor
         // reverse apply to align with the auto usages and sub tenant usages, which are not after applying the usage factor
