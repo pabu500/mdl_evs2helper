@@ -175,6 +175,7 @@ public class FleetStatProcessor {
                 String sqlValDiff = "select count(*) as count from " + targetTableName
                         + " where site_tag = '" + siteTag + "'"
                         + " and " + valDiffHealthFilter
+                        + lcStatusConstraint
                         + additionalConstraint;
                 List<Map<String, Object>> respValDiff;
                 try {
