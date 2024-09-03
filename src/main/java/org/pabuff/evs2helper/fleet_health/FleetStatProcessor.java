@@ -330,6 +330,7 @@ public class FleetStatProcessor {
                             + " and " + itemLocBuildingColName + " = '" + buildingNameSql + "'"
                             + blockSel
                             + " and " + valDiffHealthFilter
+                            + lcStatusConstraint
                             + additionalConstraint;
                     List<Map<String, Object>> respValDiff;
                     try {
