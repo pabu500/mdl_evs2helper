@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="scope helper zsp itemIdColName reorder_id to id">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/email/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/email/EmailService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,8 +35,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/pabu500/mdl_evs2helper.git&quot;,
-    &quot;accountId&quot;: &quot;99c90f38-29b0-416f-be37-e5259112c618&quot;
+    &quot;url&quot;: &quot;https://github.com/pa621bu500/mdl_evs2helper.git&quot;,
+    &quot;accountId&quot;: &quot;3d9258f8-4b5e-4ba2-8a78-6347e8f7c2d5&quot;
   },
   &quot;recentNewPullRequestHead&quot;: {
     &quot;server&quot;: {
@@ -69,6 +68,8 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Maven.evs2helper [clean,deploy].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.evs2helper [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.evs2helper [compile].executor&quot;: &quot;Run&quot;,
     &quot;Maven.evs2helper [package].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,

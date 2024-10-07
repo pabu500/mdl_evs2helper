@@ -63,12 +63,20 @@ public class EmailService {
     }
     public void sendEmailWithAttachment(String fromAddress, String senderName, String to, String subject, String text, File attachedFile, boolean isHtml) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+        String disclaimer = "<br><br><span style='font-size: 10px;'>" +
+                "<span style='background-color: yellow; font-size: 12px; font-style: italic;'>Disclaimer</span>: This email and any files transmitted with it contain confidential information intended solely for the named recipient. " +
+                "The information is privileged and must not be disclosed, shared, copied, or distributed to any party outside the intended recipients. " +
+                "Any use of this email’s content for purposes other than those authorized by the sender is strictly prohibited. " +
+                "If you have received this email in error, please notify the sender immediately and delete this email from your system. " +
+                "If you are not the intended recipient, do not disclose, copy, or rely on the contents of this email, and refrain from sharing it with others. Thank you.</span>";
+
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(senderName+ " <"+fromAddress+">");
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setText(text, isHtml);
+            helper.setText(text+disclaimer, isHtml);
 
             // Add attachment
             if(attachedFile != null) {
