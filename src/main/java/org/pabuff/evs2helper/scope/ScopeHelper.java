@@ -244,14 +244,16 @@ public class ScopeHelper {
                 itemIdColName = "item_name";
             }
         }else if (projectScope.toLowerCase().contains("ems_zsp")) {
+            String schemaPrefix = "zsp.";
             itemType = ItemTypeEnum.METER_ZSP;
-            itemTableName = "meter_zsp";//"recorder";
-            itemReadingTableName = "meter_reading_zsp";//"energy_etc";
+            itemTableName = schemaPrefix +"meter_zsp";
+            itemReadingTableName = schemaPrefix+ "meter_reading_zsp";//"energy_etc";
+            tenantTableName = schemaPrefix + "tenant_zsp";//"tenant";
+            itemGroupTableName = schemaPrefix + "recgroup";
+            tenantTargetGroupTableName = schemaPrefix + "tenantgroup";
+
             itemReadingIndexColName = "id";//"egyid";
             itemReadingIdColName = "recorder_id";//"egyinstkey";
-            itemGroupTableName = "recgroup";
-            tenantTableName = "tenant_zsp";//"tenant";
-            tenantTargetGroupTableName = "tenantgroup";
             itemIdColName = "id";//"recid";
 //            itemNameColName = "recdisplayname";
             itemNameColName = "rec_displayname";//"recid";
