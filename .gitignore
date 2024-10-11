@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+/.idea/aws.xml
+/.idea/compiler.xml
+/.idea/encodings.xml
+/.idea/jarRepositories.xml
+/.idea/misc.xml
+/.idea/vcs.xml
