@@ -264,14 +264,15 @@ public class ScopeHelper {
             valKey = "kwh_total";//"kwhtot";
             itemLocBuildingColName = "loc_building";
         }else if (projectScope.toLowerCase().contains("ems_mbfc")) {
+            String schemaPrefix = "mbfc.";
             itemType = ItemTypeEnum.METER_MBFC;
-            itemTableName = "meter_mbfc"; //"recorder";
-            itemReadingTableName =  "meter_reading_mbfc";//"energy_etc";
+            itemTableName = schemaPrefix + "meter_mbfc"; //"recorder";
+            itemReadingTableName =  schemaPrefix + "meter_reading_mbfc";//"energy_etc";
             itemReadingIndexColName = "id"; //"egyid";
             itemReadingIdColName = "recorder_id";//"item_name";//"egyinstkey";
-            itemGroupTableName = "recgroup";
-            tenantTableName = "customer";
-            tenantTargetGroupTableName = "custgroup";
+            itemGroupTableName = schemaPrefix + "recgroup";
+            tenantTableName = schemaPrefix + "customer";
+            tenantTargetGroupTableName = schemaPrefix + "custgroup";
             itemIdColName = "id"; //"recid";
 //            itemNameColName = "recdisplayname";
             itemNameColName = "rec_displayname"; //"recid";

@@ -257,39 +257,48 @@ public class MeterUsageProcessor {
 //                }
 //                usageSummary.put("alt_name", meterAltName);
 
-                String firstReadingVal = (String) resultMonthly.get("first_reading_val");
-                String lastReadingVal = (String) resultMonthly.get("last_reading_val");
-                String firstReadingTime = ((String) resultMonthly.get("first_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("first_reading_time");
-                String lastReadingTime = ((String) resultMonthly.get("last_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("last_reading_time");
-                Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
-                Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
-                //round to 2 decimals
-                Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
-                Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
-                Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
-//                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-                firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
-                lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
-                String usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
+                try {
+                    String firstReadingVal = (String) resultMonthly.get("first_reading_val");
+                    String lastReadingVal = (String) resultMonthly.get("last_reading_val");
+                    String firstReadingTime = ((String) resultMonthly.get("first_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("first_reading_time");
+                    String lastReadingTime = ((String) resultMonthly.get("last_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("last_reading_time");
 
-                usageSummary.put("first_reading_time", firstReadingTime);
-                usageSummary.put("last_reading_time", lastReadingTime);
-                usageSummary.put("first_reading_val", firstReadingVal);
-                usageSummary.put("last_reading_val", lastReadingVal);
-                usageSummary.put("usage", usage);
+                    firstReadingVal = firstReadingVal == null ? "" : firstReadingVal;
+                    lastReadingVal = lastReadingVal == null ? "" : lastReadingVal;
+
+                    Double firstReadingValDouble = firstReadingVal.isEmpty() ? null : Double.parseDouble(firstReadingVal);
+                    Double lastReadingValDouble = lastReadingVal.isEmpty() ? null : Double.parseDouble(lastReadingVal);
+                    //round to 2 decimals
+                    Double firstReadingValDouble2 = firstReadingValDouble == null ? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
+                    Double lastReadingValDouble2 = lastReadingValDouble == null ? null : MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
+                    Double usageDouble = firstReadingValDouble2 == null || lastReadingValDouble2 == null ? null : lastReadingValDouble2 - firstReadingValDouble2;
+//                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+                    firstReadingVal = firstReadingValDouble2 == null ? "-" : String.format("%.2f", firstReadingValDouble2);
+                    lastReadingVal = lastReadingValDouble2 == null ? "-" : String.format("%.2f", lastReadingValDouble2);
+                    String usage = usageDouble == null ? "-" : String.format("%.2f", usageDouble);
+
+                    usageSummary.put("first_reading_time", firstReadingTime);
+                    usageSummary.put("last_reading_time", lastReadingTime);
+                    usageSummary.put("first_reading_val", firstReadingVal);
+                    usageSummary.put("last_reading_val", lastReadingVal);
+                    usageSummary.put("usage", usage);
 //                usageSummary.put("first_reading_ref", resultMonthly.get("first_reading_ref"));
 //                usageSummary.put("last_reading_ref", resultMonthly.get("last_reading_ref"));
-                boolean useCommissionDatetime = resultMonthly.get("use_commissioned_datetime") != null && (boolean) resultMonthly.get("use_commissioned_datetime");
-                usageSummary.put("use_commissioned_datetime", useCommissionDatetime);
-                usageSummary.put("last_reading_timestamp", lastReadingTimestampStr);
+                    boolean useCommissionDatetime = resultMonthly.get("use_commissioned_datetime") != null && (boolean) resultMonthly.get("use_commissioned_datetime");
+                    usageSummary.put("use_commissioned_datetime", useCommissionDatetime);
+                    usageSummary.put("last_reading_timestamp", lastReadingTimestampStr);
 
-                usageSummaryList.add(usageSummary);
+                    usageSummaryList.add(usageSummary);
 
-                logger.info(processingCount + "/" + totalCount + " meter: " + meterSn + " usage: " + usage);
-                if(testCount > 0 && processingCount >= testCount){
-                    break;
+                    logger.info(processingCount + "/" + totalCount + " meter: " + meterSn + " usage: " + usage);
+                    if(testCount > 0 && processingCount >= testCount){
+                        break;
+                    }
+                    continue;
+                }catch (Exception e){
+                    logger.info("error: " + e.getMessage());
+                    return Collections.singletonMap("error", "error: " + e.getMessage());
                 }
-                continue;
             }
 
             String firstReadingVal = "-";
@@ -380,22 +389,31 @@ public class MeterUsageProcessor {
 
             if(resp2.isEmpty()){
             }else {
-                if(!useCommissionedDatetime) {
-                    firstReadingVal = (String) resp2.getFirst().get("first_reading_val");
-                    firstReadingTime = (String) resp2.getFirst().get("first_reading_time");
+                try {
+                    if(!useCommissionedDatetime) {
+                        firstReadingVal = (String) resp2.getFirst().get("first_reading_val");
+                        firstReadingTime = (String) resp2.getFirst().get("first_reading_time");
+                    }
+                    lastReadingVal = (String) resp2.getFirst().get("last_reading_val");
+                    lastReadingTime = (String) resp2.getFirst().get("last_reading_time");
+
+                    firstReadingVal = firstReadingVal == null ? "" : firstReadingVal;
+                    lastReadingVal = lastReadingVal == null ? "" : lastReadingVal;
+
+                    Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
+                    Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
+                    //round to 2 decimals
+                    Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
+                    Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
+                    Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
+    //                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+                    firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
+                    lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
+                    usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
+                }catch (Exception e){
+                    logger.info("error: " + e.getMessage());
+                    return Collections.singletonMap("error", "error: " + e.getMessage());
                 }
-                lastReadingVal = (String) resp2.getFirst().get("last_reading_val");
-                lastReadingTime = (String) resp2.getFirst().get("last_reading_time");
-                Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
-                Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
-                //round to 2 decimals
-                Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
-                Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
-                Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
-//                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-                firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
-                lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
-                usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
             }
 //            LinkedHashMap<String, Object> usageSummary = new LinkedHashMap<>();
 //
@@ -623,20 +641,29 @@ public class MeterUsageProcessor {
                         continue;
                     }
 
-                    firstReadingVal = (String) resultMonthly.get("first_reading_val");
-                    lastReadingVal = (String) resultMonthly.get("last_reading_val");
-                    firstReadingTimeStr = ((String) resultMonthly.get("first_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("first_reading_time");
-                    lastReadingTimeStr = ((String) resultMonthly.get("last_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("last_reading_time");
-                    Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
-                    Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
-                    //round to 2 decimals
-                    Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
-                    Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
-                    Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
+                    try {
+                        firstReadingVal = (String) resultMonthly.get("first_reading_val");
+                        lastReadingVal = (String) resultMonthly.get("last_reading_val");
+                        firstReadingTimeStr = ((String) resultMonthly.get("first_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("first_reading_time");
+                        lastReadingTimeStr = ((String) resultMonthly.get("last_reading_time")).isEmpty() ? "-" : (String) resultMonthly.get("last_reading_time");
+
+                        firstReadingVal = firstReadingVal == null ? "" : firstReadingVal;
+                        lastReadingVal = lastReadingVal == null ? "" : lastReadingVal;
+
+                        Double firstReadingValDouble = firstReadingVal.isEmpty() ? null : Double.parseDouble(firstReadingVal);
+                        Double lastReadingValDouble = lastReadingVal.isEmpty() ? null : Double.parseDouble(lastReadingVal);
+                        //round to 2 decimals
+                        Double firstReadingValDouble2 = firstReadingValDouble == null ? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
+                        Double lastReadingValDouble2 = lastReadingValDouble == null ? null : MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
+                        Double usageDouble = firstReadingValDouble2 == null || lastReadingValDouble2 == null ? null : lastReadingValDouble2 - firstReadingValDouble2;
 //                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-                    firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
-                    lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
-                    usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
+                        firstReadingVal = firstReadingValDouble2 == null ? "-" : String.format("%.2f", firstReadingValDouble2);
+                        lastReadingVal = lastReadingValDouble2 == null ? "-" : String.format("%.2f", lastReadingValDouble2);
+                        usage = usageDouble == null ? "-" : String.format("%.2f", usageDouble);
+                    }catch (Exception e){
+                        logger.info("error: " + e.getMessage());
+                        return Collections.singletonMap("error", "error: " + e.getMessage());
+                    }
 
                 }else {
                     //from endDatetimeStr, go back numberOfIntervals intervals
@@ -681,20 +708,29 @@ public class MeterUsageProcessor {
                         break;
                     }
 
-                    firstReadingVal = (String) resp2.getFirst().get("first_reading_val");
-                    lastReadingVal = (String) resp2.getFirst().get("last_reading_val");
-                    firstReadingTimeStr = (String) resp2.getFirst().get("first_reading_time");
-                    lastReadingTimeStr = (String) resp2.getFirst().get("last_reading_time");
-                    Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
-                    Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
-                    //round to 2 decimals
-                    Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
-                    Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
-                    Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
-//                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
-                    firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
-                    lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
-                    usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
+                    try {
+                        firstReadingVal = (String) resp2.getFirst().get("first_reading_val");
+                        lastReadingVal = (String) resp2.getFirst().get("last_reading_val");
+                        firstReadingTimeStr = (String) resp2.getFirst().get("first_reading_time");
+                        lastReadingTimeStr = (String) resp2.getFirst().get("last_reading_time");
+
+                        firstReadingVal = firstReadingVal == null ? "" : firstReadingVal;
+                        lastReadingVal = lastReadingVal == null ? "" : lastReadingVal;
+
+                        Double firstReadingValDouble = firstReadingVal.isEmpty()? null : Double.parseDouble(firstReadingVal);
+                        Double lastReadingValDouble = lastReadingVal.isEmpty()? null: Double.parseDouble(lastReadingVal);
+                        //round to 2 decimals
+                        Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
+                        Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
+                        Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
+    //                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+                        firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
+                        lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
+                        usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
+                    } catch (Exception e) {
+                        logger.info("error: " + e.getMessage());
+                        return Collections.singletonMap("error", "error: " + e.getMessage());
+                    }
                 }
 
                 Map<String, Object> usageHistory = new HashMap<>();
