@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.pabuff</groupId>
 	<artifactId>evs2helper</artifactId>
-	<version>3.36.22</version>
+	<version>3.36.23</version>
 	<name>evs2helper</name>
 	<description>EVS2 Helper Module</description>
 
@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>org.pabuff</groupId>
 			<artifactId>util</artifactId>
-			<version>2.33.1</version>
+			<version>2.33.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.pabuff</groupId>
