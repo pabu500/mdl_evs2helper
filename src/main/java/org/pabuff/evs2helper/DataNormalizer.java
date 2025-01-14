@@ -833,6 +833,9 @@ public class DataNormalizer {
             Map<String, Map<String, Object>> readings = new HashMap<>();
             int readingsContainError = 0;
             for (String part : parts) {
+                if (row.get(part) == null || prevRow.get(part) == null){
+                    continue;
+                }
                 double readingTotal = MathUtil.ObjToDouble(row.get(part));
                 double readingTotal2 = MathUtil.ObjToDouble(prevRow.get(part));
                 double readingDiff = readingTotal - readingTotal2;
