@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="scope helper mbfc schema prefix">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/DataNormalizer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/DataNormalizer.java" afterDir="false" />
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="null check for rawDataCheck">
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -127,14 +126,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00029" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1714193431472</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1714193431472</updated>
     </task>
     <task id="LOCAL-00030" summary="misc fix">
       <option name="closed" value="true" />
@@ -520,7 +511,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732842345118</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="null check for rawDataCheck">
+      <option name="closed" value="true" />
+      <created>1736858330807</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1736858330807</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -547,7 +546,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="FleetHealth update" />
     <MESSAGE value="misc" />
     <MESSAGE value="bill processor update" />
     <MESSAGE value="fleet health update" />
@@ -572,6 +570,7 @@
     <MESSAGE value="misc update" />
     <MESSAGE value="ver update" />
     <MESSAGE value="scope helper mbfc schema prefix" />
-    <option name="LAST_COMMIT_MESSAGE" value="scope helper mbfc schema prefix" />
+    <MESSAGE value="null check for rawDataCheck" />
+    <option name="LAST_COMMIT_MESSAGE" value="null check for rawDataCheck" />
   </component>
 </project>
