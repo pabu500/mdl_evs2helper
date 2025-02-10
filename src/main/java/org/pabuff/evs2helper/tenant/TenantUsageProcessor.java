@@ -227,7 +227,7 @@ public class TenantUsageProcessor {
 
             requestMeterListUsage.put("mbr_range_hours", "18");
 
-            Map<String, Object> usageResult = meterUsageProcessor.getMeterListUsageSummary(requestMeterListUsage, meterList);
+            Map<String, Object> usageResult = meterUsageProcessor.getMeterListUsageSummary(requestMeterListUsage, meterList, null);
 
             // handle percentage
             List<Map<String, Object>> meterListUsageSummary = (List<Map<String, Object>>) usageResult.get("meter_list_usage_summary");
