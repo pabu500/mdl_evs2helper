@@ -198,6 +198,9 @@ public class ScopeHelper {
         Function<String, String> validator = null;
         String valKeyRcv = "received_total";
         String valKeyDel = "delivered_total";
+        String refKey = "ref";
+        String refKeyRcv = "ref_received";
+        String refKeyDel = "ref_delivered";
 
         if (projectScope.toLowerCase().contains("ems_smrt")) {
             itemType = ItemTypeEnum.METER_3P;
@@ -329,6 +332,9 @@ public class ScopeHelper {
         result.put("validator", validator);
         result.put("valKeyRcv", valKeyRcv);
         result.put("valKeyDel", valKeyDel);
+        result.put("refKey", refKey);
+        result.put("refKeyRcv", refKeyRcv);
+        result.put("refKeyDel", refKeyDel);
 
         return result;
     }
