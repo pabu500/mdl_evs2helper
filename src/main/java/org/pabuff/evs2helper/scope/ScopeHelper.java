@@ -57,6 +57,7 @@ public class ScopeHelper {
         String itemLocBlockColName = "mms_block";
         ItemTypeEnum itemType = ItemTypeEnum.METER;
         Function<String, String> validator = null;
+
         if (projectScope.toLowerCase().contains("ems_smrt")) {
             itemType = ItemTypeEnum.METER_3P;
             targetReadingTableName = "meter_reading_3p";
@@ -195,6 +196,9 @@ public class ScopeHelper {
         String itemLocBlockColName = "mms_block";
         ItemTypeEnum itemType = ItemTypeEnum.METER;
         Function<String, String> validator = null;
+        String valKeyRcv = "received_total";
+        String valKeyDel = "delivered_total";
+
         if (projectScope.toLowerCase().contains("ems_smrt")) {
             itemType = ItemTypeEnum.METER_3P;
             itemReadingTableName = "meter_reading_3p";
@@ -236,6 +240,8 @@ public class ScopeHelper {
             valKey = "val";
             valDiffKey = "val_diff";
             valDiffTimeKey = "dt";
+            valKeyRcv = "received_total";
+            valKeyDel = "delivered_total";
             if(itemIdType == null){
                 itemIdType = ItemIdTypeEnum.NAME;
             }
@@ -321,6 +327,8 @@ public class ScopeHelper {
         result.put("valDiffKey", valDiffKey);
         result.put("valDiffTimeKey", valDiffTimeKey);
         result.put("validator", validator);
+        result.put("valKeyRcv", valKeyRcv);
+        result.put("valKeyDel", valKeyDel);
 
         return result;
     }
