@@ -153,7 +153,7 @@ public class MeterGroupUsageProcessor {
             requestMeterListUsage.put("max_rows_per_page", "1000");
             requestMeterListUsage.put("current_page", "1");
 
-            Map<String, Object> usageResult = meterUsageProcessor.getMeterListUsageSummary(requestMeterListUsage, meterList);
+            Map<String, Object> usageResult = meterUsageProcessor.getMeterListUsageSummary(requestMeterListUsage, meterList, null);
 
             // handle percentage
             List<Map<String, Object>> meterListUsageSummary = (List<Map<String, Object>>) usageResult.get("meter_list_usage_summary");
