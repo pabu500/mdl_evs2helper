@@ -4,8 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="Scope Helper update">
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_group/MeterGroupUsageProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_group/MeterGroupUsageProcessor.java" afterDir="false" />
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="null check for rawDataCheck">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/meter_usage/MeterUsageProcessor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,21 +67,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.evs2helper [clean,deploy].executor": "Run",
-    "Maven.evs2helper [clean].executor": "Run",
-    "Maven.evs2helper [compile].executor": "Run",
-    "Maven.evs2helper [package].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/_pa/_evs2/_svc_oresvc/20240508",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.evs2helper [clean,deploy].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.evs2helper [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.evs2helper [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.evs2helper [package].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/_pa/_evs2/_svc_oresvc/20240508&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="evs2helper [clean,deploy]" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
       <MavenSettings>
@@ -126,6 +128,22 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
+    </task>
+    <task id="LOCAL-00030" summary="misc fix">
+      <option name="closed" value="true" />
+      <created>1714207614955</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1714207614955</updated>
+    </task>
+    <task id="LOCAL-00031" summary="misc fix">
+      <option name="closed" value="true" />
+      <created>1714209866779</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1714209866779</updated>
     </task>
     <task id="LOCAL-00032" summary="misc fix">
       <option name="closed" value="true" />
@@ -495,31 +513,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732842345118</updated>
     </task>
-    <task id="LOCAL-00078" summary="Scope Helper update">
+    <task id="LOCAL-00078" summary="null check for rawDataCheck">
       <option name="closed" value="true" />
-      <created>1739201364862</created>
+      <created>1736858330807</created>
       <option name="number" value="00078" />
       <option name="presentableId" value="LOCAL-00078" />
       <option name="project" value="LOCAL" />
-      <updated>1739201364862</updated>
+      <updated>1736858330807</updated>
     </task>
-    <task id="LOCAL-00079" summary="Scope Helper update">
-      <option name="closed" value="true" />
-      <created>1739206649458</created>
-      <option name="number" value="00079" />
-      <option name="presentableId" value="LOCAL-00079" />
-      <option name="project" value="LOCAL" />
-      <updated>1739206649458</updated>
-    </task>
-    <task id="LOCAL-00080" summary="Scope Helper update">
-      <option name="closed" value="true" />
-      <created>1739206686421</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1739206686421</updated>
-    </task>
-    <option name="localTasksCounter" value="81" />
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -570,7 +572,7 @@
     <MESSAGE value="misc update" />
     <MESSAGE value="ver update" />
     <MESSAGE value="scope helper mbfc schema prefix" />
-    <MESSAGE value="Scope Helper update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Scope Helper update" />
+    <MESSAGE value="null check for rawDataCheck" />
+    <option name="LAST_COMMIT_MESSAGE" value="null check for rawDataCheck" />
   </component>
 </project>

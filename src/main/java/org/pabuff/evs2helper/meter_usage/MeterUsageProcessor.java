@@ -56,12 +56,21 @@ public class MeterUsageProcessor {
         List<Map<String, Object>> usageSummaryListDel = (List<Map<String, Object>>) resultDel.get("meter_list_usage_summary");
 
         List<Map<String, Object>> usageSummaryList = new ArrayList<>();
+        String meterIdKey = (String) resultRvc.get("meter_id_key");
+        String firstReadingValKeyRcv = (String) resultRvc.get("first_reading_val_key_received");
+        String lastReadingValKeyRcv = (String) resultRvc.get("last_reading_val_key_received");
+        String firstReadingValKeyDel = (String) resultDel.get("first_reading_val_key_delivered");
+        String lastReadingValKeyDel = (String) resultDel.get("last_reading_val_key_delivered");
+        String usageKeyRcv = (String) resultRvc.get("usage_key");
+        String usageKeyDel = (String) resultDel.get("usage_key");
         for(Map<String, Object> usageSummaryRvc : usageSummaryListRvc){
-            String meterIdRvc = (String) usageSummaryRvc.get("meter_number");
+            String meterIdRvc = (String) usageSummaryRvc.get(meterIdKey);
             for(Map<String, Object> usageSummaryDel : usageSummaryListDel){
-                String meterIdDel = (String) usageSummaryDel.get("meter_number");
+                String meterIdDel = (String) usageSummaryDel.get(meterIdKey);
                 if(meterIdRvc.equals(meterIdDel)){
-                    usageSummaryRvc.put("usage_delivered", usageSummaryDel.get("usage"));
+                    usageSummaryRvc.put(firstReadingValKeyDel, usageSummaryDel.get(firstReadingValKeyDel));
+                    usageSummaryRvc.put(lastReadingValKeyDel, usageSummaryDel.get(lastReadingValKeyDel));
+                    usageSummaryRvc.put(usageKeyDel, usageSummaryDel.get(usageKeyDel));
                     usageSummaryList.add(usageSummaryRvc);
                     break;
                 }
@@ -272,6 +281,8 @@ public class MeterUsageProcessor {
             for(String idCol : idColList){
                 usageSummary.put(idCol, meterMap.get(idCol));
             }
+//            usageSummary.put("meter_id_key", itemIdColName);
+
             if(locColList != null){
                 for(String locCol : locColList){
                     usageSummary.put(locCol, meterMap.get(locCol));
@@ -305,7 +316,7 @@ public class MeterUsageProcessor {
                                 itemReadingIdColName,//itemIdColName,
                                 timeKey, valKey,
                                 mbrAdditionalConstraint,
-                                refKey);
+                                firstReadingValKey, lastReadingValKey, refKey);
 
                 if (resultMonthly.containsKey("error")) {
                     logger.info("error: " + resultMonthly.get("error"));
@@ -351,7 +362,7 @@ public class MeterUsageProcessor {
                     usageSummary.put("last_reading_time", lastReadingTime);
                     usageSummary.put(firstReadingValKey, firstReadingVal);
                     usageSummary.put(lastReadingValKey, lastReadingVal);
-                    usageSummary.put("usage", usage);
+                    usageSummary.put(usageKey, usage);
 //                usageSummary.put("first_reading_ref", resultMonthly.get("first_reading_ref"));
 //                usageSummary.put("last_reading_ref", resultMonthly.get("last_reading_ref"));
                     boolean useCommissionDatetime = resultMonthly.get("use_commissioned_datetime") != null && (boolean) resultMonthly.get("use_commissioned_datetime");
@@ -476,7 +487,7 @@ public class MeterUsageProcessor {
                     Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
                     Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
                     Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
-    //                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+                    //                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
                     firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
                     lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
                     usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
@@ -518,6 +529,14 @@ public class MeterUsageProcessor {
             }
         }
         result.put("meter_list_usage_summary", usageSummaryList);
+        result.put("meter_id_key", itemIdColName);
+        result.put("usage_key", usageKey);
+        result.put("first_reading_val_key", firstReadingValKey);
+        result.put("last_reading_val_key", lastReadingValKey);
+        result.put("first_reading_val_key_received", firstReadingValKeyRcv);
+        result.put("last_reading_val_key_received", lastReadingValKeyRcv);
+        result.put("first_reading_val_key_delivered", firstReadingValKeyDel);
+        result.put("last_reading_val_key_delivered", lastReadingValKeyDel);
         return result;
     }
 
@@ -702,6 +721,7 @@ public class MeterUsageProcessor {
                             itemReadingIdColName, //itemIdColName,
                             timeKey, valKey,
                             mbrAdditionalConstraint,
+                            "first_reading_val", "last_reading_val",
                             "ref");
                     if(resultMonthly.containsKey("error")){
                         logger.info("error: " + resultMonthly.get("error"));
@@ -794,7 +814,7 @@ public class MeterUsageProcessor {
                         Double firstReadingValDouble2 = firstReadingValDouble==null? null : MathUtil.setDecimalPlaces(firstReadingValDouble, 2, RoundingMode.HALF_UP);
                         Double lastReadingValDouble2 = lastReadingValDouble==null? null: MathUtil.setDecimalPlaces(lastReadingValDouble, 2, RoundingMode.HALF_UP);
                         Double usageDouble = firstReadingValDouble2==null || lastReadingValDouble2==null ? null : lastReadingValDouble2 - firstReadingValDouble2;
-    //                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
+                        //                Double usageDouble = lastReadingValDouble - firstReadingValDouble;
                         firstReadingVal = firstReadingValDouble2==null? "-" : String.format("%.2f", firstReadingValDouble2);
                         lastReadingVal = lastReadingValDouble2==null? "-" : String.format("%.2f", lastReadingValDouble2);
                         usage = usageDouble==null? "-" : String.format("%.2f", usageDouble);
@@ -857,7 +877,7 @@ public class MeterUsageProcessor {
             String itemReadingIdColName,
             String timeKey, String valKey,
             String mbrAdditionalConstraint,
-            String refKey) {
+            String firstReadingValKey, String lastReadingValKey, String refKey) {
         logger.info("process findMonthlyReading");
         LocalDateTime searchingStart = localHelper.getLocalNow();
 
@@ -1094,9 +1114,11 @@ public class MeterUsageProcessor {
         }
 
         result.put("first_reading_time", firstReadingTimestamp);
-        result.put("first_reading_val", firstReadingVal);
+//        result.put("first_reading_val", firstReadingVal);
+        result.put(firstReadingValKey, firstReadingVal);
         result.put("last_reading_time", lastReadingTimestamp);
-        result.put("last_reading_val", lastReadingVal);
+//        result.put("last_reading_val", lastReadingVal);
+        result.put(lastReadingValKey, lastReadingVal);
         result.put("use_commissioned_datetime", useCommissionedDatetime);
 
 //        LocalDateTime searchingEnd = localHelper.getLocalNow();
