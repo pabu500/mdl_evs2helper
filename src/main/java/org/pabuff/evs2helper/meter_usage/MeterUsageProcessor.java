@@ -77,6 +77,7 @@ public class MeterUsageProcessor {
             }
         }
         result.put("meter_list_usage_summary", usageSummaryList);
+        result.put("total_count", resultRvc.get("total_count"));
         return result;
     }
 
