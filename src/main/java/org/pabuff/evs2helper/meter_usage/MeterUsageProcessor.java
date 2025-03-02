@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.RoundingMode;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Logger;
@@ -696,7 +697,10 @@ public class MeterUsageProcessor {
                 String usage = "-";
 
                 LocalDateTime endDatetime = DateTimeUtil.getLocalDateTime(endDatetimeStr);
-                LocalDateTime endDatetimeMonthEnd = endDatetime.withDayOfMonth(endDatetime.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
+                //NOTE: endDatetime.getMonth().maxLength() will give 29 for Feb regardless of leap year
+//                LocalDateTime endDatetimeMonthEnd = endDatetime.withDayOfMonth(endDatetime.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
+                LocalDate endDatetimeMonthEndDate = endDatetime.toLocalDate();
+                LocalDateTime endDatetimeMonthEnd = endDatetime.withDayOfMonth(endDatetimeMonthEndDate.lengthOfMonth()).withHour(23).withMinute(59).withSecond(59);
                 if(targetInterval.equalsIgnoreCase("month")){
                     LocalDateTime localNow = localHelper.getLocalNow();
                     LocalDateTime endDateTimeInterval = endDatetimeMonthEnd.minusMonths(i);
@@ -883,9 +887,12 @@ public class MeterUsageProcessor {
         LocalDateTime searchingStart = localHelper.getLocalNow();
 
         LocalDateTime monthEndDatetimeDay = DateTimeUtil.getLocalDateTime(monthEndDatetimeStr);
-        LocalDateTime monthEndDatetime =  monthEndDatetimeDay
-                .withDayOfMonth(monthEndDatetimeDay.getMonth().maxLength())
-                .withHour(23).withMinute(59).withSecond(59);
+        // NOTE: monthEndDatetimeDay.getMonth().maxLength() will give 29 for Feb regardless of leap year
+//        LocalDateTime monthEndDatetime =  monthEndDatetimeDay.withDayOfMonth(monthEndDatetimeDay.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
+        LocalDate monthEndDatetimeDate = monthEndDatetimeDay.toLocalDate();
+        LocalDateTime monthEndDatetime = monthEndDatetimeDay.withDayOfMonth(monthEndDatetimeDate.lengthOfMonth()).withHour(23).withMinute(59).withSecond(59);
+
+        // get the first day of the month
 //        LocalDateTime monthStartDatetime = DateTimeUtil.getLocalDateTime(monthStartDatetimeStr);
         LocalDateTime monthStartDatetime = monthEndDatetime.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
 
@@ -982,7 +989,11 @@ public class MeterUsageProcessor {
             // that is not duplicated and not interpolated
             if (respStartSearchRange.isEmpty()) {
                 LocalDateTime beginOfMonth = monthStartDatetime.withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0);
-                LocalDateTime endOfMonth = monthStartDatetime.withDayOfMonth(monthStartDatetime.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
+                // NOTE: monthStartDatetime.getMonth().maxLength() will give 29 for Feb regardless of leap year
+//                LocalDateTime endOfMonth = monthStartDatetime.withDayOfMonth(monthStartDatetime.getMonth().maxLength()).withHour(23).withMinute(59).withSecond(59);
+                LocalDate endOfMonthDate = monthStartDatetime.toLocalDate();
+                LocalDateTime endOfMonth = monthStartDatetime.withDayOfMonth(endOfMonthDate.lengthOfMonth()).withHour(23).withMinute(59).withSecond(59);
+
                 String firstReadingOfCurrentMonthSql = "SELECT " + itemReadingIndexColName + ", " + valKey + ", " + timeKey + ", " + refKey + " FROM " + itemReadingTableName
                         + " WHERE " +
                         itemReadingIdColName + " = '" + meterId + "' AND " +
