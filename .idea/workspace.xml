@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="dependency update">
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/device/DeviceLcStatusHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/device/DeviceLcStatusHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/BypassPolicyResolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/BypassPolicyResolver.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +35,9 @@
     &quot;assignee&quot;: &quot;evs2bu500&quot;
   }
 }</component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="67c47d2d-50dc-46d2-a77c-045a3d59f2f9" />
+  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/pa621bu500/mdl_evs2helper.git&quot;,
@@ -126,22 +131,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00032" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1714322968009</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1714322968009</updated>
-    </task>
-    <task id="LOCAL-00033" summary="add net usage in result">
-      <option name="closed" value="true" />
-      <created>1714537675989</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1714537675989</updated>
     </task>
     <task id="LOCAL-00034" summary="misc update">
       <option name="closed" value="true" />
@@ -519,7 +508,23 @@
       <option name="project" value="LOCAL" />
       <updated>1743742710660</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="dependency update">
+      <option name="closed" value="true" />
+      <created>1743742771869</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1743742771869</updated>
+    </task>
+    <task id="LOCAL-00082" summary="dependency update">
+      <option name="closed" value="true" />
+      <created>1743742828387</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1743742828387</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

@@ -56,6 +56,15 @@ public class BypassPolicyResolver {
             return Map.of("result", "no",
                           "message", "meter info not found");
         }
+
+        // check perm bypass
+        // this is the lc status of meter
+        // it is different from 'bypass always' from the bypass policy
+        if("bypassed".equals(meterInfoDto.getLcStatus())){
+            return Map.of("result", "ok",
+                          "message", "lc_status is bypassed");
+        }
+
         MeterBypassDto meterBypassDto = meterInfoDto.getBypassPolicy();
 
         if(meterBypassDto == null) {
