@@ -52,6 +52,7 @@ public class DeviceLcStatusHelper {
             case MAINTENANCE -> "maint";
             case DECOMMISSIONED -> "dc";
             case BYPASSED -> "bypassed";
+            case MARKED_FOR_DELETE -> "mfd";
         };
     }
 

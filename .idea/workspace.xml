@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="MeterUsageProcessor add SE1 type usage calc">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="dependency update">
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/device/DeviceLcStatusHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/device/DeviceLcStatusHelper.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +67,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Maven.evs2helper [clean,deploy].executor": "Debug",
+    "Maven.evs2helper [clean,deploy].executor": "Run",
     "Maven.evs2helper [clean].executor": "Run",
     "Maven.evs2helper [compile].executor": "Run",
     "Maven.evs2helper [package].executor": "Run",
@@ -127,14 +126,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00031" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1714209866779</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1714209866779</updated>
     </task>
     <task id="LOCAL-00032" summary="misc fix">
       <option name="closed" value="true" />
@@ -520,7 +511,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739245186071</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <task id="LOCAL-00080" summary="dependency update">
+      <option name="closed" value="true" />
+      <created>1743742710660</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1743742710660</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -547,7 +546,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="bill processor update" />
     <MESSAGE value="fleet health update" />
     <MESSAGE value="misc fix" />
     <MESSAGE value="add net usage in result" />
@@ -572,6 +570,7 @@
     <MESSAGE value="scope helper mbfc schema prefix" />
     <MESSAGE value="null check for rawDataCheck" />
     <MESSAGE value="MeterUsageProcessor add SE1 type usage calc" />
-    <option name="LAST_COMMIT_MESSAGE" value="MeterUsageProcessor add SE1 type usage calc" />
+    <MESSAGE value="dependency update" />
+    <option name="LAST_COMMIT_MESSAGE" value="dependency update" />
   </component>
 </project>
