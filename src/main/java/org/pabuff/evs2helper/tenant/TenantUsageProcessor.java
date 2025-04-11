@@ -200,6 +200,7 @@ public class TenantUsageProcessor {
         tenantResult.put("tenant_label", tenantMap.get("tenant_label"));
         tenantResult.put("alt_name", tenantMap.get("alt_name"));
         tenantResult.put("tenant_type", tenantMap.get("type"));
+        tenantResult.put("coupled_tenant_id", tenantMap.get("coupled_tenant_id"));
 
         //list of meter groups
         List<Map<String, Object>> meterGroups = (List<Map<String, Object>>) tenantMeters.get("group_full_info");
