@@ -12,6 +12,11 @@
       <option name="url" value="https://repo.maven.apache.org/maven2/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="ias-snapshots" />
+      <option name="name" value="Infinite Automation Snapshot Repository" />
+      <option name="url" value="https://maven.mangoautomation.net/repository/ias-snapshot/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="github" />
       <option name="name" value="github" />
       <option name="url" value="https://maven.pkg.github.com/pabu500/mdl_paghelper" />
@@ -30,6 +35,11 @@
       <option name="id" value="central" />
       <option name="name" value="central" />
       <option name="url" value="https://repo1.maven.org/maven2" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="ias-releases" />
+      <option name="name" value="Infinite Automation Release Repository" />
+      <option name="url" value="https://maven.mangoautomation.net/repository/ias-release/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="eclipse-repo" />
