@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="Scope Helper update">
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+    <list default="true" id="1f171731-caad-4279-8103-23b8989ae3a6" name="Changes" comment="add sendEmailWithAttachmentCC">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/email/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/email/EmailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/email/SystemNotifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/pabuff/evs2helper/email/SystemNotifier.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,14 +127,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1712849242318</updated>
-    </task>
-    <task id="LOCAL-00032" summary="misc fix">
-      <option name="closed" value="true" />
-      <created>1714322968009</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1714322968009</updated>
     </task>
     <task id="LOCAL-00033" summary="add net usage in result">
       <option name="closed" value="true" />
@@ -521,7 +512,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739206686421</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="add sendEmailWithAttachmentCC">
+      <option name="closed" value="true" />
+      <created>1745773624375</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1745773624375</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -548,7 +547,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="misc" />
     <MESSAGE value="bill processor update" />
     <MESSAGE value="fleet health update" />
     <MESSAGE value="misc fix" />
@@ -573,6 +571,7 @@
     <MESSAGE value="ver update" />
     <MESSAGE value="scope helper mbfc schema prefix" />
     <MESSAGE value="Scope Helper update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Scope Helper update" />
+    <MESSAGE value="add sendEmailWithAttachmentCC" />
+    <option name="LAST_COMMIT_MESSAGE" value="add sendEmailWithAttachmentCC" />
   </component>
 </project>

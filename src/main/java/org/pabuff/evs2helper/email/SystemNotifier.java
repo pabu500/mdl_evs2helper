@@ -34,4 +34,9 @@ public class SystemNotifier {
     public void sendEmailWithAttachment(String senderName, String emailTo, String subject, String text, File attachedFile, boolean isHtml) {
         emailService.sendEmailWithAttachment(emailFrom, senderName, emailTo, subject, text, attachedFile, isHtml);
     }
+    public void sendEmailWithAttachmentCC(String senderName,
+                                          String emailTo, String[] cc,
+                                          String subject, String text, File attachedFile, boolean isHtml) {
+        emailService.sendEmailWithAttachmentCC(emailFrom, senderName, emailTo, cc, subject, text, attachedFile, isHtml);
+    }
 }
