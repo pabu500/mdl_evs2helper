@@ -604,6 +604,8 @@ public class KeyValUpdateProcessor {
 
                 //sort thru the item map for key and non-empty value pairs to update
                 Map<String, Object> content = new HashMap<>();
+
+                String errorText = "";
                 for(Map.Entry<String, Object> entry : item.entrySet()) {
                     String key = entry.getKey();
                     Object val = entry.getValue();
@@ -621,11 +623,13 @@ public class KeyValUpdateProcessor {
                             // item name first char must be "E"
                             if (!itemName.startsWith("E")) {
                                 logger.info("Error while doing " + opName + " op for item: " + itemSn);
+                                errorText = "Iwow item_name must start with 'E'";
                                 continue;
                             }
                             // key can only start with "R"
                             if (val == null || !val.toString().startsWith("R")) {
                                 logger.info("Error while doing " + opName + " op for item: " + itemSn);
+                                errorText = "Paired meter_id must start with 'R'";
                                 continue;
                             }
                             // get meter id from paired meter name
@@ -635,11 +639,13 @@ public class KeyValUpdateProcessor {
                                 resp = oqgHelper.OqgR(sql);
                                 if (resp.isEmpty()) {
                                     logger.info("Error while doing " + opName + " op for item: " + itemSn);
+                                    errorText = "Paired meter not found";
                                     continue;
                                 }
                                 val = resp.getFirst().get("id");
                             } catch (Exception e) {
                                 logger.info("Error while doing " + opName + " op for item: " + itemSn);
+                                errorText = "Error getting paired meter";
                                 continue;
                             }
 //                            content.put("paired_meter_id", val);
@@ -758,6 +764,14 @@ public class KeyValUpdateProcessor {
                             }
                         }
                     }
+                }
+
+                if(!errorText.isBlank()){
+                    item.put("error", Map.of("status", errorText));
+                    item.put("prev_status", item.get("status"));
+                    item.put("status", op + " error");
+                    item.put("checked", false);
+                    continue;
                 }
 
                 if(content.isEmpty()){
