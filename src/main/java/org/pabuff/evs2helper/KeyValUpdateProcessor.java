@@ -613,43 +613,54 @@ public class KeyValUpdateProcessor {
                         }
 
                         // paired meter
-                        if(!"paired_meter_name".equals(key)){
-                            logger.info("Skipping key " + key + " for item type " + itemTypeEnum);
-                            continue;
-                        }
-                        // key can only start with "R"
-                        if(val == null || !val.toString().startsWith("R")){
-                            logger.info("Error while doing " + opName + " op for item: " + itemSn);
-                            item.put("error", Map.of("status", "Invalid paired meter name"));
-                            item.put("prev_status", item.get("status"));
-                            item.put("status", op + " error");
-                            item.put("checked", false);
-                            continue;
-                        }
-                        // get meter id from paired meter name
-                        String sql = "SELECT id from meter_iwow WHERE item_name = '" + val + "'";
-                        List<Map<String, Object>> resp;
-                        try {
-                            resp = oqgHelper.OqgR(sql);
-                            if(resp.isEmpty()){
+                        if("paired_meter_name".equals(key)) {
+                            if(val == null /*|| val.toString().isBlank()*/) {
+                                continue;
+                            }
+
+                            // item name first char must be "E"
+                            if (!itemName.startsWith("E")) {
                                 logger.info("Error while doing " + opName + " op for item: " + itemSn);
-                                item.put("error", Map.of("status", "Paired meter not found"));
+                                item.put("error", Map.of("status", "Invalid item_name"));
                                 item.put("prev_status", item.get("status"));
                                 item.put("status", op + " error");
                                 item.put("checked", false);
                                 continue;
                             }
-                            val = resp.getFirst().get("id");
-                        }catch (Exception e) {
-                            logger.info("Error while doing " + opName + " op for item: " + itemSn);
-                            item.put("error", Map.of("status", e.getMessage()));
-                            item.put("prev_status", item.get("status"));
-                            item.put("status", op + " error");
-                            item.put("checked", false);
-                            continue;
+                            // key can only start with "R"
+                            if (val == null || !val.toString().startsWith("R")) {
+                                logger.info("Error while doing " + opName + " op for item: " + itemSn);
+                                item.put("error", Map.of("status", "Invalid paired meter name"));
+                                item.put("prev_status", item.get("status"));
+                                item.put("status", op + " error");
+                                item.put("checked", false);
+                                continue;
+                            }
+                            // get meter id from paired meter name
+                            String sql = "SELECT id from meter_iwow WHERE item_name = '" + val + "'";
+                            List<Map<String, Object>> resp;
+                            try {
+                                resp = oqgHelper.OqgR(sql);
+                                if (resp.isEmpty()) {
+                                    logger.info("Error while doing " + opName + " op for item: " + itemSn);
+                                    item.put("error", Map.of("status", "Paired meter not found"));
+                                    item.put("prev_status", item.get("status"));
+                                    item.put("status", op + " error");
+                                    item.put("checked", false);
+                                    continue;
+                                }
+                                val = resp.getFirst().get("id");
+                            } catch (Exception e) {
+                                logger.info("Error while doing " + opName + " op for item: " + itemSn);
+                                item.put("error", Map.of("status", e.getMessage()));
+                                item.put("prev_status", item.get("status"));
+                                item.put("status", op + " error");
+                                item.put("checked", false);
+                                continue;
+                            }
+                            // replace paired_meter_name with paired_meter_id
+                            key = "paired_meter_id";
                         }
-                        // replace paired_meter_name with paired_meter_id
-                        key = "paired_meter_id";
 
                     }else if(itemTypeEnum == ItemTypeEnum.TENANT){
                         if (key.equals("tenant_name")){
