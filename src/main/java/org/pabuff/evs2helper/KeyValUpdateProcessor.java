@@ -658,8 +658,8 @@ public class KeyValUpdateProcessor {
                                 item.put("checked", false);
                                 continue;
                             }
-                            // replace paired_meter_name with paired_meter_id
-                            key = "paired_meter_id";
+                            content.put("paired_meter_id", val);
+                            continue;
                         }
 
                     }else if(itemTypeEnum == ItemTypeEnum.TENANT){
