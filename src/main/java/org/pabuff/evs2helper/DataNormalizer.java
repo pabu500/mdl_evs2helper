@@ -1,6 +1,7 @@
 package org.pabuff.evs2helper;
 
 import org.pabuff.dto.*;
+import org.pabuff.oqghelper.OqgHelper;
 import org.pabuff.oqghelper.QueryHelper;
 import org.pabuff.utils.DateTimeUtil;
 import org.pabuff.utils.MathUtil;
@@ -20,6 +21,8 @@ public class DataNormalizer {
 
     @Autowired
     private QueryHelper queryHelper;
+    @Autowired
+    private OqgHelper oqgHelper;
 
     public List<Map<String, Object>> normalizedTransactionList(List<Map<String, Object>> transactions, boolean queryOpsId){
         List<Map<String, Object>> normalizedList = new ArrayList<>();
@@ -60,6 +63,20 @@ public class DataNormalizer {
                     }
                 }
                 normalizedTransaction.put(entry.getKey(), entry.getValue());
+
+                // if is Virtual, get username, remark from evs2_op_log table
+                String sql = "SELECT username, remark FROM evs2_op_log WHERE ref_id = '" + transaction.get("transaction_id") + "'";
+                if(isVirtual){
+                    try{
+                        List<Map<String, Object>> opsLog = oqgHelper.OqgR2x(sql, "OPS", true);
+                        if(!opsLog.isEmpty()){
+                            normalizedTransaction.put("ops_name", opsLog.getFirst().get("username"));
+                            normalizedTransaction.put("ops_remark", opsLog.getFirst().get("remark"));
+                        }
+                    }catch (Exception e){
+                        logger.warning("Error querying ops log: " + e.getMessage());
+                    }
+                }
             }
 
             if(isVirtual&&queryOpsId){
