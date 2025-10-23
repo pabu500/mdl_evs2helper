@@ -174,6 +174,7 @@ public class ReportHelper {
         String fullReportName = (String) reportInfo.get("full_report_name");
 
         File file = new File(fileLocation);
+        logger.info("Saving report to " + fileLocation);
         ExcelUtil.saveWorkbook(workbook, fileLocation);
 
         Map<String, Object> result = new HashMap<>();
