@@ -737,6 +737,9 @@ public class KeyValUpdateProcessor {
                     || itemTypeEnum == ItemTypeEnum.METER_IWOW
                     || itemTypeEnum == ItemTypeEnum.CONCENTRATOR){
                         if("lc_status".equals(key)){
+                            if(val.toString().isEmpty()){
+                                continue;
+                            }
                             val = deviceLcStatusHelper.getDeviceLcStatusDbStr(val.toString());
                             if(val == null){
                                 logger.info("Error while doing " + opName + " op for item: " + itemSn);
