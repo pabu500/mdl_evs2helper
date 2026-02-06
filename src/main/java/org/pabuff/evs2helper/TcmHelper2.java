@@ -133,6 +133,10 @@ public class TcmHelper2 {
     }
 
     public Map<String, Object> doBatchResetRefBal(List<Map<String, Object>> resetList) throws Exception {
+        // get sn from the first item to determine tcm path
+        String meterSn = (String) resetList.getFirst().get("meter_sn");
+        String tcmPath = getTcmPath("meter_sn", meterSn);
+
         String tcmEpt = tcmPath + tcmEptDoBatchResetRefBal;
 
         HttpHeaders headers = new HttpHeaders();
@@ -152,6 +156,9 @@ public class TcmHelper2 {
         }
     }
     public Map<String, Object> updateMeterBypassPolicy(List<String> meterSns) throws Exception {
+        // get sn from the first item to determine tcm path
+        String meterSn = meterSns.getFirst();
+        String tcmPath = getTcmPath("meter_sn", meterSn);
         String tcmEpt = tcmPath + tcmEptUpdateMeterBypassPolicy;
 
         HttpHeaders headers = new HttpHeaders();
