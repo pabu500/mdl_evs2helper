@@ -61,6 +61,7 @@ public class BypassPolicyResolver {
         // this is the lc status of meter
         // it is different from 'bypass always' from the bypass policy
         if("bypassed".equals(meterInfoDto.getLcStatus())){
+            logger.info("Meter lc_status is bypassed: " + meterSn);
             return Map.of("result", "ok",
                           "message", "lc_status is bypassed");
         }
