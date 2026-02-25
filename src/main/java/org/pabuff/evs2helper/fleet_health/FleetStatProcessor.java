@@ -136,6 +136,20 @@ public class FleetStatProcessor {
             }
             siteStat.put("total", respAll.getFirst().get("count"));
 
+             String sqlMaint = "select count(*) as count from " + targetTableName
+                    + " where site_tag = '" + siteTag + "'"
+                    + " and lc_status = 'maint' "
+                    + additionalConstraint;
+
+            try {
+                respAll = oqgHelper.OqgR2(sqlMaint, true);
+            } catch (Exception e) {
+                logger.severe(e.getMessage());
+                return Map.of("error", e.getMessage());
+            }
+
+            siteStat.put("maint_count", respAll.getFirst().get("count"));
+
             String sqlLRT = "select count(*) as count from " + targetTableName
                     + " where site_tag = '" + siteTag + "'"
                     + " and " + lastReadingHealthFilter
@@ -285,6 +299,20 @@ public class FleetStatProcessor {
                     return Map.of("error", e.getMessage());
                 }
                 siteStat.put("total", respAll.getFirst().get("count"));
+
+               String sqlMaint = "select count(*) as count from " + targetTableName
+                    + " where site_tag = '" + selectedSiteTag + "'"
+                    + " and " + itemLocBuildingColName + " = '" + buildingNameSql + "'"
+                    + blockSel + " and lc_status = 'maint' "
+                    + additionalConstraint;
+                try {
+                    respAll = oqgHelper.OqgR2(sqlMaint, true);
+                } catch (Exception e) {
+                    logger.severe(e.getMessage());
+                    return Map.of("error", e.getMessage());
+                }
+
+                siteStat.put("maint_count", respAll.getFirst().get("count"));
 
                 String sqlLRT = "select count(*) as count from " + targetTableName
                         + " where site_tag = '" + selectedSiteTag + "'"
