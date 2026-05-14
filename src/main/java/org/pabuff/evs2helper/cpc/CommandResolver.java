@@ -72,4 +72,34 @@ public class CommandResolver {
             return Map.of("command_type", CommandType.rls);
         }
     }
+
+    public Map<String, Object> resolveCommandType2(Map<String, Object> meterInfo) {
+
+        String siteTag = (String) meterInfo.get("site_tag");
+        if(siteTag == null || siteTag.isEmpty()){
+            return Map.of("error", "scope_str is empty");
+        }
+        String commType = (String) meterInfo.get("comm_type");
+        String block = (String) meterInfo.get("mms_block");
+
+        if("evs2_loop".equals(commType)){
+            if("nus_ync".equals(siteTag) || "nus_utown".equals(siteTag)){
+                return Map.of("command_type", CommandType.rlsEvs2Loop);
+            }
+        }
+        if(siteTag.contains("ntu_mr")){
+            return Map.of("command_type", CommandType.acLock);
+        }
+        if(siteTag.contains("nus_vh")){
+            return Map.of("command_type", CommandType.acController);
+        }
+        if(siteTag.contains("nus_pgpr") && (block != null && !block.isEmpty())){
+            if(!"13".equals(block) && !"14".equals(block)){
+                return Map.of("command_type", CommandType.acController);
+            }
+        }
+
+        return Map.of("command_type", CommandType.rls);
+
+    }
 }
