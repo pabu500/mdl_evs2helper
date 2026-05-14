@@ -12,4 +12,8 @@ public class OpResultPublisher {
     public void publishEvent(final OpResultEvent event) {
         applicationEventPublisher.publishEvent(event);
     }
+
+    public void publishEvent2(final OpResultEvent2 event) {
+        applicationEventPublisher.publishEvent(event);
+    }
 }

@@ -18,6 +18,7 @@ public class GatewayResolver {
 
         String projectNameEvs2Nus = "evs2_nus";
         String siteTagVh = "vh";
+        String siteTagPgpr = "pgpr";
 
         String projectName = (String) scope.get("project_name");
         String siteTag = (String) scope.get("site_tag");
@@ -25,7 +26,7 @@ public class GatewayResolver {
             logger.warning("Project name or site tag is null");
             return null;
         }
-        if (projectNameEvs2Nus.equalsIgnoreCase(projectName) && siteTagVh.equalsIgnoreCase(siteTag)) {
+        if (projectNameEvs2Nus.equalsIgnoreCase(projectName) && (siteTag.contains(siteTagVh) || siteTag.contains(siteTagPgpr))) {
             String gw = acControllerGatewayTag;
             if(gw.isEmpty()){
                 logger.warning("ac_controller_gateway_tag is empty");
