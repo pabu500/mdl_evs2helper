@@ -19,7 +19,7 @@ public class CpcOpHelper {
     @Autowired
     private OqgHelper oqgHelper;
 
-    public Map<String, Object> postMeterRlsTargetOp2(String meterSnStr, double refBal, String opTargetStr, String opTableName, boolean isReset){
+    public Map<String, Object> postMeterServiceTarget(String meterSnStr, double refBal, String opTargetStr, String opTableName, boolean isReset){
 //        String tableName = "meter_rls_op_test";
 //        String tableName = "meter_rls_op";
         if(opTableName==null || opTableName.isEmpty()){
