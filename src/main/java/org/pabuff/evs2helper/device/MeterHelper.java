@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,5 +62,21 @@ public class MeterHelper {
             return Collections.singletonMap("error", e.getMessage());
         }
         return Collections.singletonMap("meter_displayname", meterDisplayName.get(0).get("meter_displayname"));
+    }
+
+    public Map<String,Object> getMeterBuilding(String building){
+        if(building==null || building.isEmpty()){
+            return Collections.singletonMap("error", "building is null or empty");
+        }
+        String lowerCaseBuilding = building.toLowerCase();
+        if(lowerCaseBuilding.contains("prince george")){
+            building = "Prince George's Residence";
+        }else if(lowerCaseBuilding.contains("college ave west")){
+            // remove the rest of the string after "College Ave West"
+            building = building.replaceFirst("(?i)(.*College Ave West).*", "$1");
+        }else if(lowerCaseBuilding.contains("maple residence")){
+            building = "Maple Residence";
+        }
+        return Collections.singletonMap("result", building);
     }
 }
