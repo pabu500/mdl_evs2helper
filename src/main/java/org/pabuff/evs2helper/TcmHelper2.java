@@ -28,6 +28,8 @@ public class TcmHelper2 {
     private String tcmPathNusVh;
     @Value("${tcm.path.ntu_mr}")
     private String tcmPathNtuMr;
+    @Value("${tcm.path.sutd_campus}")
+    private String tcmPathSutdCampus;
 
     @Value("${tcm.ept.do_one_topup}")
     private String tcmEptDoOneTopup;
@@ -127,6 +129,8 @@ public class TcmHelper2 {
                 return tcmPathNusVh;
             } else if ("ntu_mr".equals(siteTag)) {
                 return tcmPathNtuMr;
+            } else if("sutd_campus".equals(siteTag)) {
+                return tcmPathSutdCampus;
             }
         }
         return tcmPath;

@@ -63,6 +63,33 @@ public class MeterHelper {
         }
         return Collections.singletonMap("meter_displayname", meterDisplayName.get(0).get("meter_displayname"));
     }
+    public Map<String, Object> getMeterInfoFromSn(String meterSn){
+        String meterInfoQuery = "SELECT * FROM meter WHERE meter_sn = '" + meterSn + "'";
+        List<Map<String, Object>> meterInfo;
+        try {
+            meterInfo = oqgHelper.OqgR(meterInfoQuery);
+            if(meterInfo.isEmpty()){
+                return Collections.singletonMap("info", "meter_sn not found");
+            }
+        } catch (Exception e) {
+            return Collections.singletonMap("error", e.getMessage());
+        }
+        return meterInfo.getFirst();
+    }
+
+    public Map<String, Object> getMeterInfoFromDisplayName(String meterDisplayName){
+        String meterInfoQuery = "SELECT * FROM meter WHERE meter_displayname = '" + meterDisplayName + "'";
+        List<Map<String, Object>> meterInfo;
+        try {
+            meterInfo = oqgHelper.OqgR(meterInfoQuery);
+            if(meterInfo.isEmpty()){
+                return Collections.singletonMap("info", "meter_displayname not found");
+            }
+        } catch (Exception e) {
+            return Collections.singletonMap("error", e.getMessage());
+        }
+        return meterInfo.getFirst();
+    }
 
     public Map<String,Object> getMeterBuilding(String building){
         if(building==null || building.isEmpty()){
