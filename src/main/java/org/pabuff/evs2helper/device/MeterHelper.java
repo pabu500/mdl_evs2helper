@@ -115,13 +115,13 @@ public class MeterHelper {
         if (normalizedBuilding.contains("College Ave West")) {
             int index = normalizedBuilding.indexOf("College Ave West");
             normalizedBuilding = normalizedBuilding.substring(0, index + "College Ave West".length());
-            Integer value = null;
+            String value = null;
             if ("mms".equalsIgnoreCase(source)) {
-                value = Integer.parseInt(String.valueOf(unit.charAt(2)));
+                value = String.valueOf(unit.charAt(2));
             } else {
                 int startIndex = building.indexOf("RC");
                 if (startIndex != -1) {
-                    value = Character.getNumericValue(building.charAt(startIndex + 3));
+                    value = String.valueOf(building.charAt(startIndex + 3));
                 }
                 block = normalizedBuilding.split("\\s+")[0];
             }
@@ -160,28 +160,34 @@ public class MeterHelper {
         return Collections.singletonMap("error", "no match found");
     }
 
-    private Map<String, Object> resolveRcBlock(String source, int value, String building, String blockA, String blockB) {
+    private Map<String, Object> resolveRcBlock(String source, String value, String building, String blockA, String blockB) {
         int rcaMinValue = 1;
         int rcaMaxValue = 2;
         int rcbMinValue = 3;
         int rcbMaxValue = 8;
         if("mms".equalsIgnoreCase(source)) {
-            if (value >= rcaMinValue && value <= rcaMaxValue) {
+           int intValue;
+            try{
+                intValue = Integer.parseInt(value);
+            }catch (Exception e){
+                return Collections.singletonMap("error", "unit is not valid");
+            }
+            if (intValue >= rcaMinValue && intValue <= rcaMaxValue) {
                     return Map.of("data", Map.of(
                                     "building", building,
                                     "block", blockA));
             }
-            if (value >= rcbMinValue && value <= rcbMaxValue) {
+            if (intValue >= rcbMinValue && intValue <= rcbMaxValue) {
                 return Map.of("data", Map.of(
                                 "building", building,
                                 "block", blockB));
             }
         } else if("pag".equalsIgnoreCase(source)) {
-            if("A".equalsIgnoreCase(blockA)){
+            if("A".equalsIgnoreCase(value)){
                 return Map.of("data", Map.of(
                                 "building", building,
                                 "block", blockA));
-            }else if("B".equalsIgnoreCase(blockB)){
+            }else if("B".equalsIgnoreCase(value)){
                 return Map.of("data", Map.of(
                                 "building", building,
                                 "block", blockB));
