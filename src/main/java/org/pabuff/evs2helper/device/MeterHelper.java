@@ -123,6 +123,7 @@ public class MeterHelper {
                 if (startIndex != -1) {
                     value = Character.getNumericValue(building.charAt(startIndex + 3));
                 }
+                block = normalizedBuilding.split("\\s+")[0];
             }
             if(value == null) {
                 return Collections.singletonMap("error", "unit is not valid");
@@ -139,17 +140,19 @@ public class MeterHelper {
         for (Map<String, Object> row : meterAddrLookupTable) {
             if ("mms".equalsIgnoreCase(source)) {
                 String rowBuilding = (String) row.get("mms_building_value");
-                String rowBlock = (String) row.get("mms_block");
+                String rowBlock = (String) row.get("result_block_value");
                 if (normalizedBuilding.contains(rowBuilding)) {
                     if (block == null || block.equals(rowBlock)) {
-                        normalizedAddrInfo.put("building", row.get("result_value"));
+                        normalizedAddrInfo.put("building", row.get("result_building_value"));
+                        normalizedAddrInfo.put("block", row.get("result_block_value"));
                         return Map.of("data", normalizedAddrInfo);
                     }
                 }
             } else if ("pag".equalsIgnoreCase(source)) {
                 String rowBuilding = (String) row.get("pag_building_value");
                 if (normalizedBuilding.contains(rowBuilding)) {
-                    normalizedAddrInfo.put("building", row.get("result_value"));
+                    normalizedAddrInfo.put("building", row.get("result_building_value"));
+                    normalizedAddrInfo.put("block", row.get("result_block_value"));
                     return Map.of("data", normalizedAddrInfo);
                 }
             }
@@ -190,203 +193,203 @@ public class MeterHelper {
     }
 
     private static final List<Map<String, Object>> meterAddrLookupTable = List.of(
-                Map.of(
-                        "result_value", "36 College Ave East",
-                        "mms_building_value", "36 College Ave East",
-                        "mms_block", "36",
-                        "pag_building_value", "36 College Ave East"
-                ),
-                Map.of(
-                        "result_value", "26 College Ave East",
-                        "mms_building_value", "26 College Ave East",
-                        "mms_block", "26",
-                        "pag_building_value", "26 College Ave East"
-                ),
-                Map.of(
-                        "result_value", "22 College Ave East",
-                        "mms_building_value", "22 College Ave East",
-                        "mms_block", "22",
-                        "pag_building_value", "22 College Ave East"
-                ),
-                Map.of(
-                        "result_value", "8 College Ave East",
-                        "mms_building_value", "8 College Ave East",
-                        "mms_block", "8",
-                        "pag_building_value", "8 College Ave East"
-                ),
-                Map.of(
-                        "result_value", "5 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "5",
-                        "pag_building_value", "5 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "6 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "6",
-                        "pag_building_value", "6 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "7 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "7",
-                        "pag_building_value", "7 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "8 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "8",
-                        "pag_building_value", "8 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "11 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "11",
-                        "pag_building_value", "11 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "12 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "12",
-                        "pag_building_value", "12 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "13 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "13",
-                        "pag_building_value", "13 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "14 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "14",
-                        "pag_building_value", "14 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "17 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "17",
-                        "pag_building_value", "17 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "18 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "18",
-                        "pag_building_value", "18 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "19 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "19",
-                        "pag_building_value", "19 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "21 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "21",
-                        "pag_building_value", "21 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "23 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "23",
-                        "pag_building_value", "23 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "25 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "25",
-                        "pag_building_value", "25 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "26 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "26",
-                        "pag_building_value", "26 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "28 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "28",
-                        "pag_building_value", "28 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "30 Prince George's Residence",
-                        "mms_building_value", "Prince George's Residence",
-                        "mms_block", "30",
-                        "pag_building_value", "30 Prince George's Residence"
-                ),
-                Map.of(
-                        "result_value", "Maple Residence",
-                        "mms_building_value", "Maple Residences",
-                        "mms_block", "Maple Residences",
-                        "pag_building_value", "Maple Residence"
-                ),
-                Map.of(
-                        "result_value", "Valour House Building A",
-                        "mms_building_value", "Valour House Building A",
-                        "mms_block", "A",
-                        "pag_building_value", "Valour House Building A"
-                ),
-                Map.of(
-                        "result_value", "25E Lower Kent Ridge Rd",
-                        "mms_building_value", "25E Lower Kent Ridge Rd",
-                        "mms_block", "",
-                        "pag_building_value", "25E Lower Kent Ridge Rd"
-                ),
-                Map.of(
-                        "result_value", "Block A 10 Heng Mui Keng Ter",
-                        "mms_building_value", "Block A 10 Heng Mui Keng Ter",
-                        "mms_block", "A",
-                        "pag_building_value", "Block A 10 Heng Mui Keng Ter"
-                ),
-                Map.of(
-                        "result_value", "Block B 10 Heng Mui Keng Ter",
-                        "mms_building_value", "Block B 10 Heng Mui Keng Ter",
-                        "mms_block", "B",
-                        "pag_building_value", "Block B 10 Heng Mui Keng Ter"
-                ),
-                Map.of(
-                        "result_value", "Block A 20 Heng Mui Keng Ter",
-                        "mms_building_value", "Block A 20 Heng Mui Keng Ter",
-                        "mms_block", "A",
-                        "pag_building_value", "Block A 20 Heng Mui Keng Ter"
-                ),
-                Map.of(
-                        "result_value", "Block B 20 Heng Mui Keng Ter",
-                        "mms_building_value", "Block B 20 Heng Mui Keng Ter",
-                        "mms_block", "B",
-                        "pag_building_value", "Block B 20 Heng Mui Keng Ter"
-                ),
-                Map.of(
-                        "result_value", "Block B 1A Kent Ridge Rd",
-                        "mms_building_value", "Block B 1A Kent Ridge Rd",
-                        "mms_block", "B",
-                        "pag_building_value", "Block B 1A Kent Ridge Rd"
-                ),
-                Map.of(
-                        "result_value", "Block C 1A Kent Ridge Rd",
-                        "mms_building_value", "Block C 1A Kent Ridge Rd",
-                        "mms_block", "C",
-                        "pag_building_value", "Block C 1A Kent Ridge Rd"
-                ),
-                Map.of(
-                        "result_value", "Block D 1A Kent Ridge Rd",
-                        "mms_building_value", "Block D 1A Kent Ridge Rd",
-                        "mms_block", "D",
-                        "pag_building_value", "Block D 1A Kent Ridge Rd"
-                ),
-                Map.of(
-                        "result_value", "Block A 10 Kent Ridge Dr",
-                        "mms_building_value", "Block A 10 Kent Ridge Dr",
-                        "mms_block", "A",
-                        "pag_building_value", "Block A 10 Kent Ridge Dr"
-                ),
-                Map.of(
-                        "result_value", "Block A 12 Kent Ridge Dr",
-                        "mms_building_value", "Block A 12 Kent Ridge Dr",
-                        "mms_block", "A",
-                        "pag_building_value", "Block A 12 Kent Ridge Dr"
-                )
-        );
+        Map.of(
+                "result_building_value", "36 College Ave East",
+                "result_block_value", "36",
+                "mms_building_value", "36 College Ave East",
+                "pag_building_value", "36 College Ave East"
+        ),
+        Map.of(
+                "result_building_value", "26 College Ave East",
+                "result_block_value", "26",
+                "mms_building_value", "26 College Ave East",
+                "pag_building_value", "26 College Ave East"
+        ),
+        Map.of(
+                "result_building_value", "22 College Ave East",
+                "result_block_value", "22",
+                "mms_building_value", "22 College Ave East",
+                "pag_building_value", "22 College Ave East"
+        ),
+        Map.of(
+                "result_building_value", "8 College Ave East",
+                "result_block_value", "8",
+                "mms_building_value", "8 College Ave East",
+                "pag_building_value", "8 College Ave East"
+        ),
+        Map.of(
+                "result_building_value", "5 Prince George's Residence",
+                "result_block_value", "5",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "5 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "6 Prince George's Residence",
+                "result_block_value", "6",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "6 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "7 Prince George's Residence",
+                "result_block_value", "7",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "7 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "8 Prince George's Residence",
+                "result_block_value", "8",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "8 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "11 Prince George's Residence",
+                "result_block_value", "11",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "11 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "12 Prince George's Residence",
+                "result_block_value", "12",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "12 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "13 Prince George's Residence",
+                "result_block_value", "13",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "13 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "14 Prince George's Residence",
+                "result_block_value", "14",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "14 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "17 Prince George's Residence",
+                "result_block_value", "17",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "17 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "18 Prince George's Residence",
+                "result_block_value", "18",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "18 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "19 Prince George's Residence",
+                "result_block_value", "19",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "19 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "21 Prince George's Residence",
+                "result_block_value", "21",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "21 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "23 Prince George's Residence",
+                "result_block_value", "23",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "23 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "25 Prince George's Residence",
+                "result_block_value", "25",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "25 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "26 Prince George's Residence",
+                "result_block_value", "26",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "26 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "28 Prince George's Residence",
+                "result_block_value", "28",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "28 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "30 Prince George's Residence",
+                "result_block_value", "30",
+                "mms_building_value", "Prince George's Residence",
+                "pag_building_value", "30 Prince George's Residence"
+        ),
+        Map.of(
+                "result_building_value", "Maple Residence",
+                "result_block_value", "Maple Residences",
+                "mms_building_value", "Maple Residences",
+                "pag_building_value", "Maple Residence"
+        ),
+        Map.of(
+                "result_building_value", "Valour House Building A",
+                "result_block_value", "A",
+                "mms_building_value", "Valour House Building A",
+                "pag_building_value", "Valour House Building A"
+        ),
+        Map.of(
+                "result_building_value", "25E Lower Kent Ridge Rd",
+                "result_block_value", "E",
+                "mms_building_value", "25E Lower Kent Ridge Rd",
+                "pag_building_value", "25E Lower Kent Ridge Rd"
+        ),
+        Map.of(
+                "result_building_value", "Block A 10 Heng Mui Keng Ter",
+                "result_block_value", "A",
+                "mms_building_value", "Block A 10 Heng Mui Keng Ter",
+                "pag_building_value", "Block A 10 Heng Mui Keng Ter"
+        ),
+        Map.of(
+                "result_building_value", "Block B 10 Heng Mui Keng Ter",
+                "result_block_value", "B",
+                "mms_building_value", "Block B 10 Heng Mui Keng Ter",
+                "pag_building_value", "Block B 10 Heng Mui Keng Ter"
+        ),
+        Map.of(
+                "result_building_value", "Block A 20 Heng Mui Keng Ter",
+                "result_block_value", "A",
+                "mms_building_value", "Block A 20 Heng Mui Keng Ter",
+                "pag_building_value", "Block A 20 Heng Mui Keng Ter"
+        ),
+        Map.of(
+                "result_building_value", "Block B 20 Heng Mui Keng Ter",
+                "result_block_value", "B",
+                "mms_building_value", "Block B 20 Heng Mui Keng Ter",
+                "pag_building_value", "Block B 20 Heng Mui Keng Ter"
+        ),
+        Map.of(
+                "result_building_value", "Block B 1A Kent Ridge Rd",
+                "result_block_value", "B",
+                "mms_building_value", "Block B 1A Kent Ridge Rd",
+                "pag_building_value", "Block B 1A Kent Ridge Rd"
+        ),
+        Map.of(
+                "result_building_value", "Block C 1A Kent Ridge Rd",
+                "result_block_value", "C",
+                "mms_building_value", "Block C 1A Kent Ridge Rd",
+                "pag_building_value", "Block C 1A Kent Ridge Rd"
+        ),
+        Map.of(
+                "result_building_value", "Block D 1A Kent Ridge Rd",
+                "result_block_value", "D",
+                "mms_building_value", "Block D 1A Kent Ridge Rd",
+                "pag_building_value", "Block D 1A Kent Ridge Rd"
+        ),
+        Map.of(
+                "result_building_value", "Block A 10 Kent Ridge Dr",
+                "result_block_value", "A",
+                "mms_building_value", "Block A 10 Kent Ridge Dr",
+                "pag_building_value", "Block A 10 Kent Ridge Dr"
+        ),
+        Map.of(
+                "result_building_value", "Block A 12 Kent Ridge Dr",
+                "result_block_value", "A",
+                "mms_building_value", "Block A 12 Kent Ridge Dr",
+                "pag_building_value", "Block A 12 Kent Ridge Dr"
+        )
+    );
 }
