@@ -166,7 +166,7 @@ public class MeterHelper {
         int rcbMinValue = 3;
         int rcbMaxValue = 8;
         if("mms".equalsIgnoreCase(source)) {
-           int intValue;
+            int intValue;
             try{
                 intValue = Integer.parseInt(value);
             }catch (Exception e){
