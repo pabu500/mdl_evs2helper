@@ -121,7 +121,7 @@ public class MeterHelper {
             } else {
                 int startIndex = building.indexOf("RC");
                 if (startIndex != -1) {
-                    value = Character.getNumericValue(building.charAt(startIndex + 2));
+                    value = Character.getNumericValue(building.charAt(startIndex + 3));
                 }
             }
             if(value == null) {
