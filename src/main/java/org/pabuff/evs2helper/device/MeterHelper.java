@@ -326,7 +326,7 @@ public class MeterHelper {
                 "pag_building_value", "30 Prince George's Residence"
         ),
         Map.of(
-                "result_building_value", "Maple Residence",
+                "result_building_value", "Maple Residences",
                 "result_block_value", "Maple Residences",
                 "mms_building_value", "Maple Residences",
                 "pag_building_value", "Maple Residence"
