@@ -150,7 +150,7 @@ public class MeterHelper {
                 }
             } else if ("pag".equalsIgnoreCase(source)) {
                 String rowBuilding = (String) row.get("pag_building_value");
-                if (normalizedBuilding.contains(rowBuilding)) {
+                if (normalizedBuilding.equals(rowBuilding)) {
                     normalizedAddrInfo.put("building", row.get("result_building_value"));
                     normalizedAddrInfo.put("block", row.get("result_block_value"));
                     return Map.of("data", normalizedAddrInfo);
