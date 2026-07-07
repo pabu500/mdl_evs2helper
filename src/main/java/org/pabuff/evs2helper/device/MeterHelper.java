@@ -142,7 +142,7 @@ public class MeterHelper {
                 String rowBuilding = (String) row.get("mms_building_value");
                 String rowBlock = (String) row.get("result_block_value");
                 if (normalizedBuilding.contains(rowBuilding)) {
-                    if (block == null || block.equals(rowBlock)) {
+                    if (block == null || block.equalsIgnoreCase(rowBlock)) {
                         normalizedAddrInfo.put("building", row.get("result_building_value"));
                         normalizedAddrInfo.put("block", row.get("result_block_value"));
                         return Map.of("data", normalizedAddrInfo);
@@ -150,7 +150,7 @@ public class MeterHelper {
                 }
             } else if ("pag".equalsIgnoreCase(source)) {
                 String rowBuilding = (String) row.get("pag_building_value");
-                if (normalizedBuilding.equals(rowBuilding)) {
+                if (normalizedBuilding.equalsIgnoreCase(rowBuilding)) {
                     normalizedAddrInfo.put("building", row.get("result_building_value"));
                     normalizedAddrInfo.put("block", row.get("result_block_value"));
                     return Map.of("data", normalizedAddrInfo);
