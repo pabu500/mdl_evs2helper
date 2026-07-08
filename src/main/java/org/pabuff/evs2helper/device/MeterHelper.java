@@ -130,7 +130,8 @@ public class MeterHelper {
             }
             return switch (block) {
                 case "10" -> resolveRcBlock(source,value, normalizedBuilding, rc1aBlock, rc1bBlock);
-                case "12" -> Map.of("data", Map.of("building", normalizedBuilding, "block", rc2Block));
+                case "12" -> Map.of("data", Map.of( "scope_str", "evs2_nus",
+                                "site_tag", "nus_ync","building", normalizedBuilding, "block", rc2Block));
                 case "28" -> resolveRcBlock(source,value, normalizedBuilding, rc3aBlock, rc3bBlock);
                 default -> Collections.singletonMap("error", "block is not valid");
             };
@@ -152,6 +153,8 @@ public class MeterHelper {
             } else if ("pag".equalsIgnoreCase(source)) {
                 String rowBuilding = (String) row.get("pag_building_value");
                 if (normalizedBuilding.equalsIgnoreCase(rowBuilding)) {
+                    normalizedAddrInfo.put("scope_str", row.get("result_scope_value"));
+                    normalizedAddrInfo.put("site_tag", row.get("result_site_value"));
                     normalizedAddrInfo.put("building", row.get("result_building_value"));
                     normalizedAddrInfo.put("block", row.get("result_block_value"));
                     return Map.of("data", normalizedAddrInfo);
@@ -186,10 +189,14 @@ public class MeterHelper {
         } else if("pag".equalsIgnoreCase(source)) {
             if("A".equalsIgnoreCase(value)){
                 return Map.of("data", Map.of(
+                                "scope_str", "evs2_nus",
+                                "site_tag", "nus_ync",
                                 "building", building,
                                 "block", blockA));
             }else if("B".equalsIgnoreCase(value)){
                 return Map.of("data", Map.of(
+                                "scope_str", "evs2_nus",
+                                "site_tag", "nus_ync",
                                 "building", building,
                                 "block", blockB));
             }else{
@@ -201,198 +208,280 @@ public class MeterHelper {
 
     private static final List<Map<String, Object>> meterAddrLookupTable = List.of(
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_utown",
+                "result_building_value", "38 College Ave East",
+                "result_block_value", "38",
+                "mms_building_value", "38 College Ave East",
+                "pag_building_value", "38 College Ave East"
+        ),
+        Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_utown",
                 "result_building_value", "36 College Ave East",
                 "result_block_value", "36",
                 "mms_building_value", "36 College Ave East",
                 "pag_building_value", "36 College Ave East"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_utown",
                 "result_building_value", "26 College Ave East",
                 "result_block_value", "26",
                 "mms_building_value", "26 College Ave East",
                 "pag_building_value", "26 College Ave East"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_utown",
                 "result_building_value", "22 College Ave East",
                 "result_block_value", "22",
                 "mms_building_value", "22 College Ave East",
                 "pag_building_value", "22 College Ave East"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_utown",
                 "result_building_value", "8 College Ave East",
                 "result_block_value", "8",
                 "mms_building_value", "8 College Ave East",
                 "pag_building_value", "8 College Ave East"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_utown",
+                "result_building_value", "6 College Ave East",
+                "result_block_value", "6",
+                "mms_building_value", "6 College Ave East",
+                "pag_building_value", "6 College Ave East"
+        ),
+        Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "5 Prince George's Residence",
                 "result_block_value", "5",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "5 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "6 Prince George's Residence",
                 "result_block_value", "6",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "6 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "7 Prince George's Residence",
                 "result_block_value", "7",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "7 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "8 Prince George's Residence",
                 "result_block_value", "8",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "8 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "11 Prince George's Residence",
                 "result_block_value", "11",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "11 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "12 Prince George's Residence",
                 "result_block_value", "12",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "12 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "13 Prince George's Residence",
                 "result_block_value", "13",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "13 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "14 Prince George's Residence",
                 "result_block_value", "14",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "14 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "17 Prince George's Residence",
                 "result_block_value", "17",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "17 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "18 Prince George's Residence",
                 "result_block_value", "18",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "18 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "19 Prince George's Residence",
                 "result_block_value", "19",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "19 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "21 Prince George's Residence",
                 "result_block_value", "21",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "21 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "23 Prince George's Residence",
                 "result_block_value", "23",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "23 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "25 Prince George's Residence",
                 "result_block_value", "25",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "25 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "26 Prince George's Residence",
                 "result_block_value", "26",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "26 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "28 Prince George's Residence",
                 "result_block_value", "28",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "28 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_pgpr",
                 "result_building_value", "30 Prince George's Residence",
                 "result_block_value", "30",
                 "mms_building_value", "Prince George's Residence",
                 "pag_building_value", "30 Prince George's Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_ntu",
+                "result_site_value","ntu_mr",
                 "result_building_value", "Maple Residences",
                 "result_block_value", "Maple Residences",
                 "mms_building_value", "Maple Residences",
                 "pag_building_value", "Maple Residence"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_vh",
                 "result_building_value", "Valour House Building A",
                 "result_block_value", "A",
                 "mms_building_value", "Valour House Building A",
                 "pag_building_value", "Valour House Building A"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_rvrc",
                 "result_building_value", "25E Lower Kent Ridge Rd",
                 "result_block_value", "E",
                 "mms_building_value", "25E Lower Kent Ridge Rd",
                 "pag_building_value", "25E Lower Kent Ridge Rd"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_rvrc",
                 "result_building_value", "Block A 10 Heng Mui Keng Ter",
                 "result_block_value", "A",
                 "mms_building_value", "Block A 10 Heng Mui Keng Ter",
                 "pag_building_value", "Block A 10 Heng Mui Keng Ter"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_rvrc",
                 "result_building_value", "Block B 10 Heng Mui Keng Ter",
                 "result_block_value", "B",
                 "mms_building_value", "Block B 10 Heng Mui Keng Ter",
                 "pag_building_value", "Block B 10 Heng Mui Keng Ter"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_rvrc",
                 "result_building_value", "Block A 20 Heng Mui Keng Ter",
                 "result_block_value", "A",
                 "mms_building_value", "Block A 20 Heng Mui Keng Ter",
                 "pag_building_value", "Block A 20 Heng Mui Keng Ter"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_rvrc",
                 "result_building_value", "Block B 20 Heng Mui Keng Ter",
                 "result_block_value", "B",
                 "mms_building_value", "Block B 20 Heng Mui Keng Ter",
                 "pag_building_value", "Block B 20 Heng Mui Keng Ter"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_rvrc",
                 "result_building_value", "Block B 1A Kent Ridge Rd",
                 "result_block_value", "B",
                 "mms_building_value", "Block B 1A Kent Ridge Rd",
                 "pag_building_value", "Block B 1A Kent Ridge Rd"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_rvrc",
                 "result_building_value", "Block C 1A Kent Ridge Rd",
                 "result_block_value", "C",
                 "mms_building_value", "Block C 1A Kent Ridge Rd",
                 "pag_building_value", "Block C 1A Kent Ridge Rd"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_rvrc",
                 "result_building_value", "Block D 1A Kent Ridge Rd",
                 "result_block_value", "D",
                 "mms_building_value", "Block D 1A Kent Ridge Rd",
                 "pag_building_value", "Block D 1A Kent Ridge Rd"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_rvrc",
                 "result_building_value", "Block A 10 Kent Ridge Dr",
                 "result_block_value", "A",
                 "mms_building_value", "Block A 10 Kent Ridge Dr",
                 "pag_building_value", "Block A 10 Kent Ridge Dr"
         ),
         Map.of(
+                "result_scope_value", "evs2_nus",
+                "result_site_value","nus_rvrc",
                 "result_building_value", "Block A 12 Kent Ridge Dr",
                 "result_block_value", "A",
                 "mms_building_value", "Block A 12 Kent Ridge Dr",
