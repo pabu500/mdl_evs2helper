@@ -131,7 +131,7 @@ public class MeterHelper {
             return switch (block) {
                 case "10" -> resolveRcBlock(source,value, normalizedBuilding, rc1aBlock, rc1bBlock);
                 case "12" -> Map.of("data", Map.of( "scope_str", "evs2_nus",
-                                "site_str", "nus_ync","building", normalizedBuilding, "block", rc2Block));
+                                "site_tag", "nus_ync","building", normalizedBuilding, "block", rc2Block));
                 case "28" -> resolveRcBlock(source,value, normalizedBuilding, rc3aBlock, rc3bBlock);
                 default -> Collections.singletonMap("error", "block is not valid");
             };
@@ -154,7 +154,7 @@ public class MeterHelper {
                 String rowBuilding = (String) row.get("pag_building_value");
                 if (normalizedBuilding.equalsIgnoreCase(rowBuilding)) {
                     normalizedAddrInfo.put("scope_str", row.get("result_scope_value"));
-                    normalizedAddrInfo.put("site_str", row.get("result_site_value"));
+                    normalizedAddrInfo.put("site_tag", row.get("result_site_value"));
                     normalizedAddrInfo.put("building", row.get("result_building_value"));
                     normalizedAddrInfo.put("block", row.get("result_block_value"));
                     return Map.of("data", normalizedAddrInfo);
@@ -190,13 +190,13 @@ public class MeterHelper {
             if("A".equalsIgnoreCase(value)){
                 return Map.of("data", Map.of(
                                 "scope_str", "evs2_nus",
-                                "site_str", "nus_ync",
+                                "site_tag", "nus_ync",
                                 "building", building,
                                 "block", blockA));
             }else if("B".equalsIgnoreCase(value)){
                 return Map.of("data", Map.of(
                                 "scope_str", "evs2_nus",
-                                "site_str", "nus_ync",
+                                "site_tag", "nus_ync",
                                 "building", building,
                                 "block", blockB));
             }else{
