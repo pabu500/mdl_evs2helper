@@ -143,7 +143,7 @@ public class MeterHelper {
             if ("mms".equalsIgnoreCase(source)) {
                 String rowBuilding = (String) row.get("mms_building_value");
                 String rowBlock = (String) row.get("result_block_value");
-                if (normalizedBuilding.equalsIgnoreCase(rowBuilding) || mmsPgprBuildingName.equalsIgnoreCase(normalizedBuilding) ) {
+                if (normalizedBuilding.equalsIgnoreCase(rowBuilding)) {
                     if (block == null || block.equalsIgnoreCase(rowBlock)) {
                         normalizedAddrInfo.put("building", row.get("result_building_value"));
                         normalizedAddrInfo.put("block", row.get("result_block_value"));
