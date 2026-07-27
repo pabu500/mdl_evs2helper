@@ -30,7 +30,7 @@ public class TcmHelper2 {
     private String tcmPathNtuMr;
     @Value("${tcm.path.sutd_campus}")
     private String tcmPathSutdCampus;
-    @Value("{tcm.path.nus_five_halls}")
+    @Value("${tcm.path.nus_five_halls}")
     private String tcmPathNusFiveHalls;
 
     @Value("${tcm.ept.do_one_topup}")
