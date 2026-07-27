@@ -30,8 +30,8 @@ public class TcmHelper2 {
     private String tcmPathNtuMr;
     @Value("${tcm.path.sutd_campus}")
     private String tcmPathSutdCampus;
-    @Value("{tcm.path.five_halls}")
-    private String tcmPathFiveHalls;
+    @Value("{tcm.path.nus_five_halls}")
+    private String tcmPathNusFiveHalls;
 
     @Value("${tcm.ept.do_one_topup}")
     private String tcmEptDoOneTopup;
@@ -117,7 +117,7 @@ public class TcmHelper2 {
         } catch (Exception e) {
             return tcmPath;
         }
-        List<String> hallsSiteTagList = List.of("nus_krh", "nus_sh", "nus_eh", "nus_th", "nus_ke7h");
+        List<String> nusHallsSiteTagList = List.of("nus_krh", "nus_sh", "nus_eh", "nus_th", "nus_ke7h");
         if (resp != null && !resp.isEmpty()) {
             String siteTag = (String) resp.getFirst().get("site_tag");
             if ("nus_pgpr".equals(siteTag)) {
@@ -134,8 +134,8 @@ public class TcmHelper2 {
                 return tcmPathNtuMr;
             } else if("sutd_campus".equals(siteTag)) {
                 return tcmPathSutdCampus;
-            } else if (hallsSiteTagList.contains(siteTag)) {
-                return tcmPathFiveHalls;
+            } else if (nusHallsSiteTagList.contains(siteTag)) {
+                return tcmPathNusFiveHalls;
             }
         }
         return tcmPath;
