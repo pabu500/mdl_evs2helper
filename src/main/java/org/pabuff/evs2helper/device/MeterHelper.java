@@ -410,14 +410,14 @@ public class MeterHelper {
         Map.of(
                 "result_scope_value", "evs2_nus",
                 "result_site_value","nus_rvrc",
-                "result_building_value", "25E Lower Kent Ridge Rd",
+                "result_building_value", "Ridge View Residence",
                 "result_block_value", "E",
                 "mms_building_value", "25E Lower Kent Ridge Rd",
                 "pag_building_value", "25E Lower Kent Ridge Rd"
         ),
         Map.of(
                 "result_scope_value", "evs2_nus",
-                "result_site_value","nus_rvrc",
+                "result_site_value","nus_krh",
                 "result_building_value", "Block A 10 Heng Mui Keng Ter",
                 "result_block_value", "A",
                 "mms_building_value", "Block A 10 Heng Mui Keng Ter",
@@ -425,7 +425,7 @@ public class MeterHelper {
         ),
         Map.of(
                 "result_scope_value", "evs2_nus",
-                "result_site_value","nus_rvrc",
+                "result_site_value","nus_krh",
                 "result_building_value", "Block B 10 Heng Mui Keng Ter",
                 "result_block_value", "B",
                 "mms_building_value", "Block B 10 Heng Mui Keng Ter",
@@ -433,7 +433,7 @@ public class MeterHelper {
         ),
         Map.of(
                 "result_scope_value", "evs2_nus",
-                "result_site_value","nus_rvrc",
+                "result_site_value","nus_sh",
                 "result_building_value", "Block A 20 Heng Mui Keng Ter",
                 "result_block_value", "A",
                 "mms_building_value", "Block A 20 Heng Mui Keng Ter",
@@ -441,7 +441,7 @@ public class MeterHelper {
         ),
         Map.of(
                 "result_scope_value", "evs2_nus",
-                "result_site_value","nus_rvrc",
+                "result_site_value","nus_sh",
                 "result_building_value", "Block B 20 Heng Mui Keng Ter",
                 "result_block_value", "B",
                 "mms_building_value", "Block B 20 Heng Mui Keng Ter",
@@ -449,7 +449,7 @@ public class MeterHelper {
         ),
         Map.of(
                 "result_scope_value", "evs2_nus",
-                "result_site_value","nus_rvrc",
+                "result_site_value","nus_ke7h",
                 "result_building_value", "Block B 1A Kent Ridge Rd",
                 "result_block_value", "B",
                 "mms_building_value", "Block B 1A Kent Ridge Rd",
@@ -457,7 +457,7 @@ public class MeterHelper {
         ),
         Map.of(
                 "result_scope_value", "evs2_nus",
-                "result_site_value","nus_rvrc",
+                "result_site_value","nus_ke7h",
                 "result_building_value", "Block C 1A Kent Ridge Rd",
                 "result_block_value", "C",
                 "mms_building_value", "Block C 1A Kent Ridge Rd",
@@ -465,7 +465,7 @@ public class MeterHelper {
         ),
         Map.of(
                 "result_scope_value", "evs2_nus",
-                "result_site_value","nus_rvrc",
+                "result_site_value","nus_ke7h",
                 "result_building_value", "Block D 1A Kent Ridge Rd",
                 "result_block_value", "D",
                 "mms_building_value", "Block D 1A Kent Ridge Rd",
@@ -473,7 +473,7 @@ public class MeterHelper {
         ),
         Map.of(
                 "result_scope_value", "evs2_nus",
-                "result_site_value","nus_rvrc",
+                "result_site_value","nus_eh",
                 "result_building_value", "Block A 10 Kent Ridge Dr",
                 "result_block_value", "A",
                 "mms_building_value", "Block A 10 Kent Ridge Dr",
@@ -481,7 +481,7 @@ public class MeterHelper {
         ),
         Map.of(
                 "result_scope_value", "evs2_nus",
-                "result_site_value","nus_rvrc",
+                "result_site_value","nus_th",
                 "result_building_value", "Block A 12 Kent Ridge Dr",
                 "result_block_value", "A",
                 "mms_building_value", "Block A 12 Kent Ridge Dr",
