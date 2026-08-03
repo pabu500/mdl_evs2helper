@@ -15,6 +15,8 @@ public class AcControllerResolver {
     public String pagMqttAgentVhPath;
     @Value("${pag.mqtt.agent.pgpr.path}")
     public String pagMqttAgentPgprPath;
+    @Value("${pag.mqtt.agent.five_halls.path}")
+    public String pagMqttAgentFiveHallsPath;
 
     static private final List<String> pgpr6AdhocMeter = List.of(
             "201808000338",
@@ -116,10 +118,29 @@ public class AcControllerResolver {
             topicPub = "evs2/nus/" + topicInfix + "/" + gw;
             topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + meterSn;
             pmaPath = pagMqttAgentPgprPath;
+        } else if(isFiveHalls(siteTag)){
+            String gw = "gw1";
+            block = block.toLowerCase();
+            String site = siteTag.split("_")[1];
+
+            String topicInfix = site + block;
+            topicPub = "evs2/nus/" + topicInfix + "/" + gw;
+            topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + meterSn;
+            pmaPath = pagMqttAgentFiveHallsPath;
         } else {
             return Map.of("error", "Unsupported site tag: " + siteTag);
         }
 
         return Map.of("topic_pub", topicPub, "topic_sub", topicSub, "pma_path", pmaPath);
+    }
+
+    Boolean isFiveHalls(String siteTag){
+        if(siteTag == null || siteTag.isEmpty()){
+            return false;
+        }
+
+        siteTag = siteTag.toLowerCase();
+        return "nus_eh".equals(siteTag) || "nus_ke7h".equals(siteTag) || "nus_krh".equals(siteTag)
+                || "nus_sh".equals(siteTag) || "nus_th".equals(siteTag);
     }
 }
