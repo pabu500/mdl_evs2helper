@@ -28,7 +28,7 @@ public class AcControllerOperator {
     @Autowired
     PagCommAgentHelper  pagCommAgentHelper;
     @Autowired
-    GatewayResolver gatewayResolver;
+    AcControllerGatewayResolver gatewayResolver;
     @Value("${pag.comm.agent.vh.path}")
     public String pagCommAgentVhPath;
     @Value("${pag.comm.agent.pgpr.path}")
