@@ -17,7 +17,9 @@ public class AcControllerResolver {
     public String pagMqttAgentPgprPath;
     @Value("${pag.mqtt.agent.five_halls.path}")
     public String pagMqttAgentFiveHallsPath;
+    private static final List<String> siteTagNus5HallsList = List.of("nus_eh", "nus_ke7h", "nus_krh", "nus_sh", "nus_th");
 
+    // 48 meters at PGPR 6 are controlled by the ac controller at pgpr 5
     static private final List<String> pgpr6AdhocMeter = List.of(
             "201808000338",
             "201808000340",
@@ -118,7 +120,7 @@ public class AcControllerResolver {
             topicPub = "evs2/nus/" + topicInfix + "/" + gw;
             topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + meterSn;
             pmaPath = pagMqttAgentPgprPath;
-        } else if(isFiveHalls(siteTag)){
+        } else if(isNus5HallsFromSiteTag(siteTag)){
             String gw = "gw1";
             block = block.toLowerCase();
             String site = siteTag.split("_")[1];
@@ -134,13 +136,14 @@ public class AcControllerResolver {
         return Map.of("topic_pub", topicPub, "topic_sub", topicSub, "pma_path", pmaPath);
     }
 
-    Boolean isFiveHalls(String siteTag){
+    Boolean isNus5HallsFromSiteTag(String siteTag){
         if(siteTag == null || siteTag.isEmpty()){
             return false;
         }
 
         siteTag = siteTag.toLowerCase();
-        return "nus_eh".equals(siteTag) || "nus_ke7h".equals(siteTag) || "nus_krh".equals(siteTag)
-                || "nus_sh".equals(siteTag) || "nus_th".equals(siteTag);
+//        return "nus_eh".equals(siteTag) || "nus_ke7h".equals(siteTag) || "nus_krh".equals(siteTag)
+//                || "nus_sh".equals(siteTag) || "nus_th".equals(siteTag);
+        return siteTagNus5HallsList.contains(siteTag);
     }
 }
