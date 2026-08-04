@@ -16,6 +16,58 @@ public class AcControllerGatewayResolver {
     private String acControllerGatewayTag;
     private static final List<String> siteTagNus5HallsList = List.of("nus_eh", "nus_ke7h", "nus_krh", "nus_sh", "nus_th");
 
+    // 48 meters at PGPR 6 are controlled by the ac controller at pgpr 5
+    static private final List<String> pgpr6AdhocMeter = List.of(
+            "201808000338",
+            "201808000340",
+            "201808000268",
+            "201808000271",
+            "201808000270",
+            "201808000247",
+            "201808000336",
+            "201808000253",
+            "201808000255",
+            "201906000050",
+            "201906000139",
+            "201906000044",
+            "201906000370",
+            "201906000382",
+            "201906000138",
+            "201906000134",
+            "201906000381",
+            "201906000385",
+            "201906000029",
+            "201906000017",
+            "201906000028",
+            "201906000019",
+            "201906000025",
+            "201906000201",
+            "201906000380",
+            "201906000132",
+            "201906000042",
+            "201906000265",
+            "201906000267",
+            "201906000205",
+            "201906000207",
+            "201906000383",
+            "201906000337",
+            "201906000336",
+            "201906000319",
+            "201906000317",
+            "201906000188",
+            "201906000186",
+            "201906000192",
+            "201906000193",
+            "201906000327",
+            "201906000325",
+            "201906000181",
+            "201906000187",
+            "201906000144",
+            "201906000146",
+            "201906000081",
+            "201906000077");
+
+
     public Map<String, Object> resolveGateway(Map<String, Object> scope) {
         logger.info("resolveGateway()");
 
@@ -77,6 +129,12 @@ public class AcControllerGatewayResolver {
                 topicSubscribe = "evs2/nus/vh/" + gw + "/" + meterSn;
                 break;
             case "nus_pgpr":
+                if("6".equals(block)){
+                    if(pgpr6AdhocMeter.contains(meterSn)){
+                        block = "5";
+                    }
+                }
+
                 topicPublish = "evs2/nus/pgpr" + block + "/" + gw;
                 topicSubscribe = "evs2/nus/pgpr" + block + "/" + gw + "/" + meterSn;
                 break;
