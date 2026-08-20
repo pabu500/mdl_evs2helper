@@ -32,6 +32,8 @@ public class TcmHelper2 {
     private String tcmPathSutdCampus;
     @Value("${tcm.path.nus_five_halls}")
     private String tcmPathNusFiveHalls;
+    @Value("${tcm.path.pa_atp}")
+    private String tcmPathPaAtp;
 
     @Value("${tcm.ept.do_one_topup}")
     private String tcmEptDoOneTopup;
@@ -136,6 +138,8 @@ public class TcmHelper2 {
                 return tcmPathSutdCampus;
             } else if (nusHallsSiteTagList.contains(siteTag)) {
                 return tcmPathNusFiveHalls;
+            } else if ("pa_atp".equals(siteTag)) {
+                return tcmPathPaAtp;
             }
         }
         return tcmPath;
