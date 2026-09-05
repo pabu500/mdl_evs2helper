@@ -217,7 +217,7 @@ public class DataNormalizer {
         List<IotHistoryRowDto> iotHistory = new ArrayList<>();
         List<Double> intervals = new ArrayList<>();
         List<Double> diffs = new ArrayList<>();
-        long dominantIntervalHours = 0;
+        Long dominantIntervalHours = null;
         double maxIntervalHours = 0;
 
         for (int i = 0; i < srcKwhReading.size(); i++) {
@@ -248,8 +248,8 @@ public class DataNormalizer {
         }
         //find the dominant interval
         dominantIntervalHours = MathUtil.findDominantLong(intervals);
-        if (dominantIntervalHours == 0) {
-            dominantIntervalHours = 1;
+        if (dominantIntervalHours == null) {
+            dominantIntervalHours = 24L;
         }
         maxIntervalHours = MathUtil.findMax(intervals);
         //insert estimated rows
@@ -259,8 +259,8 @@ public class DataNormalizer {
         iotHistoryNormalized = iotHistory;
 
         //find duration of the list in resp
-        LocalDateTime end = DateTimeUtil.getLocalDateTime((String) srcKwhReading.get(0).get("kwh_timestamp"));
-        LocalDateTime start = DateTimeUtil.getLocalDateTime((String) srcKwhReading.get(srcKwhReading.size() - 1).get("kwh_timestamp"));
+        LocalDateTime end = DateTimeUtil.getLocalDateTime((String) srcKwhReading.getFirst().get("kwh_timestamp"));
+        LocalDateTime start = DateTimeUtil.getLocalDateTime((String) srcKwhReading.getLast().get("kwh_timestamp"));
         long duration = Duration.between(start, end).toMillis();
         double averageReading = MathUtil.findAverage(diffs);
         double total = MathUtil.findTotal(diffs);
@@ -285,7 +285,7 @@ public class DataNormalizer {
         List<IotHistoryRowDto> iotHistory = new ArrayList<>();
         List<Double> intervals = new ArrayList<>();
         List<Double> diffs = new ArrayList<>();
-        long dominantInterval = 0;
+        Long dominantInterval = null;
         double maxInterval = 0;
         Map<String, Long> repeatedReading = new HashMap<>();
         //convert to IotHistoryRowDto
@@ -355,8 +355,10 @@ public class DataNormalizer {
 
         //find the dominant interval
         dominantInterval = MathUtil.findDominantLong(intervals);
-        if(dominantInterval == 0) {
-            dominantInterval = 1;
+        if(dominantInterval == null) {
+//            dominantInterval = 1;
+            logger.warning("Dominant interval is null, cannot normalize meter reading for device: " + deviceID);
+            return null;
         }
         maxInterval = MathUtil.findMax(intervals);
         //insert estimated rows
@@ -366,8 +368,8 @@ public class DataNormalizer {
         iotHistoryNormalized = iotHistory;
 
         //find duration of the list in resp
-        LocalDateTime end = DateTimeUtil.getLocalDateTime((String) resp.get(0).get("kwh_timestamp"));
-        LocalDateTime start = DateTimeUtil.getLocalDateTime((String) resp.get(resp.size()-1).get("kwh_timestamp"));
+        LocalDateTime end = DateTimeUtil.getLocalDateTime((String) resp.getFirst().get("kwh_timestamp"));
+        LocalDateTime start = DateTimeUtil.getLocalDateTime((String) resp.getLast().get("kwh_timestamp"));
         long duration = Duration.between(start, end).toMillis();
         double averageReading = MathUtil.findAverage(diffs);
         double total = MathUtil.findTotal(diffs);
@@ -391,7 +393,9 @@ public class DataNormalizer {
         List<IotHistoryRowDto> iotHistory = new ArrayList<>();
         List<Double> intervals = new ArrayList<>();
         List<Double> diffs = new ArrayList<>();
-        long dominantIntervalHours = 0;
+//        long dominantIntervalHours = 0;
+        Long dominantIntervalHours = null;
+
         double maxIntervalHours = 0;
 
         for (int i = 0; i < srcKwhReading.size(); i++) {
@@ -422,8 +426,10 @@ public class DataNormalizer {
         }
         //find the dominant interval
         dominantIntervalHours = MathUtil.findDominantLong(intervals);
-        if (dominantIntervalHours == 0) {
-            dominantIntervalHours = 1;
+        if (dominantIntervalHours == null) {
+//            dominantIntervalHours = 1;
+//            logger.warning("Dominant interval is null, cannot normalize meter reading for device.");
+            return null;
         }
         maxIntervalHours = MathUtil.findMax(intervals);
         //insert estimated rows
@@ -433,8 +439,8 @@ public class DataNormalizer {
         iotHistoryNormalized = iotHistory;
 
         //find duration of the list in resp
-        LocalDateTime end = DateTimeUtil.getLocalDateTime((String) srcKwhReading.get(0).get("kwh_timestamp"));
-        LocalDateTime start = DateTimeUtil.getLocalDateTime((String) srcKwhReading.get(srcKwhReading.size() - 1).get("kwh_timestamp"));
+        LocalDateTime end = DateTimeUtil.getLocalDateTime((String) srcKwhReading.getFirst().get("kwh_timestamp"));
+        LocalDateTime start = DateTimeUtil.getLocalDateTime((String) srcKwhReading.getLast().get("kwh_timestamp"));
         long duration = Duration.between(start, end).toMillis();
         double averageReading = MathUtil.findAverage(diffs);
         double total = MathUtil.findTotal(diffs);
