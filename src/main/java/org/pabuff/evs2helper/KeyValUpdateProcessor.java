@@ -342,6 +342,51 @@ public class KeyValUpdateProcessor {
 //                String sql = "UPDATE " + tableName + " SET " + keyName + " = " + val +
 //                        " WHERE meter_sn = '" + itemSn + "'";
 
+                // if is replacement, delete the old val from cpc_policy table and bypass_policy table
+                if(opName.contains("replacement")) {
+                    String oldVal = (String) item.get("pre_edit_" + keyName);
+                    if(oldVal != null && !oldVal.isBlank()) {
+                        String delSql = "DELETE FROM cpc_policy WHERE " + keyName + " = '" + oldVal + "'";
+                        try {
+                            Map<String, Object> delResp = oqgHelper.OqgD(delSql);
+                            if (delResp.containsKey("error")) {
+                                logger.info("Error while doing " + op + " for item: " + itemSn);
+                                item.put("error", Map.of("status", delResp.get("error")));
+                                item.put("prev_status", item.get("status"));
+                                item.put("status", op + " error");
+                                item.put("checked", false);
+                                continue;
+                            }
+                        } catch (Exception ex) {
+                            logger.info("Error while doing " + op + " for item: " + itemSn);
+                            item.put("error", Map.of("status", ex.getMessage()));
+                            item.put("prev_status", item.get("status"));
+                            item.put("status", op + " error");
+                            item.put("checked", false);
+                            continue;
+                        }
+                        delSql = "DELETE FROM meter_bypass_policy WHERE " + keyName + " = '" + oldVal + "'";
+                        try {
+                            Map<String, Object> delResp = oqgHelper.OqgD(delSql);
+                            if (delResp.containsKey("error")) {
+                                logger.info("Error while doing " + op + " for item: " + itemSn);
+                                item.put("error", Map.of("status", delResp.get("error")));
+                                item.put("prev_status", item.get("status"));
+                                item.put("status", op + " error");
+                                item.put("checked", false);
+                                continue;
+                            }
+                        } catch (Exception ex) {
+                            logger.info("Error while doing " + op + " for item: " + itemSn);
+                            item.put("error", Map.of("status", ex.getMessage()));
+                            item.put("prev_status", item.get("status"));
+                            item.put("status", op + " error");
+                            item.put("checked", false);
+                            continue;
+                        }
+                    }
+                }
+
                 Map<String, String> sqlResult = SqlUtil.makeUpdateSql(
                         Map.of(
                                 "table", itemTableName,
