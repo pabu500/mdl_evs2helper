@@ -75,10 +75,12 @@ public class AcControllerResolver {
         logger.info("resolveAcControlInfo()");
 
         String meterSn =  (String) meterInfo.get("meter_sn");
-        if(meterSn == null){
-            logger.warning("Meter SN is null");
-            return Map.of("error", "Meter SN is null");
+        String meterDisplayName =  (String) meterInfo.get("meter_displayname");
+        if(meterSn == null && meterDisplayName == null){
+            logger.warning("Meter SN or Meter Display Name is null");
+            return Map.of("error", "Meter SN or Meter Display Name is null");
         }
+        String itemId = meterDisplayName == null || meterDisplayName.isEmpty() ? meterSn : meterDisplayName;
 
         String siteTag =  (String) meterInfo.get("site_tag");
         if(siteTag == null){
@@ -105,21 +107,21 @@ public class AcControllerResolver {
                 gw = Math.random() < 0.5 ? "gw1" : "gw2";
             }
             topicPub = "evs2/nus/vh/" + gw;
-            topicSub = "evs2/nus/vh/" + gw + "/" + meterSn;
+            topicSub = "evs2/nus/vh/" + gw + "/" + itemId;
             pmaPath = pagMqttAgentVhPath;
         } else if("nus_pgpr".equalsIgnoreCase(siteTag)){
             String gw = "gw1";
             String site = "pgpr";
 
             if("6".equals(block)){
-                if(pgpr6AdhocMeter.contains(meterSn)){
+                if(meterSn != null && pgpr6AdhocMeter.contains(meterSn)){
                     block = "5";
                 }
             }
 
             String topicInfix = block != null && !block.isEmpty() ? site + block : site;
             topicPub = "evs2/nus/" + topicInfix + "/" + gw;
-            topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + meterSn;
+            topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + itemId;
             pmaPath = pagMqttAgentPgprPath;
         } else if(isNus5HallsFromSiteTag(siteTag)){
             String gw = "gw1";
@@ -128,7 +130,7 @@ public class AcControllerResolver {
 
             String topicInfix = site + block;
             topicPub = "evs2/nus/" + topicInfix + "/" + gw;
-            topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + meterSn;
+            topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + itemId;
             pmaPath = pagMqttAgentFiveHallsPath;
         } else {
             return Map.of("error", "Unsupported site tag: " + siteTag);
