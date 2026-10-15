@@ -19,68 +19,66 @@ public class AcControllerResolver {
     public String pagMqttAgentFiveHallsPath;
     private static final List<String> siteTagNus5HallsList = List.of("nus_eh", "nus_ke7h", "nus_krh", "nus_sh", "nus_th");
 
-    // 48 meters at PGPR 6 are controlled by the ac controller at pgpr 5
-    static private final List<String> pgpr6AdhocMeter = List.of(
-            "201808000338",
-            "201808000340",
-            "201808000268",
-            "201808000271",
-            "201808000270",
-            "201808000247",
-            "201808000336",
-            "201808000253",
-            "201808000255",
-            "201906000050",
-            "201906000139",
-            "201906000044",
-            "201906000370",
-            "201906000382",
-            "201906000138",
-            "201906000134",
-            "201906000381",
-            "201906000385",
-            "201906000029",
-            "201906000017",
-            "201906000028",
-            "201906000019",
-            "201906000025",
-            "201906000201",
-            "201906000380",
-            "201906000132",
-            "201906000042",
-            "201906000265",
-            "201906000267",
-//            "201906000205",
-            "201906000023",
-            "201906000207",
-            "201906000383",
-            "201906000337",
-            "201906000336",
-            "201906000319",
-            "201906000317",
-            "201906000188",
-            "201906000186",
-            "201906000192",
-            "201906000193",
-            "201906000327",
-            "201906000325",
-            "201906000181",
-            "201906000187",
-            "201906000144",
-            "201906000146",
-            "201906000081",
-            "201906000077");
+    // PGPR 6 meters controlled by the ac controller at PGPR 5, identified by display name
+    static private final List<String> pgpr6AdhocMeterDisplayNames = List.of(
+            "10010821",
+            "10010822",
+            "10010823",
+            "10010824",
+            "10010825",
+            "10010829",
+            "10010830",
+            "10010831",
+            "10010832",
+            "10010854",
+            "10010855",
+            "10010856",
+            "10010857",
+            "10010858",
+            "10010859",
+            "10010860",
+            "10010861",
+            "10010862",
+            "10010869",
+            "10010870",
+            "10010871",
+            // Skipped meter SN 201906000019: display name is missing from the meter CSV.
+            "10010888",
+            "10010889",
+            "10010898",
+            "10010899",
+            "10010900",
+            "10010907",
+            "10010908",
+            "10010909",
+            "10010910",
+            "10010911",
+            "10010921",
+            "10010922",
+            "10010923",
+            "10010924",
+            "10010943",
+            "10010944",
+            "10010945",
+            "10010946",
+            "10010947",
+            "10010948",
+            "10010958",
+            "10010959",
+            "10010960",
+            "10010961",
+            "10010962",
+            "10010963",
+            "10010873");
 
     public Map<String, Object> resolveAcControlInfo(Map<String, Object> meterInfo){
         logger.info("resolveAcControlInfo()");
 
-        String meterSn =  (String) meterInfo.get("meter_sn");
         String meterDisplayName =  (String) meterInfo.get("meter_displayname");
-        if(meterSn == null && meterDisplayName == null){
-            logger.warning("Meter SN or Meter Display Name is null");
-            return Map.of("error", "Meter SN or Meter Display Name is null");
+        if(meterDisplayName == null || meterDisplayName.isBlank()){
+            logger.warning("Meter display name is null or blank");
+            return Map.of("error", "Meter display name is null or blank");
         }
-        String itemId = meterDisplayName == null || meterDisplayName.isEmpty() ? meterSn : meterDisplayName;
 
         String siteTag =  (String) meterInfo.get("site_tag");
         if(siteTag == null){
@@ -107,21 +105,21 @@ public class AcControllerResolver {
                 gw = Math.random() < 0.5 ? "gw1" : "gw2";
             }
             topicPub = "evs2/nus/vh/" + gw;
-            topicSub = "evs2/nus/vh/" + gw + "/" + itemId;
+            topicSub = "evs2/nus/vh/" + gw + "/" + meterDisplayName;
             pmaPath = pagMqttAgentVhPath;
         } else if("nus_pgpr".equalsIgnoreCase(siteTag)){
             String gw = "gw1";
             String site = "pgpr";
 
             if("6".equals(block)){
-                if(meterSn != null && pgpr6AdhocMeter.contains(meterSn)){
+                if(pgpr6AdhocMeterDisplayNames.contains(meterDisplayName)){
                     block = "5";
                 }
             }
 
             String topicInfix = block != null && !block.isEmpty() ? site + block : site;
             topicPub = "evs2/nus/" + topicInfix + "/" + gw;
-            topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + itemId;
+            topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + meterDisplayName;
             pmaPath = pagMqttAgentPgprPath;
         } else if(isNus5HallsFromSiteTag(siteTag)){
             String gw = "gw1";
@@ -130,7 +128,7 @@ public class AcControllerResolver {
 
             String topicInfix = site + block;
             topicPub = "evs2/nus/" + topicInfix + "/" + gw;
-            topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + itemId;
+            topicSub = "evs2/nus/" + topicInfix + "/" + gw + "/" + meterDisplayName;
             pmaPath = pagMqttAgentFiveHallsPath;
         } else {
             return Map.of("error", "Unsupported site tag: " + siteTag);
