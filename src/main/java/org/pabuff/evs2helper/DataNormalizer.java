@@ -27,10 +27,12 @@ public class DataNormalizer {
     public List<Map<String, Object>> normalizedTransactionList(List<Map<String, Object>> transactions, boolean queryOpsId){
         List<Map<String, Object>> normalizedList = new ArrayList<>();
 
+        // get all virtual transaction id to add username and remark into normalizedList
+        Set<String> virtualTransactionIds = new HashSet<>();
         for(Map<String, Object> transaction : transactions){
             //get all map entry and copy to normalizedList
             Map<String, Object> normalizedTransaction = new HashMap<>();
-            boolean isVirtual = false;
+//            boolean isVirtual = false;
             for(Map.Entry<String, Object> entry : transaction.entrySet()){
                 switch (entry.getKey()) {
                     case "payment_mode" -> {
@@ -42,7 +44,8 @@ public class DataNormalizer {
                         }
                         entry.setValue(paymentModeStr);
                         if(paymentModeStr.equalsIgnoreCase("Virtual")) {
-                            isVirtual = true;
+//                            isVirtual = true;
+                            virtualTransactionIds.add((String) transaction.get("transaction_id"));
                         }
                     }
                     case "payment_channel" -> {
@@ -63,31 +66,77 @@ public class DataNormalizer {
                     }
                 }
                 normalizedTransaction.put(entry.getKey(), entry.getValue());
-
-                // if is Virtual, get username, remark from evs2_op_log table
-                String sql = "SELECT username, remark FROM evs2_op_log WHERE ref_id = '" + transaction.get("transaction_id") + "'";
-                if(isVirtual){
-                    try{
-                        List<Map<String, Object>> opsLog = oqgHelper.OqgR2x(sql, "OPS", true);
-                        if(!opsLog.isEmpty()){
-                            normalizedTransaction.put("ops_name", opsLog.getFirst().get("username"));
-                            normalizedTransaction.put("ops_remark", opsLog.getFirst().get("remark"));
-                        }
-                    }catch (Exception e){
-                        logger.warning("Error querying ops log: " + e.getMessage());
-                    }
-                }
             }
 
-            if(isVirtual&&queryOpsId){
-                String transactionId = (String) transaction.get("transaction_id");
-                Map<String, Object> ops = queryHelper.getOpsLogItem("ref_id", transactionId);
-                if(ops!=null) {
-                    normalizedTransaction.put("ops_name", ops.get("username"));
-                }
-            }
+//            // if is Virtual, get username, remark from evs2_op_log table
+//            if(isVirtual){
+//                String sql = "SELECT username, remark FROM evs2_op_log WHERE ref_id = '" + transaction.get("transaction_id") + "'";
+//                logger.info("test");
+//                try{
+//                    List<Map<String, Object>> opsLog = oqgHelper.OqgR2x(sql, "OPS", true);
+//                    logger.info(opsLog.toString());
+//                    if(!opsLog.isEmpty()){
+//                        normalizedTransaction.put("ops_name", opsLog.getFirst().get("username"));
+//                        normalizedTransaction.put("ops_remark", opsLog.getFirst().get("remark"));
+//                    }
+//                }catch (Exception e){
+//                    logger.warning("Error querying ops log: " + e.getMessage());
+//                }
+//            }
+//
+//            if(isVirtual && queryOpsId){
+//                String opsName = (String) normalizedTransaction.get("ops_name");
+//                if(opsName == null || opsName.isBlank()) {
+//                    String transactionId = (String) transaction.get("transaction_id");
+//                    Map<String, Object> ops = queryHelper.getOpsLogItem("ref_id", transactionId);
+//                    if(ops!=null) {
+//                        normalizedTransaction.put("ops_name", ops.get("username"));
+//                    }
+//                }
+//            }
 
             normalizedList.add(normalizedTransaction);
+        }
+
+        // get virtual transaction record from evs2_op_log
+        Map<String, Map<String, Object>> opsLogByRefId = new HashMap<>();
+        if(!virtualTransactionIds.isEmpty()){
+
+            // convert transactionId set to string to apply in filter query
+            String ids = virtualTransactionIds.stream()
+                    .map(id -> "'" + id + "'")
+                    .collect(Collectors.joining(","));
+
+            String sql = "SELECT ref_id, username, remark FROM evs2_op_log WHERE ref_id IN (" + ids + ")";
+            try {
+                List<Map<String, Object>> opsLogs = oqgHelper.OqgR2x(sql, "OPS", true);
+                for (Map<String, Object> opsLog : opsLogs) {
+                    opsLogByRefId.putIfAbsent((String) opsLog.get("ref_id"), opsLog);
+                }
+            } catch (Exception e) {
+                logger.warning("Error querying ops log: " + e.getMessage());
+            }
+        }
+
+        // insert username, remark into normalized list
+        if(!opsLogByRefId.isEmpty()){
+            for(Map<String, Object> normalizedTransaction : normalizedList){
+                String transactionId = (String) normalizedTransaction.get("transaction_id");
+                if(opsLogByRefId.containsKey(transactionId)){
+                    // if ref id in ops log map match to transaction id in normalized transaction
+                    Map<String, Object> opsLog = opsLogByRefId.get(transactionId);
+                    String username = (String) opsLog.get("username");
+                    if (queryOpsId && (username == null || username.isBlank())) {
+                        Map<String, Object> ops = queryHelper.getOpsLogItem("ref_id", transactionId);
+                        if(ops!=null) {
+                            username = (String) ops.get("username");
+                        }
+                    }
+
+                    normalizedTransaction.put("ops_name", username);
+                    normalizedTransaction.put("ops_remark", opsLog.get("remark"));
+                }
+            }
         }
         return normalizedList;
     }
